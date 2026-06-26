@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<template id="__bundler_thumbnail"><svg viewBox="0 0 160 112" xmlns="http://www.w3.org/2000/svg"><rect width="160" height="112" fill="#0F3D3A"/><rect x="24" y="20" width="52" height="72" rx="6" fill="#15514C"/><rect x="84" y="20" width="52" height="34" rx="6" fill="#15514C"/><rect x="84" y="60" width="52" height="32" rx="6" fill="#C2613B"/><rect x="30" y="28" width="36" height="4" rx="2" fill="#5FB7A8"/><rect x="30" y="36" width="28" height="3" rx="1.5" fill="#5FB7A8" opacity=".6"/><rect x="30" y="44" width="32" height="3" rx="1.5" fill="#5FB7A8" opacity=".6"/><rect x="30" y="52" width="24" height="3" rx="1.5" fill="#5FB7A8" opacity=".4"/><text x="110" y="82" font-family="serif" font-size="14" fill="white" text-anchor="middle" font-weight="600">Apply</text></svg></template>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+ --primary:#0F3D3A;--primary-2:#15514C;--on-primary:#ffffff;
+ --accent:#C2613B;--accent-2:#A94E2D;--accent-soft:#F6E7DD;
+ --surface:#FFFFFF;--surface-2:#F6F3EC;--surface-3:#EFEBE0;
+ --on-surface:#1C2422;--muted:#5F6B68;--border:#E2DED4;--border-2:#D6D1C4;
+ --destructive:#B23A2E;--ring:rgba(15,61,58,.32);
+ --shadow:0 1px 2px rgba(28,36,34,.05),0 10px 28px rgba(28,36,34,.09);
+ --shadow-sm:0 1px 2px rgba(28,36,34,.06);
+ --radius:11px;--radius-sm:8px;
+ --font-ui:'Public Sans',system-ui,-apple-system,sans-serif;
+ --font-display:'Newsreader',Georgia,serif;
+ --font-mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+[data-theme="dark"]{
+ --primary:#5FB7A8;--primary-2:#74C9BA;--on-primary:#08201D;
+ --accent:#E08456;--accent-2:#EB9468;--accent-soft:#2A2018;
+ --surface:#111A18;--surface-2:#0C1413;--surface-3:#1A2724;
+ --on-surface:#ECE9E1;--muted:#9AA7A3;--border:#27332F;--border-2:#324039;
+ --destructive:#E27063;--ring:rgba(95,183,168,.4);
+ --shadow:0 1px 2px rgba(0,0,0,.35),0 12px 30px rgba(0,0,0,.5);
+ --shadow-sm:0 1px 2px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--font-ui);color:var(--on-surface);background:var(--surface-2);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+::selection{background:var(--accent-soft)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+input,select,textarea,button{font-family:inherit}
+</style>
+</helmet>
+
+<div data-theme="{{ theme }}" style="min-height:100vh;background:var(--surface-2);color:var(--on-surface);font-family:var(--font-ui)">
+
+  <header style="position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 20px;height:60px;background:var(--surface);border-bottom:1px solid var(--border)">
+    <button onClick="{{ toHome }}" style="display:flex;align-items:center;gap:11px;background:none;border:none;cursor:pointer;padding:4px 4px;color:inherit">
+      <!-- ATG Apply logo mark: geometric A with terracotta apex -->
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="36" height="36" rx="10" fill="var(--primary)"/>
+        <!-- Outer A legs -->
+        <path d="M18 8.5L9 27.5" stroke="white" stroke-width="2.3" stroke-linecap="round"/>
+        <path d="M18 8.5L27 27.5" stroke="white" stroke-width="2.3" stroke-linecap="round"/>
+        <!-- Crossbar -->
+        <path d="M12.5 21.5H23.5" stroke="white" stroke-width="2.3" stroke-linecap="round"/>
+        <!-- Terracotta apex dot -->
+        <circle cx="18" cy="8.5" r="3" fill="var(--accent)"/>
+      </svg>
+      <!-- Two-weight wordmark -->
+      <span style="display:flex;align-items:baseline;gap:0;line-height:1">
+        <span style="font-family:var(--font-display);font-weight:700;font-size:18px;letter-spacing:-.02em;color:var(--on-surface)">ATG</span><span style="font-family:var(--font-display);font-weight:400;font-size:17px;letter-spacing:-.01em;color:var(--muted);padding-left:4px">Apply</span>
+      </span>
+    </button>
+
+    <div style="display:flex;align-items:center;gap:10px">
+      <div role="tablist" aria-label="Preview role" style="display:flex;background:var(--surface-3);border:1px solid var(--border);border-radius:9px;padding:3px;gap:2px">
+        <button onClick="{{ viewPublic }}" style="{{ rPublic }}">Visitor</button>
+        <button onClick="{{ viewUser }}" style="{{ rUser }}">Customer</button>
+        <button onClick="{{ viewAdmin }}" style="{{ rAdmin }}">Operator</button>
+      </div>
+      <button onClick="{{ toArch }}" title="System architecture" aria-label="System architecture" style="display:grid;place-items:center;width:38px;height:38px;border-radius:9px;background:var(--surface);border:1px solid var(--border);cursor:pointer;color:var(--muted)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><path d="M14 17.5h7M17.5 14v7"></path></svg>
+      </button>
+      <button onClick="{{ toggleTheme }}" title="Toggle theme" aria-label="Toggle dark mode" style="display:grid;place-items:center;width:38px;height:38px;border-radius:9px;background:var(--surface);border:1px solid var(--border);cursor:pointer;color:var(--muted)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+      </button>
+    </div>
+  </header>
+
+  <sc-if value="{{ isPublic }}" hint-placeholder-val="{{ true }}">
+  <nav style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;padding:10px 20px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:60px;z-index:40">
+    <button onClick="{{ toHome }}" style="{{ pHome }}">Home</button>
+    <button onClick="{{ toHow }}" style="{{ pHow }}">How it works</button>
+    <button onClick="{{ toPricing }}" style="{{ pPricing }}">Pricing</button>
+    <button onClick="{{ toContact }}" style="{{ pContact }}">Contact</button>
+    <button onClick="{{ toPrivacy }}" style="{{ pPrivacy }}">Privacy</button>
+    <button onClick="{{ toTerms }}" style="{{ pTerms }}">Terms</button>
+    <span style="flex:1"></span>
+    <button onClick="{{ toSignup }}" style="padding:9px 18px;border-radius:9px;background:var(--accent);color:#fff;border:none;font-weight:600;font-size:14px;cursor:pointer">Start free — 2 applications</button>
+  </nav>
+  </sc-if>
+
+  <sc-if value="{{ isShell }}" hint-placeholder-val="{{ true }}">
+  <div style="display:grid;grid-template-columns:248px 1fr;min-height:calc(100vh - 60px)">
+    <aside style="background:var(--surface);border-right:1px solid var(--border);padding:18px 12px;display:flex;flex-direction:column;gap:4px">
+      <div style="padding:6px 12px 14px;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)">{{ navLabel }}</div>
+      <sc-for list="{{ navItems }}" as="it" hint-placeholder-count="8">
+        <button onClick="{{ it.onClick }}" style="{{ it.style }}">
+          <span style="display:grid;place-items:center;width:20px;height:20px">{{ it.iconEl }}</span>
+          <span style="flex:1;text-align:left">{{ it.label }}</span>
+          <sc-if value="{{ it.badge }}" hint-placeholder-val="0"><span style="min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center">{{ it.badge }}</span></sc-if>
+        </button>
+      </sc-for>
+      <span style="flex:1"></span>
+      <div style="margin-top:12px;padding:13px;border-radius:var(--radius-sm);background:var(--surface-2);border:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:9px">
+          <span style="display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--primary);color:var(--on-primary);font-weight:600;font-size:14px">{{ whoInitials }}</span>
+          <div style="min-width:0">
+            <div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ whoName }}</div>
+            <div style="font-size:11px;color:var(--muted)">{{ whoRole }}</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <main style="min-width:0;padding:0">
+      <!-- ============ CUSTOMER: DASHBOARD ============ -->
+      <sc-if value="{{ isUDash }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:26px 30px;max-width:1180px">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px">
+          <div><h1 style="font-family:var(--font-display);font-weight:500;font-size:30px;margin:0">Welcome back, Nandini</h1><p style="color:var(--muted);margin:5px 0 0;font-size:14px">Here's where your applications stand this week.</p></div>
+          <button onClick="{{ goJobs }}" style="display:inline-flex;align-items:center;gap:8px;padding:10px 17px;border-radius:9px;background:var(--accent);color:#fff;border:none;font-weight:600;font-size:14px;cursor:pointer">Review {{ myPendingCount }} new jobs</button>
+        </div>
+        <div style="display:grid;grid-template-columns:1.6fr 1fr;gap:18px;align-items:start">
+          <div style="display:flex;flex-direction:column;gap:18px">
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><h2 style="font-size:16px;margin:0">Application tracker</h2><button onClick="{{ goApps }}" style="background:none;border:none;color:var(--primary);font-weight:600;font-size:13px;cursor:pointer">View all</button></div>
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+                <sc-for list="{{ myTracker }}" as="t" hint-placeholder-count="8">
+                  <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:13px">
+                    <div style="display:flex;align-items:center;gap:7px;color:{{ t.c }}">{{ t.iconEl }}<span style="font-size:22px;font-weight:700;color:var(--on-surface)">{{ t.count }}</span></div>
+                    <div style="font-size:12px;color:var(--muted);margin-top:4px">{{ t.label }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><h2 style="font-size:16px;margin:0">Jobs awaiting your approval</h2><span style="font-size:12px;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:3px 9px;border-radius:7px">{{ myPendingCount }} pending</span></div>
+              <p style="font-size:13px;color:var(--muted);margin:0 0 14px">Nothing is submitted until you approve it.</p>
+              <div style="display:flex;flex-direction:column;gap:11px">
+                <sc-for list="{{ myPending }}" as="r" hint-placeholder-count="3">
+                  <div style="border:1px solid var(--border);border-radius:11px;padding:14px;display:flex;gap:13px;align-items:flex-start">
+                    <span style="display:grid;place-items:center;width:46px;height:46px;border-radius:10px;font-weight:700;font-size:14px;background:{{ r.fitB }};color:{{ r.fitC }};flex-shrink:0">{{ r.fit }}%</span>
+                    <div style="flex:1;min-width:0">
+                      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-weight:600;font-size:15px">{{ r.title }}</span><span style="font-size:13px;color:var(--muted)">· {{ r.company }} · {{ r.loc }}</span></div>
+                      <div style="display:flex;align-items:center;gap:8px;margin:5px 0"><span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:{{ r.fitC }};background:{{ r.fitB }};padding:3px 8px;border-radius:6px"><span style="width:6px;height:6px;border-radius:50%;background:{{ r.fitC }}"></span>{{ r.fitTier }} fit</span><span style="font-size:12px;color:var(--muted)">Deadline {{ r.deadlineFmt }}</span></div>
+                      <p style="font-size:13px;color:var(--muted);line-height:1.5;margin:6px 0 0">{{ r.reason }}</p>
+                      <div style="display:flex;gap:9px;margin-top:12px">
+                        <sc-if value="{{ r.apPending }}" hint-placeholder-val="{{ true }}">
+                          <button onClick="{{ r.onApprove }}" style="padding:8px 16px;border-radius:8px;background:var(--primary);color:var(--on-primary);border:none;font-weight:600;font-size:13px;cursor:pointer">Approve</button>
+                          <button onClick="{{ r.onDecline }}" style="padding:8px 16px;border-radius:8px;background:var(--surface);color:var(--muted);border:1px solid var(--border-2);font-weight:600;font-size:13px;cursor:pointer">Skip</button>
+                        </sc-if>
+                        <sc-if value="{{ r.apApproved }}" hint-placeholder-val=""><span style="display:inline-flex;align-items:center;gap:6px;color:#1F7A4D;font-weight:600;font-size:13px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Approved — sent to your team</span></sc-if>
+                        <sc-if value="{{ r.apDeclined }}" hint-placeholder-val=""><span style="color:var(--muted);font-weight:600;font-size:13px">Skipped</span></sc-if>
+                      </div>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:18px">
+            <div style="background:var(--primary);color:var(--on-primary);border-radius:var(--radius);padding:20px">
+              <div style="font-size:13px;opacity:.8">Professional package</div>
+              <div style="display:flex;align-items:baseline;gap:6px;margin:4px 0 12px"><span style="font-family:var(--font-display);font-size:38px;font-weight:600">{{ myBalance.remaining }}</span><span style="opacity:.8;font-size:14px">of {{ myBalance.total }} left</span></div>
+              <div style="height:8px;border-radius:99px;background:rgba(255,255,255,.18);overflow:hidden"><div style="height:100%;width:{{ myBalance.pct }};background:var(--accent);border-radius:99px"></div></div>
+              <div style="font-size:12px;opacity:.75;margin-top:8px">{{ myBalance.used }} applications used</div>
+              <button onClick="{{ goUpgrade }}" style="width:100%;margin-top:14px;padding:10px;border-radius:9px;background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.2);font-weight:600;font-size:13px;cursor:pointer">Top up or upgrade</button>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+              <h2 style="font-size:15px;margin:0 0 12px">Your profile</h2>
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><span style="display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:var(--surface-3);color:var(--primary);font-weight:700">ND</span><div><div style="font-weight:600;font-size:14px">Nandini</div><div style="font-size:12px;color:var(--muted)">Senior UX Designer · Colombo</div></div></div>
+              <div style="display:flex;flex-direction:column;gap:8px;font-size:13px">
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Target roles</span><span style="font-weight:500">UX / Product Design</span></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Locations</span><span style="font-weight:500">Colombo · Remote</span></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Your team</span><span style="font-weight:500">ATG specialist</span></div>
+              </div>
+              <button onClick="{{ goProfile }}" style="width:100%;margin-top:14px;padding:9px;border-radius:8px;background:var(--surface-2);border:1px solid var(--border);font-weight:600;font-size:13px;cursor:pointer;color:var(--on-surface)">Edit profile</button>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><h2 style="font-size:15px;margin:0">Recent updates</h2><button onClick="{{ goNotify }}" style="background:none;border:none;color:var(--primary);font-weight:600;font-size:13px;cursor:pointer">All</button></div>
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <sc-for list="{{ notifTop }}" as="n" hint-placeholder-count="3">
+                  <div style="display:flex;gap:11px;align-items:flex-start"><span style="display:grid;place-items:center;width:30px;height:30px;border-radius:8px;background:var(--surface-2);color:var(--primary);flex-shrink:0">{{ n.iconEl }}</span><div><div style="font-size:13px;font-weight:600;line-height:1.3">{{ n.title }}</div><div style="font-size:12px;color:var(--muted);margin-top:1px">{{ n.t }}</div></div></div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ CUSTOMER: JOBS ============ -->
+      <sc-if value="{{ isUJobs }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:26px 30px;max-width:1080px">
+        <h1 style="font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 4px">Recommended jobs</h1>
+        <p style="color:var(--muted);margin:0 0 20px;font-size:14px">Roles your ATG team researched for you. Approve the ones you want — skip the rest.</p>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <sc-for list="{{ myRows }}" as="r" hint-placeholder-count="8">
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:16px;display:flex;gap:14px;align-items:flex-start">
+              <span style="display:grid;place-items:center;width:52px;height:52px;border-radius:11px;font-weight:700;font-size:15px;background:{{ r.fitB }};color:{{ r.fitC }};flex-shrink:0">{{ r.fit }}%</span>
+              <div style="flex:1;min-width:0">
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-weight:600;font-size:16px">{{ r.title }}</span><span style="font-size:13px;color:var(--muted)">· {{ r.company }} · {{ r.loc }}</span></div>
+                <div style="display:flex;align-items:center;gap:8px;margin:6px 0;flex-wrap:wrap">
+                  <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:{{ r.fitC }};background:{{ r.fitB }};padding:3px 8px;border-radius:6px"><span style="width:6px;height:6px;border-radius:50%;background:{{ r.fitC }}"></span>{{ r.fitTier }} fit</span>
+                  <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:{{ r.statusC }};background:{{ r.statusB }};padding:3px 8px;border-radius:6px">{{ r.statusLabel }}</span>
+                  <span style="font-size:12px;color:var(--muted)">Deadline {{ r.deadlineFmt }} · via {{ r.source }}</span>
+                </div>
+                <p style="font-size:13px;color:var(--muted);line-height:1.5;margin:4px 0 0">{{ r.reason }}</p>
+                <div style="display:flex;gap:9px;margin-top:12px;align-items:center">
+                  <sc-if value="{{ r.apPending }}" hint-placeholder-val="{{ true }}">
+                    <button onClick="{{ r.onApprove }}" style="padding:8px 16px;border-radius:8px;background:var(--primary);color:var(--on-primary);border:none;font-weight:600;font-size:13px;cursor:pointer">Approve</button>
+                    <button onClick="{{ r.onDecline }}" style="padding:8px 16px;border-radius:8px;background:var(--surface);color:var(--muted);border:1px solid var(--border-2);font-weight:600;font-size:13px;cursor:pointer">Skip</button>
+                  </sc-if>
+                  <sc-if value="{{ r.apApproved }}" hint-placeholder-val=""><span style="display:inline-flex;align-items:center;gap:6px;color:#1F7A4D;font-weight:600;font-size:13px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Approved</span></sc-if>
+                  <sc-if value="{{ r.apDeclined }}" hint-placeholder-val=""><span style="color:var(--muted);font-weight:600;font-size:13px">Skipped</span></sc-if>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ CUSTOMER: APPLICATIONS ============ -->
+      <sc-if value="{{ isUApps }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:26px 30px;max-width:1080px">
+        <h1 style="font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 4px">Application tracker</h1>
+        <p style="color:var(--muted);margin:0 0 20px;font-size:14px">Every application we've submitted or are preparing, with proof of submission.</p>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+          <div style="display:grid;grid-template-columns:1.8fr 1fr 1fr 1.2fr;gap:12px;padding:12px 18px;background:var(--surface-2);border-bottom:1px solid var(--border);font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)"><span>Role</span><span>Status</span><span>Applied</span><span>Proof</span></div>
+          <sc-for list="{{ myApplied }}" as="r" hint-placeholder-count="5">
+            <div style="display:grid;grid-template-columns:1.8fr 1fr 1fr 1.2fr;gap:12px;padding:14px 18px;border-bottom:1px solid var(--border);align-items:center">
+              <div><div style="font-weight:600;font-size:14px">{{ r.title }}</div><div style="font-size:12px;color:var(--muted)">{{ r.company }} · {{ r.loc }}</div></div>
+              <span style="display:inline-flex;width:fit-content;align-items:center;gap:5px;font-size:11px;font-weight:700;color:{{ r.statusC }};background:{{ r.statusB }};padding:4px 9px;border-radius:7px">{{ r.statusLabel }}</span>
+              <span style="font-size:13px;color:var(--muted)">{{ r.appliedFmt }}</span>
+              <sc-if value="{{ r.proofType }}" hint-placeholder-val="">
+                <span style="display:inline-flex;width:fit-content;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--primary)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6z"/><path d="M9 12l2 2 4-4"/></svg>{{ r.proofType }}</span>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ CUSTOMER: PROFILE (reuses signup note) ============ -->
+      <sc-if value="{{ isUProfile }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:26px 30px;max-width:760px">
+        <h1 style="font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 18px">Your profile</h1>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;display:flex;flex-direction:column;gap:16px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div><label style="{{ flbl }}">Full name</label><input value="Nandini" style="{{ fin }}"/></div>
+            <div><label style="{{ flbl }}">Email</label><input value="nandini@gmail.com" style="{{ fin }}"/></div>
+            <div><label style="{{ flbl }}">Target roles</label><input value="Senior UX Designer, Product Designer" style="{{ fin }}"/></div>
+            <div><label style="{{ flbl }}">Locations</label><input value="Colombo, Remote" style="{{ fin }}"/></div>
+          </div>
+          <button onClick="{{ saveProfile }}" style="align-self:flex-start;padding:11px 20px;border-radius:9px;background:var(--primary);color:var(--on-primary);border:none;font-weight:600;font-size:14px;cursor:pointer">Save changes</button>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ CUSTOMER: DOCUMENTS ============ -->
+      <sc-if value="{{ isUDocs }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:26px 30px;max-width:920px">
+        <h1 style="font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 4px">Your documents</h1>
+        <p style="color:var(--muted);margin:0 0 20px;font-size:14px">Tailored CVs and motivation letters your team prepared for each role.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <sc-for list="{{ myDocs }}" as="d" hint-placeholder-count="4">
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:16px;display:flex;gap:13px;align-items:center">
+              <span style="display:grid;place-items:center;width:42px;height:42px;border-radius:10px;background:var(--surface-2);color:var(--primary)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></svg></span>
+              <div style="flex:1;min-width:0"><div style="font-weight:600;font-size:14px">{{ d.name }}</div><div style="font-size:12px;color:var(--muted)">{{ d.meta }}</div></div>
+              <span style="font-size:12px;font-weight:600;color:var(--primary)">Download</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ CUSTOMER: PAYMENTS ============ -->
+      <sc-if value="{{ isUPay }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:26px 30px;max-width:880px">
+        <h1 style="font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 18px">Payments</h1>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:16px">
+          <div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:13px;color:var(--muted)">Professional package</div><div style="font-family:var(--font-display);font-size:26px;font-weight:600">USD 100.00</div></div><span style="font-size:12px;font-weight:700;color:#1F7A4D;background:#E3F3E8;padding:5px 11px;border-radius:8px">Paid</span></div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;padding:12px 18px;background:var(--surface-2);border-bottom:1px solid var(--border);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)"><span>Invoice</span><span>Method</span><span>Date</span><span style="text-align:right">Status</span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;padding:14px 18px;align-items:center"><span style="font-family:var(--font-mono);font-size:13px">WISE-8841-204</span><span style="font-size:13px">Wise</span><span style="font-size:13px;color:var(--muted)">30 May 2026</span><span style="text-align:right"><span style="font-size:11px;font-weight:700;color:#1F7A4D;background:#E3F3E8;padding:4px 9px;border-radius:7px">Paid · $100</span></span></div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ CUSTOMER: UPGRADE ============ -->
+      <sc-if value="{{ isUUpgrade }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:26px 30px;max-width:1080px">
+        <div style="background:var(--accent-soft);border:1px solid var(--accent);border-radius:var(--radius);padding:20px 22px;margin-bottom:24px;display:flex;gap:14px;align-items:center">
+          <span style="display:grid;place-items:center;width:44px;height:44px;border-radius:11px;background:var(--accent);color:#fff;flex-shrink:0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M12 9l1.4 1.6L15 12l-1.6 1.4L12 15l-1.4-1.6L9 12l1.6-1.4z"/></svg></span>
+          <div><div style="font-weight:700;font-size:16px;color:var(--accent-2)">Keep the momentum going</div><div style="font-size:14px;color:var(--accent-2);opacity:.9">You've used 23 of 100 applications. Top up or move to a bigger package any time — your profile and history stay exactly as they are.</div></div>
+        </div>
+        <h1 style="font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 18px">Choose a package</h1>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+          <sc-for list="{{ paidCards }}" as="p" hint-placeholder-count="3">
+            <div style="{{ p.cardStyle }}">
+              <sc-if value="{{ p.showBadge }}" hint-placeholder-val=""><span style="position:absolute;top:-11px;left:22px;padding:4px 11px;border-radius:7px;background:var(--accent);color:#fff;font-size:11px;font-weight:700">{{ p.badge }}</span></sc-if>
+              <div><div style="font-family:var(--font-display);font-size:20px;font-weight:600">{{ p.name }}</div><div style="{{ p.blurbStyle }}">{{ p.blurb }}</div></div>
+              <div style="display:flex;align-items:baseline;gap:6px"><span style="font-family:var(--font-display);font-size:36px;font-weight:600">{{ p.priceFmt }}</span><span style="{{ p.appsStyle }}">· {{ p.apps }} apps</span></div>
+              <button onClick="{{ p.onUpgrade }}" style="{{ p.ctaStyle }}">{{ p.cta }}</button>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ CUSTOMER: NOTIFICATIONS ============ -->
+      <sc-if value="{{ isUNotify }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:26px 30px;max-width:760px">
+        <h1 style="font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 4px">Notifications</h1>
+        <p style="color:var(--muted);margin:0 0 20px;font-size:14px">Updates from your ATG team, newest first.</p>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <sc-for list="{{ notifDec }}" as="n" hint-placeholder-count="6">
+            <div style="background:{{ n.bg }};border:1px solid var(--border);border-left:3px solid {{ n.accent }};border-radius:10px;padding:15px 16px;display:flex;gap:13px;align-items:flex-start">
+              <span style="display:grid;place-items:center;width:36px;height:36px;border-radius:9px;background:var(--surface);color:var(--primary);flex-shrink:0">{{ n.iconEl }}</span>
+              <div style="flex:1"><div style="display:flex;justify-content:space-between;gap:10px"><span style="font-weight:600;font-size:14px">{{ n.title }}</span><span style="font-size:12px;color:var(--muted);white-space:nowrap">{{ n.t }}</span></div><p style="font-size:13px;color:var(--muted);line-height:1.5;margin:4px 0 0">{{ n.body }}</p></div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ CUSTOMER: SUPPORT ============ -->
+      <sc-if value="{{ isUSupport }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:26px 30px;max-width:720px">
+        <h1 style="font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 4px">Support</h1>
+        <p style="color:var(--muted);margin:0 0 20px;font-size:14px">Message your team. A real person replies within one working day.</p>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;display:flex;flex-direction:column;gap:14px;margin-bottom:16px">
+          <div style="display:flex;gap:11px"><span style="display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--surface-3);color:var(--primary);font-weight:700;font-size:13px;flex-shrink:0">RP</span><div style="background:var(--surface-2);border:1px solid var(--border);border-radius:11px;border-top-left-radius:3px;padding:12px 14px"><div style="font-size:13px;line-height:1.5">Hi Nandini — your IFS application is queued and will be prepared this week. Anything else you'd like us to prioritise?</div><div style="font-size:11px;color:var(--muted);margin-top:5px">Roshan · ATG team · 4 days ago</div></div></div>
+        </div>
+        <div style="display:flex;gap:10px"><input placeholder="Type a message…" style="flex:1;padding:12px 14px;border-radius:9px;border:1px solid var(--border-2);background:var(--surface);font-size:14px;color:inherit"/><button onClick="{{ sendSupport }}" style="padding:12px 20px;border-radius:9px;background:var(--accent);color:#fff;border:none;font-weight:600;font-size:14px;cursor:pointer">Send</button></div>
+      </div>
+      </sc-if>
+
+      <!-- ============ ADMIN: OVERVIEW ============ -->
+      <sc-if value="{{ isADash }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:24px 28px;max-width:1280px">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px"><div><h1 style="font-family:var(--font-display);font-weight:500;font-size:28px;margin:0">Operator console</h1><p style="color:var(--muted);margin:4px 0 0;font-size:14px">Thursday, 26 June 2026 · ATG Concordia operations</p></div></div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px">
+          <sc-for list="{{ adminStats }}" as="s" hint-placeholder-count="4">
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px">
+              <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:13px;color:var(--muted)">{{ s.label }}</span><span style="color:var(--muted)">{{ s.iconEl }}</span></div>
+              <div style="font-family:var(--font-display);font-size:32px;font-weight:600;margin:6px 0 2px">{{ s.value }}</div>
+              <div style="font-size:12px;color:var(--muted)">{{ s.sub }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:16px">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+            <h2 style="font-size:16px;margin:0 0 14px">Applications by status</h2>
+            <div style="display:flex;flex-direction:column;gap:9px">
+              <sc-for list="{{ adminStatusList }}" as="s" hint-placeholder-count="8">
+                <div style="display:flex;align-items:center;gap:12px"><span style="width:120px;font-size:13px;font-weight:500">{{ s.label }}</span><div style="flex:1;height:10px;border-radius:99px;background:var(--surface-3);overflow:hidden"><div style="height:100%;width:{{ s.barW }};background:{{ s.c }};border-radius:99px"></div></div><span style="width:24px;text-align:right;font-size:13px;font-weight:700">{{ s.count }}</span></div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+            <h2 style="font-size:16px;margin:0 0 14px">Needs attention</h2>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <button onClick="{{ goQC }}" style="display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:13px;cursor:pointer">
+                <span style="display:grid;place-items:center;width:36px;height:36px;border-radius:9px;background:#FBF0D9;color:#8A6100"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span>
+                <div style="flex:1"><div style="font-weight:600;font-size:14px">QC queue</div><div style="font-size:12px;color:var(--muted)">Applications awaiting sign-off</div></div>
+                <span style="font-weight:700;color:#8A6100">{{ qcCount }}</span>
+              </button>
+              <button onClick="{{ goPay }}" style="display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:13px;cursor:pointer">
+                <span style="display:grid;place-items:center;width:36px;height:36px;border-radius:9px;background:#E4ECF7;color:#1E4E8C"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5h18v11H3z"/><path d="M3 10.5h18"/></svg></span>
+                <div style="flex:1"><div style="font-weight:600;font-size:14px">Payments to reconcile</div><div style="font-size:12px;color:var(--muted)">Pending or partial</div></div>
+                <span style="font-weight:700;color:#1E4E8C">{{ payNeedsCount }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ ADMIN: USERS ============ -->
+      <sc-if value="{{ isAUsers }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:24px 28px;max-width:1280px">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:16px"><div><h1 style="font-family:var(--font-display);font-weight:500;font-size:28px;margin:0">Users</h1><p style="color:var(--muted);margin:4px 0 0;font-size:14px">{{ usersCount }} users · filter by package or payment status</p></div><button onClick="{{ goExport }}" style="display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:9px;background:var(--surface);border:1px solid var(--border-2);font-weight:600;font-size:13px;cursor:pointer;color:var(--on-surface)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 11l5 5 5-5M5 20h14"/></svg>Export CSV</button></div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+          <div style="display:grid;grid-template-columns:2fr 1.2fr 1fr 1.4fr 1fr 0.6fr;gap:12px;padding:11px 18px;background:var(--surface-2);border-bottom:1px solid var(--border);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)"><span>User</span><span>Package</span><span>Balance</span><span>Staff</span><span>Payment</span><span></span></div>
+          <sc-for list="{{ usersDec }}" as="u" hint-placeholder-count="10">
+            <button onClick="{{ u.onOpen }}" style="display:grid;grid-template-columns:2fr 1.2fr 1fr 1.4fr 1fr 0.6fr;gap:12px;padding:13px 18px;border:none;border-bottom:1px solid var(--border);background:none;cursor:pointer;text-align:left;align-items:center;width:100%;color:inherit">
+              <div style="display:flex;align-items:center;gap:11px;min-width:0"><span style="display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--surface-3);color:var(--primary);font-weight:700;font-size:13px;flex-shrink:0">{{ u.initials }}</span><div style="min-width:0"><div style="font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ u.name }}</div><div style="font-size:12px;color:var(--muted)">{{ u.city }}, {{ u.country }}</div></div></div>
+              <span style="font-size:12px;font-weight:600;width:fit-content;background:{{ u.pkgBadge }};padding:4px 10px;border-radius:7px;height:fit-content">{{ u.pkg }}</span>
+              <span style="font-size:13px;color:var(--muted)">{{ u.remaining }}/{{ u.total }}</span>
+              <span style="font-size:13px">{{ u.staffN }}</span>
+              <span style="display:inline-flex;width:fit-content;align-items:center;gap:5px;font-size:11px;font-weight:700;color:{{ u.payColor }};background:{{ u.payBg }};padding:4px 9px;border-radius:7px;height:fit-content">{{ u.payLabel }}</span>
+              <span style="color:var(--muted);text-align:right"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ ADMIN: USER DETAIL ============ -->
+      <sc-if value="{{ isAUser }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:24px 28px;max-width:1180px">
+        <button onClick="{{ goUsers }}" style="display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--muted);font-weight:600;font-size:13px;cursor:pointer;margin-bottom:14px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>All users</button>
+        <div style="display:grid;grid-template-columns:1fr 320px;gap:18px;align-items:start">
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px">
+              <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px"><span style="display:grid;place-items:center;width:54px;height:54px;border-radius:50%;background:var(--surface-3);color:var(--primary);font-weight:700;font-size:18px">{{ selUserInitials }}</span><div><h1 style="font-family:var(--font-display);font-weight:500;font-size:24px;margin:0">{{ selUser.name }}</h1><div style="font-size:13px;color:var(--muted)">{{ selUser.role }} · {{ selUser.city }}, {{ selUser.country }}</div></div></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+                <div><div style="font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)">Email</div><div style="font-size:13px;font-weight:500;margin-top:2px">{{ selUser.email }}</div></div>
+                <div><div style="font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)">Phone</div><div style="font-size:13px;font-weight:500;margin-top:2px">{{ selUser.phone }}</div></div>
+                <div><div style="font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)">Joined</div><div style="font-size:13px;font-weight:500;margin-top:2px">{{ selUserJoined }}</div></div>
+              </div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+              <h2 style="font-size:16px;margin:0 0 14px">Applications &amp; jobs</h2>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <sc-for list="{{ selRows }}" as="r" hint-placeholder-count="4">
+                  <div style="border:1px solid var(--border);border-radius:10px;padding:13px;display:flex;gap:12px;align-items:center">
+                    <span style="display:grid;place-items:center;width:42px;height:42px;border-radius:9px;font-weight:700;font-size:13px;background:{{ r.fitB }};color:{{ r.fitC }};flex-shrink:0">{{ r.fit }}%</span>
+                    <div style="flex:1;min-width:0"><div style="font-weight:600;font-size:14px">{{ r.title }} · {{ r.company }}</div><div style="font-size:12px;color:var(--muted)">{{ r.loc }} · via {{ r.source }}</div></div>
+                    <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:{{ r.statusC }};background:{{ r.statusB }};padding:4px 9px;border-radius:7px">{{ r.statusLabel }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6z"/></svg><h2 style="font-size:15px;margin:0">Internal notes</h2><span style="font-size:11px;font-weight:700;color:var(--destructive);background:#F7E5E2;padding:3px 8px;border-radius:6px">Staff only · never shown to user</span></div>
+              <div style="font-size:13px;color:var(--muted);line-height:1.6;background:var(--surface-2);border:1px solid var(--border);border-radius:9px;padding:13px">First 3 applications require founder QC sign-off. User responsive on WhatsApp. Strong CAD portfolio — lead with John Keells and Hayleys roles.</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px">
+              <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Package &amp; balance</div>
+              <div style="font-weight:700;font-size:15px;margin-bottom:8px">{{ selUser.pkg }}</div>
+              <div style="height:8px;border-radius:99px;background:var(--surface-3);overflow:hidden"><div style="height:100%;width:{{ selUserBalPct }};background:var(--primary)"></div></div>
+              <div style="font-size:12px;color:var(--muted);margin-top:6px">{{ selUser.used }} used · {{ selUser.remaining }} remaining</div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px">
+              <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Assigned staff</div>
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><span style="display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:var(--surface-3);color:var(--primary);font-weight:700;font-size:13px">{{ selStaffInitials }}</span><div><div style="font-weight:600;font-size:13px">{{ selStaffN }}</div><div style="font-size:11px;color:var(--muted)">Reassign below</div></div></div>
+              <select onChange="{{ reassign }}" style="{{ fin }}"><option>{{ selStaffN }}</option><option>Nadia Fernando</option><option>Roshan Perera</option><option>Imran Haque</option></select>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px">
+              <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Quick actions</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <button onClick="{{ goJobNew }}" style="padding:9px;border-radius:8px;background:var(--primary);color:var(--on-primary);border:none;font-weight:600;font-size:13px;cursor:pointer">Add a job recommendation</button>
+                <button onClick="{{ toastDoc }}" style="padding:9px;border-radius:8px;background:var(--surface-2);border:1px solid var(--border);font-weight:600;font-size:13px;cursor:pointer;color:var(--on-surface)">Upload document</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ ADMIN: ADD JOB (fit rubric + source) ============ -->
+      <sc-if value="{{ isAJobNew }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:24px 28px;max-width:980px">
+        <h1 style="font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 4px">Add job recommendation</h1>
+        <p style="color:var(--muted);margin:0 0 20px;font-size:14px">For {{ selUser.name }} · the fit score is computed from the rubric below, not typed by hand.</p>
+        <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:18px;align-items:start">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;display:flex;flex-direction:column;gap:14px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <div><label style="{{ flbl }}">Company</label><input placeholder="e.g. MAS Holdings" style="{{ fin }}"/></div>
+              <div><label style="{{ flbl }}">Job title</label><input placeholder="e.g. Senior UX Designer" style="{{ fin }}"/></div>
+              <div><label style="{{ flbl }}">Location</label><input placeholder="Colombo, LK" style="{{ fin }}"/></div>
+              <div><label style="{{ flbl }}">Source</label><select style="{{ fin }}"><option>LinkedIn</option><option>Indeed</option><option>Company site</option><option>Niche board</option><option>Referral</option><option>Other</option></select></div>
+              <div><label style="{{ flbl }}">Job URL</label><input placeholder="https://…" style="{{ fin }}"/></div>
+              <div><label style="{{ flbl }}">Deadline</label><input type="date" value="2026-07-10" style="{{ fin }}"/></div>
+            </div>
+            <div><label style="{{ flbl }}">Fit reason (shown to user)</label><textarea rows="2" placeholder="Why this is a good match…" style="{{ fin }}"></textarea></div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px">
+            <h2 style="font-size:15px;margin:0 0 4px">Fit rubric</h2>
+            <p style="font-size:12px;color:var(--muted);margin:0 0 16px">Weights: skills 40% · location/visa 20% · experience 20% · relevance 20%.</p>
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <div><div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:5px"><span>Skills match</span><span>{{ rSkills }}%</span></div><input type="range" min="0" max="100" value="{{ rSkills }}" onInput="{{ onSkills }}" style="width:100%;accent-color:var(--accent)"/></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:5px"><span>Location / visa fit</span><span>{{ rLoc }}%</span></div><input type="range" min="0" max="100" value="{{ rLoc }}" onInput="{{ onLoc }}" style="width:100%;accent-color:var(--accent)"/></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:5px"><span>Experience match</span><span>{{ rExp }}%</span></div><input type="range" min="0" max="100" value="{{ rExp }}" onInput="{{ onExp }}" style="width:100%;accent-color:var(--accent)"/></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:5px"><span>Role relevance</span><span>{{ rRel }}%</span></div><input type="range" min="0" max="100" value="{{ rRel }}" onInput="{{ onRel }}" style="width:100%;accent-color:var(--accent)"/></div>
+            </div>
+            <div style="margin-top:18px;padding:16px;border-radius:11px;background:{{ cfBg }};text-align:center">
+              <div style="font-size:12px;font-weight:600;color:{{ cfColor }}">Computed fit score</div>
+              <div style="font-family:var(--font-display);font-size:42px;font-weight:600;color:{{ cfColor }};line-height:1.1">{{ computedFit }}%</div>
+              <div style="font-size:13px;font-weight:700;color:{{ cfColor }}">{{ cfTier }} fit</div>
+            </div>
+            <button onClick="{{ saveJob }}" style="width:100%;margin-top:14px;padding:11px;border-radius:9px;background:var(--accent);color:#fff;border:none;font-weight:600;font-size:14px;cursor:pointer">Recommend to user</button>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ ADMIN: APPLICATIONS ============ -->
+      <sc-if value="{{ isAApps }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:24px 28px;max-width:1280px">
+        <h1 style="font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 4px">Applications</h1>
+        <p style="color:var(--muted);margin:0 0 18px;font-size:14px">All applications across users · the full operations workflow.</p>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+          <div style="display:grid;grid-template-columns:1.6fr 1.4fr 1fr 1fr 1.2fr;gap:12px;padding:11px 18px;background:var(--surface-2);border-bottom:1px solid var(--border);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)"><span>User</span><span>Role</span><span>Fit</span><span>Staff</span><span>Status</span></div>
+          <sc-for list="{{ allRows }}" as="r" hint-placeholder-count="10">
+            <div style="display:grid;grid-template-columns:1.6fr 1.4fr 1fr 1fr 1.2fr;gap:12px;padding:12px 18px;border-bottom:1px solid var(--border);align-items:center">
+              <span style="font-weight:600;font-size:13px">{{ r.uname }}</span>
+              <div style="min-width:0"><div style="font-size:13px;font-weight:500">{{ r.title }}</div><div style="font-size:12px;color:var(--muted)">{{ r.company }}</div></div>
+              <span style="display:inline-flex;width:fit-content;align-items:center;gap:5px;font-size:11px;font-weight:700;color:{{ r.fitC }};background:{{ r.fitB }};padding:3px 8px;border-radius:6px">{{ r.fit }}% {{ r.fitTier }}</span>
+              <span style="font-size:12px;color:var(--muted)">{{ r.staffN }}</span>
+              <span style="display:inline-flex;width:fit-content;align-items:center;gap:5px;font-size:11px;font-weight:700;color:{{ r.statusC }};background:{{ r.statusB }};padding:4px 9px;border-radius:7px">{{ r.statusLabel }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ ADMIN: QC QUEUE ============ -->
+      <sc-if value="{{ isAQC }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:24px 28px;max-width:980px">
+        <h1 style="font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 4px">QC queue</h1>
+        <p style="color:var(--muted);margin:0 0 20px;font-size:14px">Applications in drafting or QC. Nothing moves to Applied without a QC Lead's sign-off.</p>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <sc-for list="{{ qcRows }}" as="r" hint-placeholder-count="3">
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:16px;display:flex;gap:14px;align-items:flex-start">
+              <span style="display:grid;place-items:center;width:46px;height:46px;border-radius:10px;font-weight:700;font-size:14px;background:{{ r.statusB }};color:{{ r.statusC }};flex-shrink:0">{{ r.fit }}%</span>
+              <div style="flex:1;min-width:0">
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-weight:600;font-size:15px">{{ r.title }} · {{ r.company }}</span><span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:{{ r.statusC }};background:{{ r.statusB }};padding:3px 8px;border-radius:6px">{{ r.statusLabel }}</span></div>
+                <div style="font-size:12px;color:var(--muted);margin:4px 0">{{ r.uname }} · prepared by {{ r.staffN }} · deadline {{ r.deadlineFmt }}</div>
+                <sc-if value="{{ r.notesInt }}" hint-placeholder-val=""><div style="font-size:13px;color:var(--muted);line-height:1.5;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-top:6px">{{ r.notesInt }}</div></sc-if>
+                <div style="display:flex;gap:9px;margin-top:12px">
+                  <button onClick="{{ r.onSignoff }}" style="padding:8px 16px;border-radius:8px;background:var(--primary);color:var(--on-primary);border:none;font-weight:600;font-size:13px;cursor:pointer">Approve &amp; mark applied</button>
+                  <button onClick="{{ r.onReturn }}" style="padding:8px 16px;border-radius:8px;background:var(--surface);color:var(--muted);border:1px solid var(--border-2);font-weight:600;font-size:13px;cursor:pointer">Return to drafting</button>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ ADMIN: PAYMENTS ============ -->
+      <sc-if value="{{ isAPay }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:24px 28px;max-width:1180px">
+        <h1 style="font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 4px">Payments</h1>
+        <p style="color:var(--muted);margin:0 0 20px;font-size:14px">Manual reconciliation · each status change is logged with who and when.</p>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <sc-for list="{{ payCards }}" as="p" hint-placeholder-count="6">
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap">
+                <div style="display:flex;gap:12px;align-items:center"><span style="display:grid;place-items:center;width:42px;height:42px;border-radius:10px;background:var(--surface-3);color:var(--primary);font-weight:700;font-size:13px">{{ p.uInitials }}</span><div><div style="font-weight:600;font-size:15px">{{ p.uname }}</div><div style="font-size:12px;color:var(--muted)">{{ p.pkg }} · {{ p.method }} · {{ p.dateFmt }}</div></div></div>
+                <div style="display:flex;gap:10px;align-items:center">
+                  <div style="text-align:right"><div style="font-weight:700;font-size:16px">{{ p.paidFmt }} <span style="font-size:12px;color:var(--muted);font-weight:500">/ {{ p.amountFmt }}</span></div><div style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">{{ p.ref }}</div></div>
+                  <span style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:{{ p.statusColor }};background:{{ p.statusBg }};padding:6px 11px;border-radius:8px">{{ p.statusLabel }}</span>
+                </div>
+              </div>
+              <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:9px">Audit trail</div>
+                <div style="display:flex;flex-direction:column;gap:7px">
+                  <sc-for list="{{ p.trailDec }}" as="t" hint-placeholder-count="2">
+                    <div style="display:flex;gap:10px;align-items:center;font-size:13px"><span style="width:7px;height:7px;border-radius:50%;background:var(--primary);flex-shrink:0"></span><span style="font-weight:600">{{ t.a }}</span><span style="color:var(--muted)">{{ t.act }}</span><span style="margin-left:auto;font-family:var(--font-mono);font-size:11px;color:var(--muted)">{{ t.t }}</span></div>
+                  </sc-for>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:12px">
+                  <button onClick="{{ p.onPaid }}" style="padding:7px 13px;border-radius:8px;background:var(--surface-2);border:1px solid var(--border);font-weight:600;font-size:12px;cursor:pointer;color:var(--on-surface)">Mark Paid</button>
+                  <button onClick="{{ p.onPartial }}" style="padding:7px 13px;border-radius:8px;background:var(--surface-2);border:1px solid var(--border);font-weight:600;font-size:12px;cursor:pointer;color:var(--on-surface)">Partial</button>
+                  <button onClick="{{ p.onRefund }}" style="padding:7px 13px;border-radius:8px;background:var(--surface-2);border:1px solid var(--border);font-weight:600;font-size:12px;cursor:pointer;color:var(--destructive)">Refund</button>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ ADMIN: STAFF CAPACITY ============ -->
+      <sc-if value="{{ isAStaff }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:24px 28px;max-width:1080px">
+        <h1 style="font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 4px">Team capacity</h1>
+        <p style="color:var(--muted);margin:0 0 18px;font-size:14px">Capacity model: ~12 active users per specialist at ~35 min/user/week. Reassign before anyone hits capacity.</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px"><div style="font-size:13px;color:var(--muted)">Team headcount</div><div style="font-family:var(--font-display);font-size:30px;font-weight:600">{{ staffCount }}</div></div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px"><div style="font-size:13px;color:var(--muted)">Active load</div><div style="font-family:var(--font-display);font-size:30px;font-weight:600">{{ totalLoad }} <span style="font-size:15px;color:var(--muted)">/ {{ totalCap }}</span></div></div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px"><div style="font-size:13px;color:var(--muted)">Open capacity</div><div style="font-family:var(--font-display);font-size:30px;font-weight:600;color:var(--primary)">{{ openCap }} users</div></div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+          <sc-for list="{{ staffCards }}" as="s" hint-placeholder-count="4">
+            <div style="padding:16px 18px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1.4fr 2fr 1fr;gap:16px;align-items:center">
+              <div style="display:flex;align-items:center;gap:11px"><span style="display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:var(--surface-3);color:var(--primary);font-weight:700;font-size:13px">{{ s.initials }}</span><div><div style="font-weight:600;font-size:14px">{{ s.name }}</div><div style="font-size:12px;color:var(--muted)">{{ s.role }}</div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span style="color:var(--muted)">{{ s.load }} of {{ s.max }} users</span><span style="font-weight:600">{{ s.utilPct }}</span></div><div style="height:9px;border-radius:99px;background:var(--surface-3);overflow:hidden"><div style="height:100%;width:{{ s.utilPct }};background:{{ s.barColor }};border-radius:99px"></div></div></div>
+              <span style="justify-self:end;font-size:12px;font-weight:700;color:{{ s.barColor }}">{{ s.status }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ ADMIN: NOTIFICATION TEMPLATES ============ -->
+      <sc-if value="{{ isANotify }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:24px 28px;max-width:920px">
+        <h1 style="font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 4px">Notification templates</h1>
+        <p style="color:var(--muted);margin:0 0 20px;font-size:14px">The exact copy sent to users on each event. Variables in {curly braces} are filled at send time.</p>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <sc-for list="{{ templates }}" as="t" hint-placeholder-count="5">
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px"><span style="font-weight:700;font-size:15px">{{ t.key }}</span><span style="font-size:11px;font-weight:600;color:var(--primary);background:var(--surface-3);padding:4px 10px;border-radius:7px">{{ t.trigger }}</span></div>
+              <div style="font-size:13px;font-weight:600;margin-bottom:4px">Subject: <span style="font-weight:500;color:var(--muted)">{{ t.subject }}</span></div>
+              <div style="font-size:13px;color:var(--muted);line-height:1.6;background:var(--surface-2);border:1px solid var(--border);border-radius:9px;padding:13px;margin-top:8px;font-family:var(--font-mono)">{{ t.body }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ ADMIN: EXPORT ============ -->
+      <sc-if value="{{ isAExport }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:24px 28px;max-width:780px">
+        <h1 style="font-family:var(--font-display);font-weight:500;font-size:28px;margin:0 0 4px">Export data</h1>
+        <p style="color:var(--muted);margin:0 0 20px;font-size:14px">Download operational data as CSV for reporting and reconciliation.</p>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <sc-for list="{{ exports }}" as="e" hint-placeholder-count="4">
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:16px;display:flex;align-items:center;gap:13px">
+              <span style="display:grid;place-items:center;width:42px;height:42px;border-radius:10px;background:var(--surface-2);color:var(--primary)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/></svg></span>
+              <div style="flex:1"><div style="font-weight:600;font-size:14px">{{ e.name }}</div><div style="font-size:12px;color:var(--muted)">{{ e.rows }} rows · {{ e.cols }}</div></div>
+              <button onClick="{{ doExport }}" style="display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:9px;background:var(--primary);color:var(--on-primary);border:none;font-weight:600;font-size:13px;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 11l5 5 5-5M5 20h14"/></svg>Download</button>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+    </main>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isPublic }}" hint-placeholder-val="{{ true }}">
+  <main>
+    <!-- ================= HOME ================= -->
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+    <div>
+      <section style="position:relative;overflow:hidden;background:var(--surface);border-bottom:1px solid var(--border)">
+        <div style="max-width:1120px;margin:0 auto;padding:64px 24px 56px;display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center">
+          <div>
+            <span style="display:inline-flex;align-items:center;gap:8px;padding:6px 13px;border-radius:999px;background:var(--surface-2);border:1px solid var(--border);font-size:13px;font-weight:600;color:var(--primary)">
+              <span style="width:7px;height:7px;border-radius:50%;background:var(--accent)"></span>
+              Human-managed · Research-led
+            </span>
+            <h1 style="font-family:var(--font-display);font-weight:500;font-size:52px;line-height:1.08;letter-spacing:-.02em;margin:20px 0 0">Your personal job application team.</h1>
+            <p style="font-size:18px;line-height:1.6;color:var(--muted);margin:18px 0 0;max-width:30em">We help students, graduates and busy professionals find suitable jobs, prepare stronger applications, and apply with confidence. Our trained team researches roles, checks your fit, tailors your CV and motivation letter, and submits on your behalf.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:28px">
+              <button onClick="{{ toSignup }}" style="padding:14px 24px;border-radius:10px;background:var(--accent);color:#fff;border:none;font-weight:600;font-size:15px;cursor:pointer">Start free — 2 applications</button>
+              <button onClick="{{ toHow }}" style="padding:14px 24px;border-radius:10px;background:var(--surface);color:var(--on-surface);border:1px solid var(--border-2);font-weight:600;font-size:15px;cursor:pointer">See how it works</button>
+            </div>
+            <p style="font-size:13px;color:var(--muted);margin-top:14px">No card required. Pay only when you are satisfied.</p>
+          </div>
+          <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:var(--shadow)">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 6px 12px;border-bottom:1px solid var(--border)">
+              <span style="font-size:13px;font-weight:600;color:var(--muted)">Your dashboard · this week</span>
+              <span style="font-size:12px;color:var(--muted)">Nandini R.</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">
+              <div style="display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:13px 14px">
+                <span style="display:grid;place-items:center;width:42px;height:42px;border-radius:10px;background:#E3F3E8;color:#1F7A4D;font-weight:700;font-size:14px">88%</span>
+                <div style="flex:1;min-width:0"><div style="font-weight:600;font-size:14px">Senior UX Designer · MAS Holdings</div><div style="font-size:12px;color:var(--muted)">High fit · Applied · proof saved</div></div>
+                <span style="font-size:11px;font-weight:700;color:#1F7A4D;background:#E3F3E8;padding:4px 9px;border-radius:7px">Applied</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:13px 14px">
+                <span style="display:grid;place-items:center;width:42px;height:42px;border-radius:10px;background:#EFE8F8;color:#6B3FA0;font-weight:700;font-size:14px">82%</span>
+                <div style="flex:1;min-width:0"><div style="font-weight:600;font-size:14px">Product Designer · WSO2</div><div style="font-size:12px;color:var(--muted)">Interview scheduled 29 Jun</div></div>
+                <span style="font-size:11px;font-weight:700;color:#6B3FA0;background:#EFE8F8;padding:4px 9px;border-radius:7px">Interview</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;background:var(--surface);border:1px dashed var(--border-2);border-radius:11px;padding:13px 14px">
+                <span style="display:grid;place-items:center;width:42px;height:42px;border-radius:10px;background:#FBF0D9;color:#8A6100;font-weight:700;font-size:14px">58%</span>
+                <div style="flex:1;min-width:0"><div style="font-weight:600;font-size:14px">UX Researcher · Dialog Axiata</div><div style="font-size:12px;color:var(--muted)">Awaiting your approval</div></div>
+                <span style="font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:4px 9px;border-radius:7px">Review</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section style="max-width:1120px;margin:0 auto;padding:40px 24px">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px">
+          <div style="text-align:center"><div style="font-family:var(--font-display);font-size:34px;font-weight:600;color:var(--primary)">2 free</div><div style="font-size:13px;color:var(--muted);margin-top:4px">applications to start</div></div>
+          <div style="text-align:center"><div style="font-family:var(--font-display);font-size:34px;font-weight:600;color:var(--primary)">100%</div><div style="font-size:13px;color:var(--muted);margin-top:4px">human-prepared & checked</div></div>
+          <div style="text-align:center"><div style="font-family:var(--font-display);font-size:34px;font-weight:600;color:var(--primary)">3</div><div style="font-size:13px;color:var(--muted);margin-top:4px">working-day match SLA</div></div>
+          <div style="text-align:center"><div style="font-family:var(--font-display);font-size:34px;font-weight:600;color:var(--primary)">Proof</div><div style="font-size:13px;color:var(--muted);margin-top:4px">of every submission</div></div>
+        </div>
+      </section>
+
+      <section style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+        <div style="max-width:1120px;margin:0 auto;padding:56px 24px">
+          <h2 style="font-family:var(--font-display);font-weight:500;font-size:34px;letter-spacing:-.01em;margin:0 0 6px">How it works</h2>
+          <p style="color:var(--muted);margin:0 0 32px;font-size:16px">Four steps. Real people at every one.</p>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px">
+            <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:22px"><div style="font-family:var(--font-display);font-size:22px;color:var(--accent);font-weight:600">01</div><h3 style="font-size:17px;margin:10px 0 6px">Tell us about you</h3><p style="font-size:14px;color:var(--muted);line-height:1.55;margin:0">Complete a guided intake — experience, target roles, documents. About 12 minutes.</p></div>
+            <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:22px"><div style="font-family:var(--font-display);font-size:22px;color:var(--accent);font-weight:600">02</div><h3 style="font-size:17px;margin:10px 0 6px">We research & score</h3><p style="font-size:14px;color:var(--muted);line-height:1.55;margin:0">Your team finds roles and rates each one with a clear fit score and an honest reason.</p></div>
+            <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:22px"><div style="font-family:var(--font-display);font-size:22px;color:var(--accent);font-weight:600">03</div><h3 style="font-size:17px;margin:10px 0 6px">You approve</h3><p style="font-size:14px;color:var(--muted);line-height:1.55;margin:0">Nothing is sent without your say-so. Approve the roles you like, skip the rest.</p></div>
+            <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:22px"><div style="font-family:var(--font-display);font-size:22px;color:var(--accent);font-weight:600">04</div><h3 style="font-size:17px;margin:10px 0 6px">We apply & prove it</h3><p style="font-size:14px;color:var(--muted);line-height:1.55;margin:0">We tailor, QC and submit — then log proof of every application to your dashboard.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section style="max-width:1120px;margin:0 auto;padding:56px 24px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center">
+          <div>
+            <h2 style="font-family:var(--font-display);font-weight:500;font-size:32px;letter-spacing:-.01em;margin:0 0 16px">Not a bot. A team.</h2>
+            <p style="font-size:16px;color:var(--muted);line-height:1.65;margin:0 0 18px">We don't mass auto-apply or scrape job boards and fire off generic applications. Trained specialists in Sri Lanka research roles, tailor each application, and run a quality check before anything is submitted in your name.</p>
+            <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px">
+              <li style="display:flex;gap:11px;align-items:flex-start;font-size:15px"><span style="color:var(--primary);margin-top:2px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Every application reviewed by a person before it's sent</li>
+              <li style="display:flex;gap:11px;align-items:flex-start;font-size:15px"><span style="color:var(--primary);margin-top:2px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Sensitive documents never sent to external AI tools</li>
+              <li style="display:flex;gap:11px;align-items:flex-start;font-size:15px"><span style="color:var(--primary);margin-top:2px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>You approve every role before we apply</li>
+            </ul>
+          </div>
+          <div style="background:var(--primary);color:var(--on-primary);border-radius:16px;padding:32px">
+            <div style="font-family:var(--font-display);font-size:21px;line-height:1.45;font-weight:400">“I had two interviews in three weeks. They handled the applications I never had time to finish — and showed me proof of every single one.”</div>
+            <div style="margin-top:20px;display:flex;align-items:center;gap:11px"><span style="display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.15);font-weight:600">ND</span><div><div style="font-weight:600;font-size:14px">Nandini R.</div><div style="font-size:13px;opacity:.75">Senior UX Designer · Colombo</div></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section style="background:var(--surface);border-top:1px solid var(--border)">
+        <div style="max-width:1120px;margin:0 auto;padding:56px 24px;text-align:center">
+          <h2 style="font-family:var(--font-display);font-weight:500;font-size:34px;margin:0 0 10px">Start with two free applications.</h2>
+          <p style="color:var(--muted);font-size:16px;margin:0 0 24px">Prove the quality first. Choose a package only when you're satisfied.</p>
+          <button onClick="{{ toSignup }}" style="padding:14px 28px;border-radius:10px;background:var(--accent);color:#fff;border:none;font-weight:600;font-size:15px;cursor:pointer">Create your account</button>
+        </div>
+      </section>
+    </div>
+    </sc-if>
+
+    <!-- ================= HOW IT WORKS ================= -->
+    <sc-if value="{{ isHow }}" hint-placeholder-val="{{ true }}">
+    <div style="max-width:920px;margin:0 auto;padding:56px 24px">
+      <h1 style="font-family:var(--font-display);font-weight:500;font-size:42px;letter-spacing:-.02em;margin:0 0 12px">How ATG Apply works</h1>
+      <p style="font-size:18px;color:var(--muted);line-height:1.6;margin:0 0 40px;max-width:38em">A human-managed service from intake to submission. Here is the full 11-step journey your application takes — and exactly where you stay in control.</p>
+      <div style="display:flex;flex-direction:column;gap:0">
+        <sc-for list="{{ journey }}" as="j" hint-placeholder-count="11">
+          <div style="display:grid;grid-template-columns:48px 1fr;gap:18px;padding:16px 0;border-bottom:1px solid var(--border)">
+            <span style="display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--surface);border:1.5px solid var(--primary);color:var(--primary);font-weight:700;font-size:15px">{{ j.n }}</span>
+            <div><div style="font-weight:600;font-size:16px;margin-bottom:3px">{{ j.t }}</div><div style="font-size:14px;color:var(--muted);line-height:1.55">{{ j.d }}</div></div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="margin-top:36px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:24px">
+        <h3 style="margin:0 0 14px;font-size:18px">How fit scores are decided</h3>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px"><div style="display:flex;align-items:center;gap:8px;font-weight:700;color:#1F7A4D"><span style="width:9px;height:9px;border-radius:50%;background:#1F7A4D"></span>High · 80–100%</div><p style="font-size:13px;color:var(--muted);margin:8px 0 0;line-height:1.5">Strong match. Recommended to apply.</p></div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px"><div style="display:flex;align-items:center;gap:8px;font-weight:700;color:#8A6100"><span style="width:9px;height:9px;border-radius:50%;background:#B7791F"></span>Medium · 50–79%</div><p style="font-size:13px;color:var(--muted);margin:8px 0 0;line-height:1.5">Possible match — some skills, visa or experience gaps.</p></div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px"><div style="display:flex;align-items:center;gap:8px;font-weight:700;color:#6B6F6B"><span style="width:9px;height:9px;border-radius:50%;background:#9AA0A0"></span>Low · under 50%</div><p style="font-size:13px;color:var(--muted);margin:8px 0 0;line-height:1.5">Weak match. Not recommended unless there's a special reason.</p></div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ================= PRICING ================= -->
+    <sc-if value="{{ isPricing }}" hint-placeholder-val="{{ true }}">
+    <div style="max-width:1120px;margin:0 auto;padding:56px 24px">
+      <div style="text-align:center;margin-bottom:40px">
+        <h1 style="font-family:var(--font-display);font-weight:500;font-size:42px;letter-spacing:-.02em;margin:0 0 10px">Simple, honest pricing</h1>
+        <p style="font-size:17px;color:var(--muted);margin:0">Start with 2 free applications. Pay only when you're satisfied.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px">
+        <sc-for list="{{ pricingCards }}" as="p" hint-placeholder-count="4">
+          <div style="{{ p.cardStyle }}">
+            <sc-if value="{{ p.showBadge }}" hint-placeholder-val=""><span style="position:absolute;top:-11px;left:22px;padding:4px 11px;border-radius:7px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;letter-spacing:.03em">{{ p.badge }}</span></sc-if>
+            <div><div style="font-family:var(--font-display);font-size:21px;font-weight:600">{{ p.name }}</div><div style="{{ p.blurbStyle }}">{{ p.blurb }}</div></div>
+            <div style="display:flex;align-items:baseline;gap:6px"><span style="font-family:var(--font-display);font-size:40px;font-weight:600;line-height:1">{{ p.priceFmt }}</span><span style="{{ p.appsStyle }}">{{ p.unitFmt }}</span></div>
+            <div style="{{ p.appsStyle }}">{{ p.apps }} applications</div>
+            <div style="display:flex;flex-direction:column;gap:9px">
+              <sc-for list="{{ p.feats }}" as="f" hint-placeholder-count="4">
+                <div style="display:flex;gap:9px;align-items:flex-start;font-size:13.5px;line-height:1.4"><span style="width:6px;height:6px;border-radius:50%;background:{{ f.dot }};margin-top:6px;flex-shrink:0"></span><span style="color:{{ f.tc }}">{{ f.t }}</span></div>
+              </sc-for>
+            </div>
+            <button onClick="{{ p.onCta }}" style="{{ p.ctaStyle }}">{{ p.cta }}</button>
+          </div>
+        </sc-for>
+      </div>
+      <div style="margin-top:28px;display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;font-size:14px;color:var(--muted)">
+        <span style="display:inline-flex;align-items:center;gap:7px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6z"/></svg> Payment by bank transfer or Wise · marked manually</span>
+        <span>·</span>
+        <span>14-day refund window — see <button onClick="{{ toTerms }}" style="background:none;border:none;color:var(--primary);font-weight:600;cursor:pointer;font-size:14px;padding:0;text-decoration:underline">Terms</button></span>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ================= CONTACT ================= -->
+    <sc-if value="{{ isContact }}" hint-placeholder-val="{{ true }}">
+    <div style="max-width:920px;margin:0 auto;padding:56px 24px">
+      <h1 style="font-family:var(--font-display);font-weight:500;font-size:42px;letter-spacing:-.02em;margin:0 0 12px">Contact &amp; support</h1>
+      <p style="font-size:17px;color:var(--muted);margin:0 0 36px;max-width:34em">A real person replies within one working day. Existing customers can also message their team directly from the dashboard.</p>
+      <div style="display:grid;grid-template-columns:1.2fr .8fr;gap:28px">
+        <form onSubmit="{{ preventSubmit }}" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;display:flex;flex-direction:column;gap:14px">
+          <div><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Your name</label><input placeholder="Tharindu W." style="width:100%;padding:11px 13px;border-radius:9px;border:1px solid var(--border-2);background:var(--surface-2);font-size:14px;color:inherit"/></div>
+          <div><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Email</label><input placeholder="you@email.com" style="width:100%;padding:11px 13px;border-radius:9px;border:1px solid var(--border-2);background:var(--surface-2);font-size:14px;color:inherit"/></div>
+          <div><label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Message</label><textarea rows="5" placeholder="How can we help?" style="width:100%;padding:11px 13px;border-radius:9px;border:1px solid var(--border-2);background:var(--surface-2);font-size:14px;color:inherit;resize:vertical"></textarea></div>
+          <button onClick="{{ sendContact }}" type="button" style="align-self:flex-start;padding:12px 22px;border-radius:9px;background:var(--accent);color:#fff;border:none;font-weight:600;font-size:14px;cursor:pointer">Send message</button>
+        </form>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:18px"><div style="font-size:13px;color:var(--muted);margin-bottom:4px">Email</div><div style="font-weight:600">hello@atgconcordia.com</div></div>
+          <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:18px"><div style="font-size:13px;color:var(--muted);margin-bottom:4px">WhatsApp</div><div style="font-weight:600">+94 76 000 0000</div></div>
+          <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:18px"><div style="font-size:13px;color:var(--muted);margin-bottom:4px">Operating hours</div><div style="font-weight:600">Mon–Sat · 9:00–18:00 IST</div></div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ================= SIGNUP WIZARD ================= -->
+    <sc-if value="{{ isSignup }}" hint-placeholder-val="{{ true }}">
+    <div style="max-width:1080px;margin:0 auto;padding:40px 24px 64px">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:8px;flex-wrap:wrap">
+        <div>
+          <h1 style="font-family:var(--font-display);font-weight:500;font-size:34px;letter-spacing:-.01em;margin:0">Create your profile</h1>
+          <p style="color:var(--muted);margin:6px 0 0;font-size:15px">Step {{ stepNum }} of {{ totalSteps }} · {{ stepLabel }} · about 12 minutes total</p>
+        </div>
+        <button onClick="{{ saveDraft }}" style="display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:9px;background:var(--surface);border:1px solid var(--border-2);font-weight:600;font-size:13px;cursor:pointer;color:var(--muted)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+          Save draft
+        </button>
+      </div>
+      <div style="height:6px;border-radius:99px;background:var(--surface-3);overflow:hidden;margin:14px 0 24px"><div style="height:100%;width:{{ stepPct }};background:var(--accent);border-radius:99px;transition:width .3s ease-out"></div></div>
+
+      <div style="display:grid;grid-template-columns:230px 1fr;gap:28px;align-items:start">
+        <nav style="display:flex;flex-direction:column;gap:2px;position:sticky;top:80px">
+          <sc-for list="{{ wsteps }}" as="w" hint-placeholder-count="8">
+            <button onClick="{{ w.onClick }}" style="{{ w.style }}">
+              <span style="display:grid;place-items:center;width:24px;height:24px;border-radius:50%;font-size:12px;font-weight:700;flex-shrink:0;background:{{ w.dotBg }};color:{{ w.dotColor }};border:1.5px solid {{ w.dotBorder }}">{{ w.n }}</span>
+              {{ w.label }}
+            </button>
+          </sc-for>
+        </nav>
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;min-height:380px">
+          <h2 style="font-family:var(--font-display);font-weight:500;font-size:24px;margin:0 0 4px">{{ stepLabel }}</h2>
+          <p style="color:var(--muted);font-size:14px;margin:0 0 22px">{{ stepHint }}</p>
+
+          <sc-if value="{{ isStep0 }}" hint-placeholder-val="{{ true }}"><div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div><label style="{{ flbl }}">Full name</label><input value="Tharindu Wickramasinghe" style="{{ fin }}"/></div>
+            <div><label style="{{ flbl }}">Email</label><input value="tharindu.w@gmail.com" style="{{ fin }}"/></div>
+            <div><label style="{{ flbl }}">Phone / WhatsApp</label><input value="+94 71 555 0142" style="{{ fin }}"/></div>
+            <div><label style="{{ flbl }}">Country of residence</label><input value="Sri Lanka" style="{{ fin }}"/></div>
+            <div><label style="{{ flbl }}">Nationality</label><input value="Sri Lankan" style="{{ fin }}"/></div>
+            <div><label style="{{ flbl }}">LinkedIn URL</label><input value="linkedin.com/in/tharindu-w" style="{{ fin }}"/></div>
+            <div style="grid-column:span 2"><label style="{{ flbl }}">Portfolio URL <span style="{{ fopt }}">optional</span></label><input placeholder="dribbble.com/…" style="{{ fin }}"/></div>
+          </div></sc-if>
+
+          <sc-if value="{{ isStep1 }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;gap:16px">
+            <div><label style="{{ flbl }}">Target countries</label><input value="Sri Lanka, UAE, Singapore" style="{{ fin }}"/></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div><label style="{{ flbl }}">Visa / work authorization</label><select style="{{ fin }}"><option>Citizen / no sponsorship needed</option><option>Have permit for target country</option><option>Need sponsorship</option></select></div>
+              <div><label style="{{ flbl }}">Availability</label><select style="{{ fin }}"><option>Immediately</option><option>2 weeks notice</option><option>1 month notice</option></select></div>
+            </div>
+            <div><label style="{{ flbl }}">Relocation preference</label><div style="display:flex;gap:10px;flex-wrap:wrap">
+              <span style="{{ fchipOn }}">Open to relocate</span><span style="{{ fchip }}">Hybrid only</span><span style="{{ fchip }}">Stay in current city</span></div></div>
+          </div></sc-if>
+
+          <sc-if value="{{ isStep2 }}" hint-placeholder-val="{{ true }}"><div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div><label style="{{ flbl }}">Highest degree</label><input value="BSc (Hons) Information Technology" style="{{ fin }}"/></div>
+            <div><label style="{{ flbl }}">University</label><input value="University of Moratuwa" style="{{ fin }}"/></div>
+            <div><label style="{{ flbl }}">Country</label><input value="Sri Lanka" style="{{ fin }}"/></div>
+            <div><label style="{{ flbl }}">Graduation date</label><input value="2019-08" type="month" style="{{ fin }}"/></div>
+            <div style="grid-column:span 2"><label style="{{ flbl }}">Key modules</label><input value="HCI, Interaction Design, Software Engineering" style="{{ fin }}"/></div>
+            <div style="grid-column:span 2"><label style="{{ flbl }}">Certifications <span style="{{ fopt }}">optional</span></label><input value="Google UX Design Certificate" style="{{ fin }}"/></div>
+          </div></sc-if>
+
+          <sc-if value="{{ isStep3 }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;gap:14px">
+            <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <div><label style="{{ flbl }}">Job title</label><input value="UX / Product Designer" style="{{ fin }}"/></div>
+              <div><label style="{{ flbl }}">Employer</label><input value="Creative Hub (Pvt) Ltd" style="{{ fin }}"/></div>
+              <div><label style="{{ flbl }}">From</label><input value="2021-03" type="month" style="{{ fin }}"/></div>
+              <div><label style="{{ flbl }}">To</label><input value="Present" style="{{ fin }}"/></div>
+              <div style="grid-column:span 2"><label style="{{ flbl }}">Key achievements &amp; tools</label><textarea rows="2" style="{{ fin }}">Led redesign of 3 fintech apps; Figma, design systems, user research.</textarea></div>
+            </div>
+            <button style="align-self:flex-start;display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:9px;background:var(--surface);border:1px dashed var(--border-2);color:var(--primary);font-weight:600;font-size:13px;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add another role</button>
+          </div></sc-if>
+
+          <sc-if value="{{ isStep4 }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;gap:16px">
+            <div><label style="{{ flbl }}">Target job titles</label><input value="Senior UX Designer, Product Designer" style="{{ fin }}"/></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div><label style="{{ flbl }}">Sectors</label><input value="Software, Fintech, Telecom" style="{{ fin }}"/></div>
+              <div><label style="{{ flbl }}">Cities / countries</label><input value="Colombo, Dubai, Remote" style="{{ fin }}"/></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div><label style="{{ flbl }}">Work mode</label><select style="{{ fin }}"><option>Hybrid preferred</option><option>Remote</option><option>On-site</option></select></div>
+              <div><label style="{{ flbl }}">Expected salary <span style="{{ fopt }}">optional</span></label><input value="LKR 350,000+/mo" style="{{ fin }}"/></div>
+            </div>
+          </div></sc-if>
+
+          <sc-if value="{{ isStep5 }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;gap:16px">
+            <div><label style="{{ flbl }}">Technical skills</label><input value="Figma, Design systems, Prototyping, User research, HTML/CSS" style="{{ fin }}"/></div>
+            <div><label style="{{ flbl }}">Soft skills</label><input value="Stakeholder communication, Facilitation, Mentoring" style="{{ fin }}"/></div>
+            <div><label style="{{ flbl }}">Languages &amp; proficiency</label><div style="display:flex;gap:10px;flex-wrap:wrap"><span style="{{ fchipOn }}">English · Fluent</span><span style="{{ fchipOn }}">Sinhala · Native</span><span style="{{ fchipOn }}">Tamil · Conversational</span></div></div>
+          </div></sc-if>
+
+          <sc-if value="{{ isStep6 }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;align-items:center;gap:14px;border:1px solid var(--border);border-radius:11px;padding:16px;background:var(--surface-2)"><span style="display:grid;place-items:center;width:42px;height:42px;border-radius:10px;background:#E3F3E8;color:#1F7A4D"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><div style="flex:1"><div style="font-weight:600;font-size:14px">CV — Tharindu_W_CV.pdf</div><div style="font-size:12px;color:var(--muted)">Uploaded · 214 KB</div></div><span style="font-size:12px;font-weight:600;color:var(--primary)">Replace</span></div>
+            <div style="display:flex;align-items:center;gap:14px;border:1px dashed var(--border-2);border-radius:11px;padding:16px;background:var(--surface);cursor:pointer"><span style="display:grid;place-items:center;width:42px;height:42px;border-radius:10px;background:var(--surface-3);color:var(--muted)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5M5 20h14"/></svg></span><div style="flex:1"><div style="font-weight:600;font-size:14px">Cover letter <span style="{{ fopt }}">optional</span></div><div style="font-size:12px;color:var(--muted)">PDF or DOCX, up to 5 MB</div></div></div>
+            <div style="display:flex;align-items:center;gap:14px;border:1px dashed var(--border-2);border-radius:11px;padding:16px;background:var(--surface);cursor:pointer"><span style="display:grid;place-items:center;width:42px;height:42px;border-radius:10px;background:var(--surface-3);color:var(--muted)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5M5 20h14"/></svg></span><div style="flex:1"><div style="font-weight:600;font-size:14px">Certificates <span style="{{ fopt }}">if useful</span></div><div style="font-size:12px;color:var(--muted)">Degree, professional certifications</div></div></div>
+          </div></sc-if>
+
+          <sc-if value="{{ isStep7 }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;gap:16px">
+            <div><label style="{{ flbl }}">Job links you'd like reviewed <span style="{{ fopt }}">optional</span></label><textarea rows="2" placeholder="Paste any specific job postings here…" style="{{ fin }}"></textarea></div>
+            <label style="display:flex;gap:12px;align-items:flex-start;padding:15px;border:1px solid var(--border);border-radius:11px;background:var(--surface-2);cursor:pointer">
+              <input type="checkbox" checked="{{ consent1 }}" onChange="{{ toggleC1 }}" style="margin-top:3px;width:18px;height:18px;accent-color:var(--primary)"/>
+              <span style="font-size:14px;line-height:1.55">I consent to ATG Concordia processing my personal data to provide this service, in line with the <button onClick="{{ toPrivacy }}" type="button" style="background:none;border:none;color:var(--primary);font-weight:600;cursor:pointer;padding:0;font-size:14px;text-decoration:underline">Privacy Policy</button>.</span>
+            </label>
+            <label style="display:flex;gap:12px;align-items:flex-start;padding:15px;border:1px solid var(--border);border-radius:11px;background:var(--surface-2);cursor:pointer">
+              <input type="checkbox" checked="{{ consent2 }}" onChange="{{ toggleC2 }}" style="margin-top:3px;width:18px;height:18px;accent-color:var(--primary)"/>
+              <span style="font-size:14px;line-height:1.55">I give the ATG team permission to prepare and submit job applications on my behalf. I understand I approve each role before it is submitted, and that placement is not guaranteed.</span>
+            </label>
+          </div></sc-if>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:28px;padding-top:20px;border-top:1px solid var(--border)">
+            <button onClick="{{ prevStep }}" style="{{ backBtnStyle }}">Back</button>
+            <div style="display:flex;gap:10px;align-items:center">
+              <sc-if value="{{ draftSaved }}" hint-placeholder-val=""><span style="font-size:13px;color:var(--primary);font-weight:600">Draft saved</span></sc-if>
+              <sc-if value="{{ isLastStep }}" hint-placeholder-val="{{ true }}">
+                <button onClick="{{ finishSignup }}" style="padding:12px 24px;border-radius:9px;background:var(--accent);color:#fff;border:none;font-weight:600;font-size:14px;cursor:pointer">Submit profile &amp; get 2 free</button>
+              </sc-if>
+              <sc-if value="{{ notLastStep }}" hint-placeholder-val="{{ true }}">
+                <button onClick="{{ nextStep }}" style="padding:12px 24px;border-radius:9px;background:var(--primary);color:var(--on-primary);border:none;font-weight:600;font-size:14px;cursor:pointer">Continue</button>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- ================= PRIVACY ================= -->
+    <sc-if value="{{ isPrivacy }}" hint-placeholder-val="{{ true }}">
+    <div style="max-width:820px;margin:0 auto;padding:56px 24px 72px">
+      <h1 style="font-family:var(--font-display);font-weight:500;font-size:40px;letter-spacing:-.02em;margin:0 0 8px">Privacy policy</h1>
+      <p style="color:var(--muted);margin:0 0 32px">Last updated 26 June 2026 · ATG Concordia (Pvt) Ltd</p>
+      <div>{{ privacyBody }}</div>
+    </div>
+    </sc-if>
+
+    <!-- ================= TERMS ================= -->
+    <sc-if value="{{ isTerms }}" hint-placeholder-val="{{ true }}">
+    <div style="max-width:820px;margin:0 auto;padding:56px 24px 72px">
+      <h1 style="font-family:var(--font-display);font-weight:500;font-size:40px;letter-spacing:-.02em;margin:0 0 8px">Terms of service</h1>
+      <p style="color:var(--muted);margin:0 0 32px">Last updated 26 June 2026 · ATG Concordia (Pvt) Ltd</p>
+      <div>{{ termsBody }}</div>
+    </div>
+    </sc-if>
+
+    <!-- ================= ARCHITECTURE ================= -->
+    <sc-if value="{{ isArch }}" hint-placeholder-val="{{ true }}">
+    <div>{{ archDoc }}</div>
+    </sc-if>
+
+    <footer style="background:var(--primary);color:var(--on-primary);margin-top:0">
+      <div style="max-width:1120px;margin:0 auto;padding:40px 24px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:24px">
+        <div>
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px"><span style="display:grid;place-items:center;width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.14);font-family:var(--font-display);font-weight:600;font-size:16px">a</span><span style="font-family:var(--font-display);font-weight:600;font-size:17px">ATG Apply</span></div>
+          <p style="font-size:13px;opacity:.75;line-height:1.6;margin:0;max-width:24em">Human-managed job applications. Research-led matching, prepared and submitted by a trained team.</p>
+        </div>
+        <div><div style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.6;margin-bottom:12px">Product</div><div style="display:flex;flex-direction:column;gap:9px;font-size:14px"><button onClick="{{ toHow }}" style="{{ footLink }}">How it works</button><button onClick="{{ toPricing }}" style="{{ footLink }}">Pricing</button><button onClick="{{ toSignup }}" style="{{ footLink }}">Start free</button></div></div>
+        <div><div style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.6;margin-bottom:12px">Company</div><div style="display:flex;flex-direction:column;gap:9px;font-size:14px"><button onClick="{{ toContact }}" style="{{ footLink }}">Contact</button><button onClick="{{ toArch }}" style="{{ footLink }}">System architecture</button></div></div>
+        <div><div style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.6;margin-bottom:12px">Legal</div><div style="display:flex;flex-direction:column;gap:9px;font-size:14px"><button onClick="{{ toPrivacy }}" style="{{ footLink }}">Privacy policy</button><button onClick="{{ toTerms }}" style="{{ footLink }}">Terms of service</button></div></div>
+      </div>
+      <div style="border-top:1px solid rgba(255,255,255,.12)"><div style="max-width:1120px;margin:0 auto;padding:16px 24px;font-size:12px;opacity:.6">© 2026 ATG Concordia (Pvt) Ltd · Colombo, Sri Lanka. A clickable V1 prototype.</div></div>
+    </footer>
+  </main>
+  </sc-if>
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="">
+    <div role="status" style="position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:100;display:flex;align-items:center;gap:10px;padding:13px 18px;border-radius:11px;background:var(--primary);color:var(--on-primary);box-shadow:var(--shadow);font-size:14px;font-weight:500;animation:fadeUp .25s ease-out">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+      {{ toast }}
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:860},&quot;startRole&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Visitor&quot;,&quot;Customer&quot;,&quot;Operator&quot;],&quot;default&quot;:&quot;Visitor&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;darkMode&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  state = {
+    role: 'public', view: 'home', theme: 'light',
+    step: 0, consent1:false, consent2:false, draftSaved:false,
+    selUser: 'u4',
+    rubric: { skills:72, location:60, experience:66, relevance:80 },
+    jobSource:'LinkedIn',
+    approvals: {}, appStatus: {},
+    toast: null, navOpen:false
+  };
+
+  // ---- meta maps ----
+  ST = {
+    pending_review:{l:'Pending review',c:'#5F6B68',b:'#ECEAE3',i:'clock'},
+    approved:{l:'Approved',c:'#0F5C4E',b:'#E1EFE9',i:'check'},
+    drafting:{l:'Drafting',c:'#1E4E8C',b:'#E4ECF7',i:'pen'},
+    qc:{l:'In QC',c:'#8A6100',b:'#FBF0D9',i:'shield'},
+    applied:{l:'Applied',c:'#1F7A4D',b:'#E3F3E8',i:'send'},
+    interview:{l:'Interview',c:'#6B3FA0',b:'#EFE8F8',i:'star'},
+    rejected:{l:'Rejected',c:'#B23A2E',b:'#F7E5E2',i:'x'},
+    follow_up_needed:{l:'Follow-up needed',c:'#A85A1E',b:'#FAEBDD',i:'bell'}
+  };
+  PAY = {
+    pending:{l:'Pending',c:'#8A6100',b:'#FBF0D9'},
+    paid:{l:'Paid',c:'#1F7A4D',b:'#E3F3E8'},
+    partial:{l:'Partially paid',c:'#1E4E8C',b:'#E4ECF7'},
+    refunded:{l:'Refunded',c:'#B23A2E',b:'#F7E5E2'}
+  };
+  fitMeta(s){
+    if(s>=80) return {tier:'High',c:'#1F7A4D',b:'#E3F3E8',ring:'#1F7A4D'};
+    if(s>=50) return {tier:'Medium',c:'#8A6100',b:'#FBF0D9',ring:'#B7791F'};
+    return {tier:'Low',c:'#6B6F6B',b:'#ECEAE3',ring:'#9AA0A0'};
+  }
+
+  // ---- staff ----
+  STAFF = [
+    {id:'s1',name:'Nadia Fernando',role:'Senior Researcher',email:'nadia@atgconcordia.com',max:12,load:9},
+    {id:'s2',name:'Roshan Perera',role:'Application Specialist',email:'roshan@atgconcordia.com',max:12,load:11},
+    {id:'s3',name:'Imran Haque',role:'Researcher',email:'imran@atgconcordia.com',max:10,load:5},
+    {id:'s4',name:'Dilani Jayasuriya',role:'QC Lead / Founder',email:'dilani@atgconcordia.com',max:8,load:6}
+  ];
+
+  // ---- users ----
+  USERS = [
+    {id:'u1',name:'Tharindu Wickramasinghe',email:'tharindu.w@gmail.com',phone:'+94 71 555 0142',country:'Sri Lanka',city:'Colombo',pkg:'Trial',total:2,used:0,remaining:2,pay:'pending',staff:'s3',state:'new',created:'2026-06-25',role:'UX / Product Designer'},
+    {id:'u2',name:'Ayesha Rahman',email:'ayesha.rahman@gmail.com',phone:'+880 1711 224 800',country:'Bangladesh',city:'Dhaka',pkg:'Trial',total:2,used:0,remaining:2,pay:'pending',staff:'s1',state:'researching',created:'2026-06-21',role:'Marketing Coordinator'},
+    {id:'u3',name:'Mohamed Naseer',email:'m.naseer@gmail.com',phone:'+960 777 1820',country:'Maldives',city:'Malé',pkg:'Trial',total:2,used:1,remaining:1,pay:'pending',staff:'s1',state:'in_prep',created:'2026-06-19',role:'Hospitality Operations'},
+    {id:'u4',name:'Nandini',email:'nandini@gmail.com',phone:'+94 76 401 2210',country:'Sri Lanka',city:'Colombo',pkg:'Professional',total:100,used:23,remaining:77,pay:'paid',staff:'s2',state:'active',created:'2026-05-30',role:'Senior UX Designer'},
+    {id:'u5',name:'Fathima Zahra',email:'fathima.z@gmail.com',phone:'+94 77 882 3301',country:'Sri Lanka',city:'Galle',pkg:'Starter',total:50,used:48,remaining:2,pay:'paid',staff:'s3',state:'active',created:'2026-06-02',role:'Accounts Executive'},
+    {id:'u6',name:'Sandun Bandara',email:'sandun.b@gmail.com',phone:'+94 71 220 9087',country:'Sri Lanka',city:'Kandy',pkg:'Premium',total:150,used:61,remaining:89,pay:'partial',staff:'s2',state:'active',created:'2026-05-18',role:'Mechanical Engineer'},
+    {id:'u7',name:'Kavya Menon',email:'kavya.menon@gmail.com',phone:'+94 75 119 4420',country:'Sri Lanka',city:'Jaffna',pkg:'Professional',total:100,used:12,remaining:88,pay:'partial',staff:'s1',state:'active',created:'2026-06-10',role:'Data Analyst'},
+    {id:'u8',name:'Rashid Khan',email:'rashid.khan@gmail.com',phone:'+880 1521 778 904',country:'Bangladesh',city:'Chittagong',pkg:'Trial',total:2,used:2,remaining:0,pay:'pending',staff:'s3',state:'trial_done',created:'2026-06-14',role:'Supply Chain Officer'},
+    {id:'u9',name:'Nilanthi Silva',email:'nilanthi.s@gmail.com',phone:'+94 76 330 7781',country:'Sri Lanka',city:'Negombo',pkg:'Starter',total:50,used:9,remaining:41,pay:'refunded',staff:'s3',state:'active',created:'2026-06-05',role:'HR Coordinator'},
+    {id:'u10',name:'Amara De Silva',email:'amara.desilva@gmail.com',phone:'+94 70 558 1290',country:'Sri Lanka',city:'Colombo',pkg:'Professional',total:100,used:41,remaining:59,pay:'paid',staff:'s2',state:'active',created:'2026-05-22',role:'Project Manager'}
+  ];
+
+  // ---- jobs/applications per user (unified rows) ----
+  ROWS = [
+    // Nandini u4 — rich spread
+    {id:'j1',uid:'u4',company:'MAS Holdings',title:'Senior UX Designer',loc:'Colombo, LK',source:'Company site',fit:88,reason:'Strong portfolio match for enterprise UX; 6y experience aligns; on-site in Colombo fits availability.',deadline:'2026-07-04',approval:'approved',status:'applied',staff:'s2',proof:'email',proofRef:'Confirmation email — careers@masholdings.com',applied:'2026-06-18',notesInt:'Tailored CV v3 used. Cover letter referenced MAS sustainability programme.'},
+    {id:'j2',uid:'u4',company:'WSO2',title:'Product Designer',loc:'Colombo / Remote',source:'LinkedIn',fit:82,reason:'Product design + design-systems experience matches. Remote option suits relocation preference.',deadline:'2026-07-09',approval:'approved',status:'interview',staff:'s2',proof:'appid',proofRef:'Application ID: WSO2-PD-20614',applied:'2026-06-15',notesInt:'Recruiter replied 06/22 — first-round call scheduled 06/29.'},
+    {id:'j3',uid:'u4',company:'Sysco LABS',title:'UI Designer',loc:'Colombo, LK',source:'Indeed',fit:76,reason:'Solid UI craft match; slightly junior to candidate level but good volume target.',deadline:'2026-07-01',approval:'approved',status:'applied',staff:'s2',proof:'screenshot',proofRef:'Screenshot of submitted application',applied:'2026-06-17',notesInt:''},
+    {id:'j4',uid:'u4',company:'99x',title:'Design Lead',loc:'Colombo, LK',source:'Referral',fit:64,reason:'Leadership scope is a stretch; 6y exp slightly below the 8y ask but worth a targeted application.',deadline:'2026-07-12',approval:'approved',status:'drafting',staff:'s1',proof:null,proofRef:null,applied:null,notesInt:'Need stronger leadership framing in motivation letter — flag for QC.'},
+    {id:'j5',uid:'u4',company:'IFS',title:'Senior Product Designer',loc:'Colombo, LK',source:'Company site',fit:91,reason:'Excellent match — enterprise SaaS, design systems, seniority all aligned.',deadline:'2026-07-15',approval:'approved',status:'approved',staff:'s2',proof:null,proofRef:null,applied:null,notesInt:''},
+    {id:'j6',uid:'u4',company:'Dialog Axiata',title:'UX Researcher',loc:'Colombo, LK',source:'Niche board',fit:58,reason:'Research-leaning role; candidate is more design than research — possible but partial skills gap.',deadline:'2026-07-08',approval:'pending',status:null,staff:'s2',proof:null,proofRef:null,applied:null,notesInt:''},
+    {id:'j7',uid:'u4',company:'Creative Software',title:'Visual Designer',loc:'Kandy, LK',source:'Indeed',fit:44,reason:'Below candidate seniority and location is outside primary target — not recommended.',deadline:'2026-07-06',approval:'pending',status:null,staff:'s2',proof:null,proofRef:null,applied:null,notesInt:''},
+    {id:'j8',uid:'u4',company:'Grab',title:'Product Designer',loc:'Singapore',source:'LinkedIn',fit:47,reason:'Great brand fit but requires SG work authorization candidate does not yet hold — low feasibility.',deadline:'2026-07-20',approval:'pending',status:null,staff:'s2',proof:null,proofRef:null,applied:null,notesInt:''},
+    // Sandun u6 — QC + rejected + follow_up
+    {id:'j9',uid:'u6',company:'John Keells Holdings',title:'Mechanical Engineer',loc:'Colombo, LK',source:'Company site',fit:85,reason:'Direct discipline match, strong CAD + maintenance background.',deadline:'2026-07-05',approval:'approved',status:'qc',staff:'s2',proof:null,proofRef:null,applied:null,notesInt:'Awaiting founder sign-off — first 3 apps for this user need QC gate.'},
+    {id:'j10',uid:'u6',company:'Brandix',title:'Maintenance Engineer',loc:'Ratmalana, LK',source:'Referral',fit:79,reason:'Good operational fit; shift pattern matches availability.',deadline:'2026-06-28',approval:'approved',status:'rejected',staff:'s2',proof:'email',proofRef:'Rejection email received 06/24',applied:'2026-06-12',notesInt:'Employer filled internally. Suggest similar roles at Hayleys.'},
+    {id:'j11',uid:'u6',company:'Hayleys',title:'Project Engineer',loc:'Colombo, LK',source:'LinkedIn',fit:81,reason:'Strong match; project delivery experience relevant.',deadline:'2026-07-02',approval:'approved',status:'follow_up_needed',staff:'s2',proof:'appid',proofRef:'Application ID: HAY-PE-3391',applied:'2026-06-10',notesInt:'No response in 14 days — send polite follow-up via portal.'},
+    // Ayesha u2 — pending approvals (mid-trial)
+    {id:'j12',uid:'u2',company:'Grameenphone',title:'Marketing Coordinator',loc:'Dhaka, BD',source:'Company site',fit:84,reason:'Telco marketing match, local role, strong fit.',deadline:'2026-07-07',approval:'pending',status:null,staff:'s1',proof:null,proofRef:null,applied:null,notesInt:''},
+    {id:'j13',uid:'u2',company:'Unilever Bangladesh',title:'Brand Executive',loc:'Dhaka, BD',source:'LinkedIn',fit:72,reason:'FMCG brand exposure is partial but trajectory fits.',deadline:'2026-07-11',approval:'pending',status:null,staff:'s1',proof:null,proofRef:null,applied:null,notesInt:''},
+    // Mohamed u3 — in prep
+    {id:'j14',uid:'u3',company:'Universal Resorts',title:'Resort Operations Supervisor',loc:'Malé, MV',source:'Niche board',fit:80,reason:'Hospitality operations direct match; island-resort experience valued.',deadline:'2026-07-03',approval:'approved',status:'drafting',staff:'s1',proof:null,proofRef:null,applied:null,notesInt:''},
+    // Fathima u5 — near exhaustion
+    {id:'j15',uid:'u5',company:'Hemas Holdings',title:'Accounts Executive',loc:'Colombo, LK',source:'Indeed',fit:77,reason:'Accounting background matches; commutable.',deadline:'2026-07-09',approval:'approved',status:'applied',staff:'s3',proof:'email',proofRef:'Confirmation email — hr@hemas.com',applied:'2026-06-20',notesInt:''},
+    // Kavya u7
+    {id:'j16',uid:'u7',company:'LSEG (Sri Lanka)',title:'Data Analyst',loc:'Colombo, LK',source:'Company site',fit:86,reason:'SQL + Python + finance-data match is excellent.',deadline:'2026-07-14',approval:'approved',status:'applied',staff:'s1',proof:'appid',proofRef:'Application ID: LSEG-DA-7741',applied:'2026-06-22',notesInt:''},
+    // Amara u10
+    {id:'j17',uid:'u10',company:'IFS',title:'Project Manager',loc:'Colombo, LK',source:'Referral',fit:83,reason:'PMP + delivery scope aligned.',deadline:'2026-07-16',approval:'approved',status:'applied',staff:'s2',proof:'email',proofRef:'Confirmation email — talent@ifs.com',applied:'2026-06-23',notesInt:''},
+    {id:'j18',uid:'u10',company:'Virtusa',title:'Delivery Manager',loc:'Colombo, LK',source:'LinkedIn',fit:69,reason:'Delivery management partial match; larger team scope.',deadline:'2026-07-18',approval:'approved',status:'drafting',staff:'s2',proof:null,proofRef:null,applied:null,notesInt:''},
+    // Rashid u8 — trial done
+    {id:'j19',uid:'u8',company:'Maersk Bangladesh',title:'Supply Chain Officer',loc:'Chittagong, BD',source:'Company site',fit:82,reason:'Port-city logistics match, strong fit.',deadline:'2026-06-27',approval:'approved',status:'applied',staff:'s3',proof:'screenshot',proofRef:'Screenshot of submitted application',applied:'2026-06-16',notesInt:''},
+    {id:'j20',uid:'u8',company:'BRAC',title:'Logistics Coordinator',loc:'Dhaka, BD',source:'Niche board',fit:74,reason:'NGO logistics; relocation to Dhaka required.',deadline:'2026-06-26',approval:'approved',status:'applied',staff:'s3',proof:'email',proofRef:'Confirmation email — careers@brac.net',applied:'2026-06-17',notesInt:''}
+  ];
+
+  // ---- payments w/ audit trail ----
+  PAYMENTS = [
+    {id:'p1',uid:'u4',pkg:'Professional',amount:100,paid:100,cur:'USD',method:'Wise',status:'paid',ref:'WISE-8841-204',date:'2026-05-30',trail:[{a:'Nandini',act:'Submitted bank transfer',t:'2026-05-30 09:12'},{a:'Dilani Jayasuriya',act:'Marked Paid (full)',t:'2026-05-30 14:40'}]},
+    {id:'p2',uid:'u6',pkg:'Premium',amount:150,paid:75,cur:'USD',method:'Bank transfer',status:'partial',ref:'BOC-22190',date:'2026-05-18',trail:[{a:'Sandun Bandara',act:'Sent first instalment',t:'2026-05-18 11:02'},{a:'Dilani Jayasuriya',act:'Marked Partially Paid (75 of 150)',t:'2026-05-19 10:25'}]},
+    {id:'p3',uid:'u7',pkg:'Professional',amount:100,paid:50,cur:'USD',method:'Wise',status:'partial',ref:'WISE-9120-771',date:'2026-06-10',trail:[{a:'Kavya Menon',act:'Sent 50% deposit',t:'2026-06-10 16:30'},{a:'Imran Haque',act:'Marked Partially Paid (50 of 100)',t:'2026-06-11 09:05'}]},
+    {id:'p4',uid:'u9',pkg:'Starter',amount:60,paid:0,cur:'USD',method:'Wise',status:'refunded',ref:'WISE-7740-118',date:'2026-06-05',trail:[{a:'Nilanthi Silva',act:'Paid in full',t:'2026-06-05 13:20'},{a:'Nilanthi Silva',act:'Requested refund (changed plans)',t:'2026-06-12 08:40'},{a:'Dilani Jayasuriya',act:'Approved & marked Refunded',t:'2026-06-13 15:10'}]},
+    {id:'p5',uid:'u5',pkg:'Starter',amount:60,paid:60,cur:'USD',method:'Bank transfer',status:'paid',ref:'COM-44021',date:'2026-06-02',trail:[{a:'Fathima Zahra',act:'Bank transfer',t:'2026-06-02 10:00'},{a:'Dilani Jayasuriya',act:'Marked Paid (full)',t:'2026-06-02 17:30'}]},
+    {id:'p6',uid:'u10',pkg:'Professional',amount:100,paid:100,cur:'USD',method:'Wise',status:'paid',ref:'WISE-6610-905',date:'2026-05-22',trail:[{a:'Amara De Silva',act:'Wise transfer',t:'2026-05-22 12:15'},{a:'Dilani Jayasuriya',act:'Marked Paid (full)',t:'2026-05-22 18:02'}]},
+    {id:'p7',uid:'u8',pkg:'Trial → Starter (pending)',amount:60,paid:0,cur:'USD',method:'—',status:'pending',ref:'—',date:'2026-06-24',trail:[{a:'System',act:'Upgrade quote sent after trial completion',t:'2026-06-24 09:00'}]},
+    {id:'p8',uid:'u1',pkg:'Trial',amount:0,paid:0,cur:'USD',method:'—',status:'pending',ref:'—',date:'2026-06-25',trail:[{a:'System',act:'Free trial granted (no payment due)',t:'2026-06-25 10:30'}]}
+  ];
+
+  // ---- notifications (customer feed for Nandini) ----
+  NOTIF = [
+    {id:'n1',type:'interview',title:'Interview invitation — WSO2',body:'WSO2 replied to your Product Designer application. First-round call scheduled for 29 Jun.',t:'2 hours ago',unread:true},
+    {id:'n2',type:'applied',title:'Application submitted — MAS Holdings',body:'Your Senior UX Designer application was submitted. Confirmation email logged as proof.',t:'Yesterday',unread:true},
+    {id:'n3',type:'job',title:'3 new jobs recommended',body:'Your ATG researcher added Dialog Axiata, Creative Software and Grab for your review.',t:'2 days ago',unread:false},
+    {id:'n4',type:'drafting',title:'Preparing your 99x application',body:'Roshan is tailoring your CV and motivation letter for the Design Lead role.',t:'3 days ago',unread:false},
+    {id:'n5',type:'reply',title:'Support replied to your message',body:'“Happy to help — your IFS application is queued and will be prepared this week.”',t:'4 days ago',unread:false},
+    {id:'n6',type:'paid',title:'Payment confirmed — Professional package',body:'We received your USD 100 payment. 100 applications added to your balance.',t:'27 May',unread:false}
+  ];
+
+  // ---- notification templates (gap 11) ----
+  TEMPLATES = [
+    {id:'t1',key:'Trial granted',trigger:'On intake completion',subject:'Welcome to ATG Apply — your 2 free applications are ready',body:'Hi {first_name}, your profile is in. Your personal ATG team is now researching roles that fit you. We will add your first recommended jobs within {sla} working days. You can review and approve each one before we apply.'},
+    {id:'t2',key:'Job recommended',trigger:'On job added by staff',subject:'New job matched for you — {job_title} at {company}',body:'Hi {first_name}, we found a {fit_tier}-fit role: {job_title} at {company} ({location}). Fit score {fit_score}%. Open your dashboard to approve or skip it.'},
+    {id:'t3',key:'Application submitted',trigger:'On status → Applied',subject:'Applied: {job_title} at {company}',body:'Hi {first_name}, your application for {job_title} at {company} has been submitted by our team. Proof of submission ({proof_type}) is saved in your dashboard. {remaining} applications remaining.'},
+    {id:'t4',key:'Upgrade prompt',trigger:'On trial used up / balance low',subject:'You are out of applications — keep the momentum going',body:'Hi {first_name}, you have used all your applications. Pick a package to continue: Starter (50 / $60), Professional (100 / $100) or Premium (150 / $150). Your profile and history stay exactly as they are.'},
+    {id:'t5',key:'Support reply',trigger:'On staff reply in Support',subject:'Re: your message to ATG Apply',body:'Hi {first_name}, {agent_name} here. {reply_body} — reply any time and a real person will get back to you within one working day.'}
+  ];
+
+  PRICING = [
+    {name:'Trial',apps:2,price:0,unit:'Free',blurb:'Prove the quality before you pay a cent.',feats:['2 full applications, fully managed','Profile research + fit scoring','Tailored CV + motivation letter','Proof of every submission'],cta:'Start free',hi:false},
+    {name:'Starter',apps:50,price:60,unit:'USD',blurb:'For students and early-stage jobseekers.',feats:['50 managed applications','Everything in Trial','Application tracker + documents','Email + WhatsApp updates'],cta:'Choose Starter',hi:false},
+    {name:'Professional',apps:100,price:100,unit:'USD',blurb:'Best balance of value and volume.',feats:['100 managed applications','Priority research turnaround','Interview follow-up tracking','Multi-country targeting'],cta:'Choose Professional',hi:true},
+    {name:'Premium',apps:150,price:150,unit:'USD',blurb:'For serious, multi-location job hunts.',feats:['150 managed applications','Fastest turnaround','Dedicated specialist','Roles across multiple countries'],cta:'Choose Premium',hi:false}
+  ];
+
+  WSTEPS = ['Personal','Work authorization','Education','Experience','Target roles','Skills & languages','Documents','Consent'];
+
+  componentDidMount(){
+    const p=this.props||{};
+    const patch={};
+    if(p.startRole==='Customer'){patch.role='user';patch.view='u-dash';}
+    else if(p.startRole==='Operator'){patch.role='admin';patch.view='a-dash';}
+    if(p.darkMode){patch.theme='dark';}
+    if(Object.keys(patch).length)this.setState(patch);
+  }
+  // ---- handlers ----
+  nav = (role,view)=>{ this.setState({role,view,navOpen:false}); if(typeof window!=='undefined') window.scrollTo&&window.scrollTo(0,0); };
+  toHome=()=>this.nav('public','home'); toHow=()=>this.nav('public','how'); toPricing=()=>this.nav('public','pricing');
+  toContact=()=>this.nav('public','contact'); toPrivacy=()=>this.nav('public','privacy'); toTerms=()=>this.nav('public','terms');
+  toSignup=()=>{this.setState({step:0});this.nav('public','signup');};
+  toArch=()=>this.nav('public','arch');
+  viewPublic=()=>this.nav('public','home'); viewUser=()=>this.nav('user','u-dash'); viewAdmin=()=>this.nav('admin','a-dash');
+  go=(view)=>this.setState({view,navOpen:false});
+  toggleTheme=()=>this.setState(s=>({theme:s.theme==='light'?'dark':'light'}));
+  flash=(m)=>{ this.setState({toast:m}); clearTimeout(this._t); this._t=setTimeout(()=>this.setState({toast:null}),2600); };
+
+  nextStep=()=>this.setState(s=>({step:Math.min(s.step+1,this.WSTEPS.length-1)}));
+  prevStep=()=>this.setState(s=>({step:Math.max(s.step-1,0)}));
+  saveDraft=()=>{this.setState({draftSaved:true});this.flash('Draft saved — you can finish later');};
+  finishSignup=()=>{this.flash('Profile submitted! 2 free applications granted.');this.nav('user','u-dash');};
+
+  approveJob=(id)=>{this.setState(s=>({approvals:{...s.approvals,[id]:'approved'}}));this.flash('Job approved — sent to your ATG team');};
+  declineJob=(id)=>{this.setState(s=>({approvals:{...s.approvals,[id]:'declined'}}));this.flash('Job skipped');};
+  setRubric=(k,v)=>this.setState(s=>({rubric:{...s.rubric,[k]:+v}}));
+  selectUser=(id)=>this.nav('admin','a-user')&&this.setState({selUser:id});
+
+  computedFit(){const r=this.state.rubric;return Math.round(r.skills*0.4+r.location*0.2+r.experience*0.2+r.relevance*0.2);}
+
+  staffName(id){const s=this.STAFF.find(x=>x.id===id);return s?s.name:'Unassigned';}
+  userById(id){return this.USERS.find(u=>u.id===id);}
+
+  navStyleBtn(active){
+    return `display:flex;align-items:center;gap:11px;width:100%;padding:10px 12px;border-radius:9px;border:none;cursor:pointer;font-size:14px;font-weight:${active?600:500};text-align:left;background:${active?'var(--surface-3)':'transparent'};color:${active?'var(--on-surface)':'var(--muted)'}`;
+  }
+  segStyle(active){
+    return `padding:6px 13px;border-radius:7px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:${active?'var(--surface)':'transparent'};color:${active?'var(--on-surface)':'var(--muted)'};box-shadow:${active?'var(--shadow-sm)':'none'}`;
+  }
+  pillTab(active){
+    return `padding:8px 14px;border-radius:8px;border:1px solid ${active?'transparent':'var(--border)'};cursor:pointer;font-size:14px;font-weight:600;background:${active?'var(--primary)':'var(--surface)'};color:${active?'var(--on-primary)':'var(--muted)'}`;
+  }
+
+  decRow(r){
+    const ap = this.state.approvals[r.id] || r.approval;
+    const sm = r.status?this.ST[r.status]:null;
+    const fm = this.fitMeta(r.fit);
+    const u = this.userById(r.uid);
+    return {...r, ap, statusLabel:sm?sm.l:'—', statusC:sm?sm.c:'#5F6B68', statusB:sm?sm.b:'#ECEAE3', statusI:sm?sm.i:'clock',
+      fitTier:fm.tier, fitC:fm.c, fitB:fm.b, fitRing:fm.ring, uname:u?u.name:'', staffN:this.staffName(r.staff),
+      deadlineFmt:this.fmtDate(r.deadline), appliedFmt:r.applied?this.fmtDate(r.applied):'—',
+      onApprove:()=>this.approveJob(r.id), onDecline:()=>this.declineJob(r.id),
+      apApproved:ap==='approved', apDeclined:ap==='declined', apPending:ap==='pending',
+      proofType: r.proof?({email:'Confirmation email',appid:'Application ID',screenshot:'Screenshot',note:'Internal note'}[r.proof]):null
+    };
+  }
+  fmtDate(d){ if(!d) return '—'; const [y,m,day]=d.split('-'); const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]; return `${+day} ${mo} ${y}`; }
+
+  renderVals(){
+    const {role,view,theme,toast,step}=this.state;
+    const isPublic = role==='public';
+    const isShell = role==='user'||role==='admin';
+    const me = this.userById('u4'); // logged-in customer
+    const myRows = this.ROWS.filter(r=>r.uid==='u4').map(r=>this.decRow(r));
+    const myPending = myRows.filter(r=>r.ap==='pending');
+    const myApproved = myRows.filter(r=>r.ap==='approved'&&r.status);
+    const allRows = this.ROWS.map(r=>this.decRow(r));
+    const qcRows = allRows.filter(r=>r.status==='qc'||r.status==='drafting');
+    const selUser = this.userById(this.state.selUser);
+    const selRows = this.ROWS.filter(r=>r.uid===this.state.selUser).map(r=>this.decRow(r));
+
+    // nav items per role
+    const mk=(view,label,icon,badge)=>({view,label,icon,badge,active:this.state.view===view,style:this.navStyleBtn(this.state.view===view),iconEl:this.icon(icon),onClick:()=>this.go(view)});
+    let navItems=[], navLabel='', whoName='', whoRole='', whoInitials='';
+    if(role==='user'){
+      navLabel='My account'; whoName='Nandini'; whoRole='Professional · 77 left'; whoInitials='ND';
+      navItems=[mk('u-dash','Dashboard','home'),mk('u-jobs','Recommended jobs','briefcase',myPending.length),mk('u-apps','Applications','list'),mk('u-docs','Documents','file'),mk('u-pay','Payments','card'),mk('u-upgrade','Upgrade','spark'),mk('u-notify','Notifications','bell',2),mk('u-support','Support','chat')];
+    } else if(role==='admin'){
+      navLabel='Operator console'; whoName='Dilani Jayasuriya'; whoRole='Admin · Founder'; whoInitials='DJ';
+      navItems=[mk('a-dash','Overview','home'),mk('a-users','Users','users'),mk('a-jobnew','Add job','briefcase'),mk('a-apps','Applications','list'),mk('a-qc','QC queue','shield',qcRows.filter(r=>r.status==='qc').length),mk('a-pay','Payments','card'),mk('a-staff','Team capacity','gauge'),mk('a-notify','Notifications','bell'),mk('a-export','Export','download')];
+    }
+
+    const cf=this.computedFit(); const cfm=this.fitMeta(cf);
+    const segActive=(v)=>v===view;
+
+    return {
+      theme, isPublic, isShell, toast, role,
+      // role switch styles
+      rPublic:this.segStyle(role==='public'), rUser:this.segStyle(role==='user'), rAdmin:this.segStyle(role==='admin'),
+      // public nav
+      pHome:this.pubNav('home'), pHow:this.pubNav('how'), pPricing:this.pubNav('pricing'), pContact:this.pubNav('contact'), pPrivacy:this.pubNav('privacy'), pTerms:this.pubNav('terms'),
+      toHome:this.toHome,toHow:this.toHow,toPricing:this.toPricing,toContact:this.toContact,toPrivacy:this.toPrivacy,toTerms:this.toTerms,toSignup:this.toSignup,toArch:this.toArch,
+      viewPublic:this.viewPublic,viewUser:this.viewUser,viewAdmin:this.viewAdmin,toggleTheme:this.toggleTheme,
+      // route booleans
+      isHome:view==='home',isHow:view==='how',isPricing:view==='pricing',isContact:view==='contact',isSignup:view==='signup',isPrivacy:view==='privacy',isTerms:view==='terms',isArch:view==='arch',
+      isUDash:view==='u-dash',isUJobs:view==='u-jobs',isUApps:view==='u-apps',isUDocs:view==='u-docs',isUPay:view==='u-pay',isUUpgrade:view==='u-upgrade',isUNotify:view==='u-notify',isUSupport:view==='u-support',isUProfile:view==='u-profile',
+      isADash:view==='a-dash',isAUsers:view==='a-users',isAUser:view==='a-user',isAJobNew:view==='a-jobnew',isAApps:view==='a-apps',isAQC:view==='a-qc',isAPay:view==='a-pay',isAStaff:view==='a-staff',isANotify:view==='a-notify',isAExport:view==='a-export',
+      // shell
+      navItems,navLabel,whoName,whoRole,whoInitials,
+      // data
+      pricing:this.PRICING, me, myRows, myPending, myApproved, allRows, qcRows, staff:this.STAFF, users:this.USERS, payments:this.PAYMENTS, notif:this.NOTIF, templates:this.TEMPLATES,
+      selUser, selRows,
+      // wizard
+      wsteps:this.WSTEPS.map((s,i)=>({label:s,n:i<step?'✓':i+1,active:i===step,done:i<step,onClick:()=>this.setState({step:i}),style:this.wizStep(i,step),
+        dotBg:i===step?'var(--primary)':i<step?'var(--primary)':'var(--surface-2)',
+        dotColor:i<=step?'var(--on-primary)':'var(--muted)',
+        dotBorder:i<=step?'var(--primary)':'var(--border-2)'})),
+      step, stepLabel:this.WSTEPS[step], stepPct:Math.round(((step+1)/this.WSTEPS.length)*100)+'%', stepNum:step+1, totalSteps:this.WSTEPS.length,
+      isLastStep:step===this.WSTEPS.length-1, isFirstStep:step===0,
+      nextStep:this.nextStep,prevStep:this.prevStep,saveDraft:this.saveDraft,finishSignup:this.finishSignup,
+      // rubric
+      rubric:this.state.rubric, computedFit:cf, cfTier:cfm.tier, cfColor:cfm.c, cfBg:cfm.b,
+      rSkills:this.state.rubric.skills,rLoc:this.state.rubric.location,rExp:this.state.rubric.experience,rRel:this.state.rubric.relevance,
+      onSkills:(e)=>this.setRubric('skills',e.target.value),onLoc:(e)=>this.setRubric('location',e.target.value),onExp:(e)=>this.setRubric('experience',e.target.value),onRel:(e)=>this.setRubric('relevance',e.target.value),
+      // ---- decorated pricing ----
+      pricingCards:this.PRICING.map(p=>({...p,priceFmt:p.price===0?'Free':('$'+p.price),unitFmt:p.price===0?'':'USD',badge:p.hi?'Most popular':'',showBadge:p.hi,
+        cardStyle:`position:relative;display:flex;flex-direction:column;gap:16px;padding:26px 22px;border-radius:var(--radius);background:${p.hi?'var(--primary)':'var(--surface)'};color:${p.hi?'var(--on-primary)':'var(--on-surface)'};border:1px solid ${p.hi?'transparent':'var(--border)'};box-shadow:${p.hi?'var(--shadow)':'none'}`,
+        ctaStyle:`margin-top:auto;padding:12px;border-radius:9px;border:none;cursor:pointer;font-weight:600;font-size:14px;background:${p.hi?'var(--accent)':'var(--surface-3)'};color:${p.hi?'#fff':'var(--on-surface)'}`,
+        appsStyle:`font-size:13px;color:${p.hi?'rgba(255,255,255,.8)':'var(--muted)'}`,
+        blurbStyle:`font-size:13px;line-height:1.5;color:${p.hi?'rgba(255,255,255,.85)':'var(--muted)'}`,
+        onCta:this.toSignup,
+        feats:p.feats.map(f=>({t:f,dot:p.hi?'rgba(255,255,255,.85)':'var(--primary)',tc:p.hi?'rgba(255,255,255,.92)':'var(--on-surface)'}))})),
+      // ---- customer tracker ----
+      myTracker:this.buildTracker('u4'),
+      myBalance:{used:me.used,total:me.total,remaining:me.remaining,pct:Math.round(me.used/me.total*100)+'%'},
+      myPayment:this.PAYMENTS.find(p=>p.uid==='u4'),
+      trialLowUser:this.userById('u8'),
+      // ---- admin aggregates ----
+      adminStats:this.adminStats(),
+      adminStatusList:this.statusList(),
+      payCards:this.PAYMENTS.map(p=>({...p,uname:(this.userById(p.uid)||{name:p.uid}).name,uInitials:this.initials((this.userById(p.uid)||{name:'?'}).name),
+        statusColor:this.PAY[p.status].c,statusBg:this.PAY[p.status].b,statusLabel:this.PAY[p.status].l,
+        dateFmt:this.fmtDate(p.date),amountFmt:'$'+p.amount,paidFmt:'$'+p.paid,trailDec:p.trail,
+        onPaid:()=>this.flash('Marked Paid — logged to audit trail'),onPartial:()=>this.flash('Marked Partially Paid — logged'),onRefund:()=>this.flash('Refund recorded — logged to audit trail')})),
+      staffCards:this.STAFF.map(s=>({...s,initials:this.initials(s.name),util:Math.round(s.load/s.max*100),utilPct:Math.round(s.load/s.max*100)+'%',free:s.max-s.load,
+        barColor:(s.load/s.max)>=0.9?'var(--destructive)':(s.load/s.max)>=0.7?'#B7791F':'var(--primary)',
+        status:(s.load/s.max)>=0.9?'At capacity':(s.load/s.max)>=0.7?'Near capacity':'Has room'})),
+      notifDec:this.NOTIF.map(n=>({...n,iconEl:this.icon(({interview:'star',applied:'briefcase',job:'briefcase',drafting:'file',reply:'chat',paid:'card'}[n.type])||'bell'),
+        accent:n.unread?'var(--accent)':'var(--border)',bg:n.unread?'var(--accent-soft)':'var(--surface)'})),
+      usersDec:this.USERS.map(u=>({...u,staffN:this.staffName(u.staff),initials:this.initials(u.name),
+        payColor:this.PAY[u.pay].c,payBg:this.PAY[u.pay].b,payLabel:this.PAY[u.pay].l,createdFmt:this.fmtDate(u.created),
+        pkgBadge:u.pkg==='Trial'?'var(--surface-3)':'var(--accent-soft)',
+        onOpen:()=>{this.setState({selUser:u.id});this.nav('admin','a-user');},
+        balPct:Math.round(u.used/u.total*100)+'%'})),
+      selStaffN:this.staffName((selUser||{}).staff),
+      selPay:this.PAYMENTS.find(p=>p.uid===(selUser||{}).id),
+      // ---- public page helpers ----
+      journey:[
+        {n:1,t:'You visit and start free',d:'No card needed. Create your account and begin the guided intake.'},
+        {n:2,t:'Complete your intake',d:'Profile, work experience, target roles and CV — about 12 minutes, save-as-you-go.'},
+        {n:3,t:'Submit your profile',d:'Everything lands securely with your assigned ATG team in Sri Lanka.'},
+        {n:4,t:'2 free applications granted',d:'Your trial balance is added instantly so you can see the service before paying.'},
+        {n:5,t:'We review & research',d:'Your team studies your profile and researches roles that genuinely fit.'},
+        {n:6,t:'Jobs added with a fit score',d:'Each role gets a 0–100 fit score and a plain-English reason for the rating.'},
+        {n:7,t:'You approve the ones you want',d:'Nothing is submitted without your approval. Skip anything that does not feel right.'},
+        {n:8,t:'We tailor & quality-check',d:'CV and motivation letter tailored to the role, then checked by a second person.'},
+        {n:9,t:'A human submits the application',d:'Applied manually — no scraping, no auto-apply bots, ever.'},
+        {n:10,t:'Proof appears on your dashboard',d:'Confirmation email, application ID or screenshot — logged as proof for each submission.'},
+        {n:11,t:'Continue with a package',d:'Happy after your trial? Pick Starter, Professional or Premium and your balance updates.'}
+      ],
+      footLink:'background:none;border:none;color:rgba(255,255,255,.82);cursor:pointer;font-size:14px;text-align:left;padding:0;font-family:inherit',
+      preventSubmit:(e)=>e.preventDefault(),
+      sendContact:()=>this.flash('Message sent — we reply within one working day'),
+      // wizard step state
+      isStep0:step===0,isStep1:step===1,isStep2:step===2,isStep3:step===3,isStep4:step===4,isStep5:step===5,isStep6:step===6,isStep7:step===7,
+      stepHint:['Your basic contact details.','Where you can work and when you can start.','Your qualifications.','Your work history — add as many roles as you like.','The roles and places you are aiming for.','What you bring and the languages you speak.','Upload your CV and any supporting documents.','Final consents before we begin.'][step],
+      notLastStep:step!==this.WSTEPS.length-1,
+      draftSaved:this.state.draftSaved,
+      consent1:this.state.consent1,consent2:this.state.consent2,
+      toggleC1:()=>this.setState(s=>({consent1:!s.consent1})),toggleC2:()=>this.setState(s=>({consent2:!s.consent2})),
+      backBtnStyle:`padding:12px 20px;border-radius:9px;background:var(--surface);border:1px solid var(--border-2);font-weight:600;font-size:14px;cursor:${step===0?'not-allowed':'pointer'};color:var(--muted);opacity:${step===0?.45:1}`,
+      flbl:'display:block;font-size:13px;font-weight:600;margin-bottom:6px',
+      fin:'width:100%;padding:11px 13px;border-radius:9px;border:1px solid var(--border-2);background:var(--surface-2);font-size:14px;color:inherit;font-family:inherit',
+      fopt:'font-weight:500;color:var(--muted);font-size:12px',
+      fchip:'padding:9px 14px;border-radius:9px;border:1px solid var(--border-2);background:var(--surface);font-size:13px;font-weight:500;color:var(--muted);cursor:pointer',
+      fchipOn:'padding:9px 14px;border-radius:9px;border:1px solid var(--primary);background:var(--surface-3);font-size:13px;font-weight:600;color:var(--on-surface);cursor:pointer',
+      privacyBody:this.legalEl('privacy'),
+      termsBody:this.legalEl('terms'),
+      archDoc:this.archEl(),
+      // ---- dashboard nav shortcuts ----
+      goJobs:()=>this.go('u-jobs'),goApps:()=>this.go('u-apps'),goUpgrade:()=>this.go('u-upgrade'),goProfile:()=>this.go('u-profile'),goNotify:()=>this.go('u-notify'),
+      goQC:()=>this.go('a-qc'),goPay:()=>this.go('a-pay'),goUsers:()=>this.go('a-users'),goExport:()=>this.go('a-export'),goJobNew:()=>this.go('a-jobnew'),
+      saveProfile:()=>this.flash('Profile saved'),sendSupport:()=>this.flash('Message sent to your team'),
+      reassign:()=>this.flash('Staff reassigned'),toastDoc:()=>this.flash('Document uploaded'),saveJob:()=>this.flash('Job recommended — user notified'),doExport:()=>this.flash('CSV downloaded'),
+      // ---- customer dashboard data ----
+      myPendingCount:myPending.length,
+      myApplied:myRows.filter(r=>r.status&&r.status!=='approved'&&r.status!=='drafting').concat(myRows.filter(r=>r.status==='drafting')),
+      notifTop:this.NOTIF.slice(0,3).map(n=>({...n,iconEl:this.icon(({interview:'spark',applied:'briefcase',job:'briefcase',drafting:'file',reply:'chat',paid:'card'}[n.type])||'bell')})),
+      myDocs:[
+        {name:'Tailored CV — MAS Holdings.pdf',meta:'v3 · prepared by your team · 18 Jun'},
+        {name:'Motivation letter — WSO2.pdf',meta:'v2 · prepared by your team · 15 Jun'},
+        {name:'Tailored CV — IFS.pdf',meta:'v1 · in preparation'},
+        {name:'Master CV — Nandini.pdf',meta:'Your original upload · 30 May'}
+      ],
+      paidCards:this.PRICING.filter(p=>p.price>0).map(p=>({...p,priceFmt:'$'+p.price,showBadge:p.hi,badge:p.hi?'Recommended':'',
+        cardStyle:`position:relative;display:flex;flex-direction:column;gap:14px;padding:24px 20px;border-radius:var(--radius);background:${p.hi?'var(--primary)':'var(--surface)'};color:${p.hi?'var(--on-primary)':'var(--on-surface)'};border:1px solid ${p.hi?'transparent':'var(--border)'}`,
+        blurbStyle:`font-size:13px;line-height:1.5;color:${p.hi?'rgba(255,255,255,.85)':'var(--muted)'}`,
+        appsStyle:`font-size:13px;color:${p.hi?'rgba(255,255,255,.8)':'var(--muted)'}`,
+        ctaStyle:`margin-top:auto;padding:11px;border-radius:9px;border:none;cursor:pointer;font-weight:600;font-size:14px;background:${p.hi?'var(--accent)':'var(--surface-3)'};color:${p.hi?'#fff':'var(--on-surface)'}`,
+        onUpgrade:()=>this.flash(p.name+' selected — our team will send payment details')})),
+      // ---- admin overview ----
+      qcCount:qcRows.filter(r=>r.status==='qc').length,
+      payNeedsCount:this.PAYMENTS.filter(p=>p.status==='pending'||p.status==='partial').length,
+      usersCount:this.USERS.length,
+      // ---- staff capacity ----
+      staffCount:this.STAFF.length,
+      totalLoad:this.STAFF.reduce((a,s)=>a+s.load,0),
+      totalCap:this.STAFF.reduce((a,s)=>a+s.max,0),
+      openCap:this.STAFF.reduce((a,s)=>a+(s.max-s.load),0),
+      // ---- selected user detail ----
+      selUserInitials:this.initials((selUser||{name:''}).name),
+      selUserJoined:this.fmtDate((selUser||{}).created),
+      selUserBalPct:selUser?Math.round(selUser.used/selUser.total*100)+'%':'0%',
+      selStaffInitials:this.initials(this.staffName((selUser||{}).staff)),
+      // ---- QC handlers ----
+      qcRows:qcRows.map(r=>({...r,onSignoff:()=>this.flash('Signed off — '+r.title+' marked Applied'),onReturn:()=>this.flash('Returned to drafting')})),
+      // ---- exports ----
+      exports:[
+        {name:'users.csv',rows:10,cols:'id, name, email, country, package, payment_status'},
+        {name:'applications.csv',rows:20,cols:'id, user, job, status, assigned_staff, proof_type'},
+        {name:'payments.csv',rows:8,cols:'id, user, amount, paid, method, status, ref'},
+        {name:'jobs.csv',rows:20,cols:'id, user, company, title, source, fit_score, deadline'}
+      ],
+    };
+  }
+  legalEl(which){
+    const h=React.createElement;
+    const sec=(title,paras)=>h('section',{key:title,style:{marginBottom:'28px'}},
+      h('h2',{style:{fontFamily:'var(--font-display)',fontWeight:500,fontSize:'22px',margin:'0 0 10px'}},title),
+      paras.map((p,i)=>typeof p==='string'
+        ? h('p',{key:i,style:{fontSize:'15px',lineHeight:1.7,color:'var(--muted)',margin:'0 0 10px'}},p)
+        : h('div',{key:i,style:{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:'11px',padding:'14px 16px',margin:'4px 0 12px',display:'flex',gap:'12px',alignItems:'flex-start'}},
+            h('span',{style:{color:'var(--accent)',fontWeight:700,flexShrink:0}},p.k),
+            h('span',{style:{fontSize:'14px',lineHeight:1.6}},p.v))));
+    if(which==='privacy') return h('div',null,
+      sec('Who we are',['ATG Concordia (Pvt) Ltd operates ATG Apply, a human-managed job-application service. We are based in Colombo, Sri Lanka. This policy explains what data we collect, why, and your rights over it.']),
+      sec('What we collect',['To prepare and submit applications on your behalf we collect: your contact details, work authorization and visa status, education and employment history, target roles, skills and languages, and the documents you upload (CV, cover letter, certificates).']),
+      sec('Data retention period',[{k:'24 months',v:'We keep your profile and application records for 24 months after your last activity, so your history and proofs remain available. After that, records are deleted or anonymised.'}]),
+      sec('Deletion requests',[{k:'30 days',v:'You may request deletion of your data at any time by emailing privacy@atgconcordia.com. We complete verified deletion requests within 30 days and confirm in writing.'}]),
+      sec('Sensitive data & external tools',['Sensitive identifiers — passport numbers, national ID, full home addresses — are stored only where strictly necessary and are never sent to external or third-party AI tools. Fit analysis and drafting tools only ever receive de-identified role and skills information.']),
+      sec('No automated scraping',['We do not run automated scraping or bot-applications. Every application is prepared and submitted by a trained member of our team.']),
+      sec('Refunds',['Our refund terms are set out in the Terms of Service. Refund-related data (transaction reference, amount, status) is retained for accounting purposes for the period required by law.']),
+      sec('Service-level commitment',[{k:'3 working days',v:'We aim to add your first recommended jobs within 3 working days of a completed intake. This is a service target, not a guarantee of placement.'}]),
+      sec('Your rights',['You can access, correct, export or delete your data, and withdraw consent at any time. Contact privacy@atgconcordia.com.']));
+    return h('div',null,
+      sec('1. The service',['ATG Apply is a human-managed service that researches roles, prepares tailored applications, and submits them on your behalf after your approval. We provide a professional service; we do not employ you or guarantee any outcome.']),
+      sec('2. No guarantee of placement',[{k:'Important',v:'We do not guarantee interviews, offers or employment. Our obligation is to prepare and submit applications to a professional standard and to provide proof of each submission.'}]),
+      sec('3. Packages & balances',['Trial includes 2 free applications. Paid packages — Starter (50/$60), Professional (100/$100), Premium (150/$150) — add applications to your balance. One application equals one submitted application to one role, with proof logged.']),
+      sec('4. Payment',['Payment in V1 is manual (bank transfer or Wise). Your balance is activated once payment is marked received. Status can be Pending, Paid, Partially Paid or Refunded.']),
+      sec('5. Refund conditions',[{k:'14 days',v:'You may request a refund within 14 days of payment for any unused applications, provided fewer than 20% of the package has been used. Used applications and any work already completed are non-refundable.'}]),
+      sec('6. Dispute process',['If you are unhappy, contact support@atgconcordia.com. We aim to resolve disputes within 7 working days. Unresolved disputes are handled under the laws of Sri Lanka. Refunds approved through this process are issued via the original payment method within 14 days.']),
+      sec('7. Your responsibilities',['You confirm the information and documents you provide are accurate and yours to share, and you grant permission to apply on your behalf. You approve each role before submission.']),
+      sec('8. Acceptable use',['You may not use the service for fraudulent applications or misrepresentation. We may pause or end service for misuse, with a pro-rata refund of unused applications where appropriate.']));
+  }
+  archEl(){
+    const h=React.createElement;
+    const card=(...kids)=>h('div',{style:{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:'var(--radius)',padding:'20px'}},...kids);
+    const secTitle=(n,t,sub)=>h('div',{style:{marginBottom:'16px'}},
+      h('div',{style:{display:'flex',alignItems:'center',gap:'10px'}},
+        h('span',{style:{fontFamily:'var(--font-mono)',fontSize:'12px',fontWeight:600,color:'var(--accent)'}},n),
+        h('h2',{style:{fontFamily:'var(--font-display)',fontWeight:500,fontSize:'24px',margin:0}},t)),
+      sub&&h('p',{style:{color:'var(--muted)',margin:'4px 0 0',fontSize:'14px'}},sub));
+
+    // sitemap
+    const routeGroup=(label,color,routes)=>card(
+      h('div',{style:{display:'flex',alignItems:'center',gap:'8px',marginBottom:'12px'}},
+        h('span',{style:{width:'9px',height:'9px',borderRadius:'50%',background:color}}),
+        h('span',{style:{fontWeight:700,fontSize:'13px',letterSpacing:'.04em',textTransform:'uppercase',color:'var(--muted)'}},label)),
+      h('div',{style:{display:'flex',flexDirection:'column',gap:'6px'}},
+        routes.map(r=>h('div',{key:r[0],style:{display:'flex',justifyContent:'space-between',gap:'10px',fontSize:'13px',padding:'5px 0',borderBottom:'1px solid var(--border)'}},
+          h('code',{style:{fontFamily:'var(--font-mono)',color:'var(--primary)',fontWeight:500}},r[0]),
+          h('span',{style:{color:'var(--muted)',textAlign:'right'}},r[1])))));
+    const sitemap=h('div',{style:{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'16px'}},
+      routeGroup('Public','#C2613B',[['/','Home / hero'],['/how-it-works','11-step journey + fit rubric'],['/pricing','4 tiers'],['/signup','8-step intake wizard'],['/login','—'],['/privacy','Retention, deletion, SLA'],['/terms','Refunds, disputes'],['/contact','Support form']]),
+      routeGroup('User','#0F3D3A',[['/dashboard','Overview'],['/dashboard/jobs','Approve recommendations'],['/dashboard/applications','Tracker'],['/dashboard/documents','Tailored CV/letters'],['/dashboard/payments','Invoices'],['/dashboard/upgrade','Trial→paid upsell'],['/dashboard/notifications','Feed'],['/dashboard/support','Message team']]),
+      routeGroup('Staff / Admin','#6B3FA0',[['/admin','Overview'],['/admin/users','+ /users/:id'],['/admin/jobs/new','Fit rubric + source'],['/admin/applications','Workflow'],['/admin/qc-queue','Sign-off gate'],['/admin/payments','Reconciliation'],['/admin/staff','Capacity model'],['/admin/notifications','Templates'],['/admin/export','CSV']]));
+
+    // ERD
+    const entity=(name,fields,note)=>h('div',{style:{background:'var(--surface)',border:'1px solid var(--border-2)',borderRadius:'10px',overflow:'hidden',fontSize:'12px'}},
+      h('div',{style:{background:'var(--primary)',color:'var(--on-primary)',padding:'8px 12px',fontWeight:700,fontFamily:'var(--font-mono)',fontSize:'12px'}},name),
+      h('div',{style:{padding:'6px 0'}},fields.map((f,i)=>h('div',{key:i,style:{display:'flex',gap:'8px',padding:'3px 12px',color:f[1]?'var(--on-surface)':'var(--muted)'}},
+        h('span',{style:{fontFamily:'var(--font-mono)',fontWeight:f[1]?700:400,color:f[1]==='pk'?'var(--accent)':f[1]==='fk'?'var(--primary)':'inherit',minWidth:'34px'}},f[1]==='pk'?'PK':f[1]==='fk'?'FK':f[1]==='new'?'＋':''),
+        h('span',{style:{fontFamily:'var(--font-mono)'}},f[0])))),
+      note&&h('div',{style:{padding:'7px 12px',borderTop:'1px solid var(--border)',background:'var(--accent-soft)',color:'var(--accent-2)',fontSize:'11px',fontWeight:600}},note));
+    const erd=h('div',{style:{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'14px'}},
+      entity('users',[['id','pk'],['name'],['email'],['phone'],['country'],['role'],['status'],['created_at']]),
+      entity('profiles',[['user_id','fk'],['nationality'],['residence'],['work_authorization'],['education'],['experience'],['skills'],['languages'],['target_roles'],['target_countries']]),
+      entity('staff  ＋new',[['id','pk'],['name'],['email'],['role'],['max_active_users','new'],['current_load','new']],'NEW · capacity model'),
+      entity('packages',[['id','pk'],['user_id','fk'],['package_name'],['total_applications'],['used_applications'],['remaining_applications'],['payment_status'],['history[]','new']],'NEW · upgrade audit trail'),
+      entity('jobs',[['id','pk'],['user_id','fk'],['source'],['company'],['title'],['location'],['job_url'],['deadline'],['applied_date','new'],['fit_score'],['fit_reason'],['user_approval_status']],'CHECK applied_date ≤ deadline'),
+      entity('applications',[['id','pk'],['user_id','fk'],['job_id','fk'],['assigned_staff_id','new'],['status'],['applied_date'],['proof_type','new'],['proof_url'],['notes_public'],['notes_internal']],'FK → staff'),
+      entity('documents',[['id','pk'],['user_id','fk'],['type'],['file_url'],['version'],['uploaded_by'],['visible_to_user'],['created_at']]),
+      entity('payments',[['id','pk'],['user_id','fk'],['amount'],['paid_amount','new'],['currency'],['method'],['status'],['transaction_ref'],['audit_trail[]','new'],['created_at']],'NEW · reconciliation trail'),
+      entity('activity_log',[['id','pk'],['user_id','fk'],['actor'],['action'],['details'],['visible_to_user','new'],['timestamp']],'NEW · drives notif feed'));
+
+    // status state diagram
+    const node=(label,c,b)=>h('div',{style:{padding:'8px 13px',borderRadius:'9px',background:b,color:c,border:'1px solid '+c,fontWeight:600,fontSize:'13px',whiteSpace:'nowrap'}},label);
+    const arrow=()=>h('span',{style:{color:'var(--muted)',fontSize:'18px'}},'→');
+    const S=this.ST;
+    const stateDiag=h('div',null,
+      h('div',{style:{display:'flex',alignItems:'center',gap:'8px',flexWrap:'wrap',marginBottom:'18px'}},
+        node(S.pending_review.l,S.pending_review.c,S.pending_review.b),arrow(),
+        node(S.approved.l,S.approved.c,S.approved.b),arrow(),
+        node(S.drafting.l,S.drafting.c,S.drafting.b),arrow(),
+        node(S.qc.l,S.qc.c,S.qc.b),arrow(),
+        node(S.applied.l,S.applied.c,S.applied.b)),
+      h('div',{style:{display:'flex',alignItems:'center',gap:'8px',flexWrap:'wrap',paddingLeft:'12px'}},
+        h('span',{style:{color:'var(--muted)',fontSize:'13px',marginRight:'4px'}},'from Applied, terminal states:'),
+        node(S.interview.l,S.interview.c,S.interview.b),
+        node(S.rejected.l,S.rejected.c,S.rejected.b),
+        node(S.follow_up_needed.l,S.follow_up_needed.c,S.follow_up_needed.b)),
+      h('p',{style:{fontSize:'13px',color:'var(--muted)',marginTop:'16px',lineHeight:1.6}},'QC is a hard gate: an application cannot move to Applied until a QC Lead signs off. Pending review can also branch to a declined/skipped state if the user does not approve the role.'));
+
+    // permission matrix
+    const cellMark=(v)=>{const m={rw:['R/W','#1F7A4D','#E3F3E8'],r:['Read','#1E4E8C','#E4ECF7'],own:['Own only','#8A6100','#FBF0D9'],no:['None','#B23A2E','#F7E5E2']}[v];
+      return h('span',{style:{display:'inline-block',padding:'3px 9px',borderRadius:'6px',fontSize:'11px',fontWeight:700,color:m[1],background:m[2]}},m[0]);};
+    const rows=[
+      ['Own profile','own','r','rw'],['Other users','no','own','rw'],['Jobs / recommendations','r','rw','rw'],
+      ['Applications','r','rw','rw'],['Public notes / proof','r','rw','rw'],['Internal staff notes','no','rw','rw'],
+      ['Documents','own','rw','rw'],['Payments','own','r','rw'],['Staff assignment','no','no','rw'],['CSV export','no','no','rw']];
+    const matrix=h('div',{style:{overflowX:'auto'}},h('table',{style:{width:'100%',borderCollapse:'collapse',fontSize:'13px'}},
+      h('thead',null,h('tr',null,['Resource','User','Staff','Admin'].map((c,i)=>h('th',{key:i,style:{textAlign:i?'center':'left',padding:'10px 12px',borderBottom:'2px solid var(--border-2)',fontSize:'12px',textTransform:'uppercase',letterSpacing:'.04em',color:'var(--muted)'}},c)))),
+      h('tbody',null,rows.map((r,i)=>h('tr',{key:i},
+        h('td',{style:{padding:'10px 12px',borderBottom:'1px solid var(--border)',fontWeight:600}},r[0]),
+        h('td',{style:{padding:'10px 12px',borderBottom:'1px solid var(--border)',textAlign:'center'}},cellMark(r[1])),
+        h('td',{style:{padding:'10px 12px',borderBottom:'1px solid var(--border)',textAlign:'center'}},cellMark(r[2])),
+        h('td',{style:{padding:'10px 12px',borderBottom:'1px solid var(--border)',textAlign:'center'}},cellMark(r[3])))))));
+
+    // demo data plan
+    const stat=(v,l)=>h('div',{style:{background:'var(--surface)',border:'1px solid var(--border)',borderRadius:'10px',padding:'16px'}},
+      h('div',{style:{fontFamily:'var(--font-display)',fontSize:'28px',fontWeight:600,color:'var(--primary)'}},v),
+      h('div',{style:{fontSize:'13px',color:'var(--muted)',marginTop:'2px'}},l));
+    const plan=h('div',null,
+      h('div',{style:{display:'grid',gridTemplateColumns:'repeat(5,1fr)',gap:'12px',marginBottom:'16px'}},
+        stat('10','demo users'),stat('4','staff members'),stat('20','jobs / applications'),stat('8','payments'),stat('6','notifications')),
+      h('div',{style:{fontSize:'14px',lineHeight:1.7,color:'var(--muted)'}},
+        h('p',{style:{margin:'0 0 8px'}},'Every state in the brief is backed by a real record: Tharindu (brand-new trial, empty dashboard), Ayesha & Mohamed (mid-trial with jobs pending approval / in prep), Nandini (paid, full spread incl. interview + follow-up), Sandun (QC gate + rejected + follow-up needed), Fathima & Rashid (trial/balance exhausted → upgrade prompt), Nilanthi (refunded), Kavya & Sandun (partially paid).'),
+        h('p',{style:{margin:0}},'Jobs span High / Medium / Low fit; applications cover all 8 statuses; payments cover Pending / Paid / Partially Paid / Refunded; proofs cover all 4 types.')));
+
+    return h('div',{style:{maxWidth:'1120px',margin:'0 auto',padding:'48px 24px 72px'}},
+      h('div',{style:{marginBottom:'36px'}},
+        h('span',{style:{display:'inline-flex',alignItems:'center',gap:'8px',padding:'6px 13px',borderRadius:'999px',background:'var(--surface)',border:'1px solid var(--border)',fontSize:'13px',fontWeight:600,color:'var(--primary)'}},'System architecture · reviewable before code'),
+        h('h1',{style:{fontFamily:'var(--font-display)',fontWeight:500,fontSize:'42px',letterSpacing:'-.02em',margin:'16px 0 8px'}},'ATG Apply — architecture'),
+        h('p',{style:{fontSize:'17px',color:'var(--muted)',margin:0,maxWidth:'40em',lineHeight:1.6}},'Sitemap, data model, application-status lifecycle, role-permission matrix and demo-data plan. Schema fixes from the gap-audit are marked ＋ / NEW.')),
+      h('div',{style:{display:'flex',flexDirection:'column',gap:'40px'}},
+        h('section',null,secTitle('01','Sitemap','Every route, grouped by role.'),sitemap),
+        h('section',null,secTitle('02','Data model (ERD)','8 original tables + audit gap-fixes. PK gold · FK teal · ＋ new field.'),card(erd)),
+        h('section',null,secTitle('03','Application status lifecycle','pending_review → approved → drafting → qc → applied → {interview, rejected, follow_up_needed}'),card(stateDiag)),
+        h('section',null,secTitle('04','Role-permission matrix','Operationalises “users never see internal notes”.'),card(matrix)),
+        h('section',null,secTitle('05','Demo data plan','Volume generated so every state is visible without imagination.'),card(plan))));
+  }
+  buildTracker(uid){
+    const order=['pending_review','approved','drafting','qc','applied','interview','rejected','follow_up_needed'];
+    const cnt={};order.forEach(k=>cnt[k]=0);
+    this.ROWS.filter(r=>r.uid===uid).forEach(r=>{const ap=this.state.approvals[r.id]||r.approval;if(ap==='pending')cnt.pending_review++;else if(r.status)cnt[r.status]++;else cnt.approved++;});
+    return order.map(k=>({key:k,label:this.ST[k].l,count:cnt[k],c:this.ST[k].c,b:this.ST[k].b,iconEl:this.icon(this.ST[k].i==='clock'?'clock':this.ST[k].i==='check'?'shield':this.ST[k].i==='pen'?'file':this.ST[k].i==='shield'?'shield':this.ST[k].i==='send'?'briefcase':this.ST[k].i==='star'?'spark':this.ST[k].i==='x'?'list':'bell')}));
+  }
+  adminStats(){
+    const us=this.USERS;const trial=us.filter(u=>u.pkg==='Trial').length;const paid=us.length-trial;
+    const applied=this.ROWS.filter(r=>r.status==='applied').length;
+    const inProg=this.ROWS.filter(r=>['drafting','qc','approved'].includes(r.status)).length;
+    const qc=this.ROWS.filter(r=>r.status==='qc').length;
+    const pendApprove=this.ROWS.filter(r=>(this.state.approvals[r.id]||r.approval)==='pending').length;
+    const pendPay=this.PAYMENTS.filter(p=>p.status==='pending').length;
+    const interviews=this.ROWS.filter(r=>r.status==='interview').length;
+    return [
+      {label:'Active users',value:us.length,sub:`${trial} trial · ${paid} paid`,icon:'users'},
+      {label:'Applications sent',value:applied,sub:`${interviews} interview${interviews===1?'':'s'}`,icon:'briefcase'},
+      {label:'In progress',value:inProg,sub:`${qc} awaiting QC`,icon:'list'},
+      {label:'Needs action',value:pendApprove+pendPay,sub:`${pendApprove} approvals · ${pendPay} payments`,icon:'bell'}
+    ].map(s=>({...s,iconEl:this.icon(s.icon)}));
+  }
+  statusList(){
+    const cnt={};Object.keys(this.ST).forEach(k=>cnt[k]=0);
+    this.ROWS.forEach(r=>{if(r.status)cnt[r.status]++;});
+    const max=Math.max(1,...Object.values(cnt));
+    return Object.keys(this.ST).map(k=>({key:k,label:this.ST[k].l,count:cnt[k],c:this.ST[k].c,b:this.ST[k].b,barW:Math.round(cnt[k]/max*100)+'%'}));
+  }
+  initials(name){return (name||'?').split(' ').filter(Boolean).map(w=>w[0]).slice(0,2).join('').toUpperCase();}
+  icon(name,size){
+    const P={
+      home:['M3 11.5 12 4l9 7.5','M5.5 10v9.5h13V10'],
+      briefcase:['M3 8.5h18v11H3z','M8.5 8.5V6a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v2.5','M3 13h18'],
+      list:['M8 6h13','M8 12h13','M8 18h13','M3.5 6h.01','M3.5 12h.01','M3.5 18h.01'],
+      file:['M6 3h8l4 4v14H6z','M14 3v4h4','M9 13h6','M9 17h6'],
+      card:['M3 6.5h18v11H3z','M3 10.5h18','M6.5 14.5h4'],
+      spark:['M12 3v4','M12 17v4','M3 12h4','M17 12h4','M12 9l1.4 1.6L15 12l-1.6 1.4L12 15l-1.4-1.6L9 12l1.6-1.4z'],
+      bell:['M18 8a6 6 0 1 0-12 0c0 7-3 8-3 8h18s-3-1-3-8','M13.7 21a2 2 0 0 1-3.4 0'],
+      chat:['M21 11.5a8 8 0 0 1-11.6 7.1L3 20.5l1.9-6.4A8 8 0 1 1 21 11.5z'],
+      users:['M16 19v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2','M9 9a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7','M22 19v-2a4 4 0 0 0-3-3.8','M16 2.2a4 4 0 0 1 0 7.6'],
+      shield:['M12 3 5 6v5c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6z','M9 12l2 2 4-4'],
+      gauge:['M12 13a8 8 0 0 1 8-8','M12 13 17 8','M4 13a8 8 0 0 1 4-7','M3.5 19.5h17'],
+      download:['M12 3v12','M7 11l5 5 5-5','M4.5 20.5h15'],
+      clock:['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18','M12 7.5V12l3 2']
+    };
+    const d=P[name]||P.home;
+    return React.createElement('svg',{width:size||18,height:size||18,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:1.7,strokeLinecap:'round',strokeLinejoin:'round'},
+      d.map((p,i)=>React.createElement('path',{key:i,d:p})));
+  }
+  pubNav(v){ const a=this.state.view===v; return `padding:8px 14px;border-radius:8px;border:none;cursor:pointer;font-size:14px;font-weight:${a?600:500};background:${a?'var(--surface-3)':'transparent'};color:${a?'var(--on-surface)':'var(--muted)'}`; }
+  wizStep(i,step){ const done=i<step,active=i===step; return `display:flex;align-items:center;gap:8px;padding:7px 4px;background:none;border:none;cursor:pointer;font-size:13px;font-weight:${active?600:500};color:${active?'var(--on-surface)':done?'var(--primary)':'var(--muted)'};text-align:left`; }
+}
+</script>
+</body>
+</html>
