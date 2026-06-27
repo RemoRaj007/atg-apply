@@ -4,15 +4,17 @@ function NavBtn({ label, iconName, active, badge, onClick }) {
   return (
     <button
       onClick={onClick}
+      className="tap-target"
+      aria-current={active ? 'page' : undefined}
       style={{
         display: 'flex', alignItems: 'center', gap: 11, width: '100%',
         padding: '10px 12px', borderRadius: 9, border: 'none', cursor: 'pointer',
-        fontSize: 14, fontWeight: active ? 600 : 500, textAlign: 'left',
+        fontSize: 'var(--text-base)', fontWeight: active ? 600 : 500, textAlign: 'left',
         background: active ? 'var(--surface-3)' : 'transparent',
         color: active ? 'var(--on-surface)' : 'var(--muted)',
       }}
     >
-      <span style={{ display: 'grid', placeItems: 'center', width: 20, height: 20 }}>
+      <span style={{ display: 'grid', placeItems: 'center', width: 20, height: 20, flexShrink: 0 }}>
         <Icon name={iconName} size={18} />
       </span>
       <span style={{ flex: 1, textAlign: 'left' }}>{label}</span>
@@ -27,41 +29,62 @@ function NavBtn({ label, iconName, active, badge, onClick }) {
   )
 }
 
-export default function Sidebar({ role, view, onNav, userNav, adminNav, whoName, whoRole, whoInitials }) {
+export default function Sidebar({ role, view, onNav, userNav, adminNav, whoName, whoRole, whoInitials, isOpen, onClose }) {
   const navItems = role === 'user' ? userNav : adminNav
   const navLabel = role === 'user' ? 'My account' : 'Operator console'
 
   return (
-    <aside style={{
-      background: 'var(--surface)', borderRight: '1px solid var(--border)',
-      padding: '18px 12px', display: 'flex', flexDirection: 'column', gap: 4,
-      width: 248, minHeight: 'calc(100vh - 60px)',
-    }}>
-      <div style={{ padding: '6px 12px 14px', fontSize: 11, fontWeight: 700, letterSpacing: '.09em', textTransform: 'uppercase', color: 'var(--muted)' }}>
-        {navLabel}
-      </div>
-      {navItems.map(item => (
-        <NavBtn
-          key={item.view}
-          label={item.label}
-          iconName={item.icon}
-          active={view === item.view}
-          badge={item.badge}
-          onClick={() => onNav(item.view)}
-        />
-      ))}
-      <span style={{ flex: 1 }} />
-      <div style={{ marginTop: 12, padding: 13, borderRadius: 'var(--radius-sm)', background: 'var(--surface-2)', border: '1px solid var(--border)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-          <span style={{ display: 'grid', placeItems: 'center', width: 34, height: 34, borderRadius: '50%', background: 'var(--primary)', color: 'var(--on-primary)', fontWeight: 600, fontSize: 14 }}>
-            {whoInitials}
+    <>
+      <div
+        className={`sidebar-backdrop${isOpen ? ' is-open' : ''}`}
+        onClick={onClose}
+        aria-hidden="true"
+      />
+      <aside
+        className={`sidebar${isOpen ? ' is-open' : ''}`}
+        aria-label={navLabel}
+        style={{
+          background: 'var(--surface)', borderRight: '1px solid var(--border)',
+          padding: '18px 12px', display: 'flex', flexDirection: 'column', gap: 4,
+          width: 'var(--sidebar-w)', minHeight: 'calc(100vh - var(--header-h))',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 12px 14px' }}>
+          <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.09em', textTransform: 'uppercase', color: 'var(--muted)' }}>
+            {navLabel}
           </span>
-          <div style={{ minWidth: 0 }}>
-            <div style={{ fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{whoName}</div>
-            <div style={{ fontSize: 11, color: 'var(--muted)' }}>{whoRole}</div>
+          <button
+            onClick={onClose}
+            aria-label="Close menu"
+            className="hide-desktop tap-target"
+            style={{ display: 'none', alignItems: 'center', justifyContent: 'center', background: 'none', border: 'none', color: 'var(--muted)', cursor: 'pointer' }}
+          >
+            <Icon name="x" size={20} />
+          </button>
+        </div>
+        {navItems.map(item => (
+          <NavBtn
+            key={item.view}
+            label={item.label}
+            iconName={item.icon}
+            active={view === item.view}
+            badge={item.badge}
+            onClick={() => { onNav(item.view); onClose?.() }}
+          />
+        ))}
+        <span style={{ flex: 1 }} />
+        <div style={{ marginTop: 12, padding: 13, borderRadius: 'var(--radius-sm)', background: 'var(--surface-2)', border: '1px solid var(--border)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+            <span style={{ display: 'grid', placeItems: 'center', width: 34, height: 34, borderRadius: '50%', background: 'var(--primary)', color: 'var(--on-primary)', fontWeight: 600, fontSize: 14, flexShrink: 0 }}>
+              {whoInitials}
+            </span>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{whoName}</div>
+              <div style={{ fontSize: 11, color: 'var(--muted)' }}>{whoRole}</div>
+            </div>
           </div>
         </div>
-      </div>
-    </aside>
+      </aside>
+    </>
   )
 }

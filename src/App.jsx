@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Header from './components/Header.jsx'
 import Sidebar from './components/Sidebar.jsx'
 import Toast from './components/Toast.jsx'
+import Icon from './components/Icon.jsx'
 import { Home, HowItWorks, Pricing, Contact, Privacy, Terms } from './pages/PublicPages.jsx'
 import SignupWizard from './pages/SignupWizard.jsx'
 import ArchitecturePage from './pages/ArchitecturePage.jsx'
@@ -18,25 +19,50 @@ import { ROWS } from './data.js'
 const MY_UID = 'u4'
 
 function PublicNav({ view, onNav, onSignup }) {
+  const [mobileOpen, setMobileOpen] = useState(false)
   const lnk = (v, label) => (
     <button
-      onClick={() => onNav('public', v)}
+      onClick={() => { onNav('public', v); setMobileOpen(false) }}
       style={{
         padding: '8px 12px', borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 14,
         background: 'none', fontWeight: view === v ? 600 : 400, color: view === v ? 'var(--on-surface)' : 'var(--muted)',
+        textAlign: 'left', minHeight: 40,
       }}
     >{label}</button>
   )
   return (
-    <nav style={{ display: 'flex', alignItems: 'center', gap: 4, flexWrap: 'wrap', padding: '10px 20px', background: 'var(--surface)', borderBottom: '1px solid var(--border)', position: 'sticky', top: 60, zIndex: 40 }}>
-      {lnk('home', 'Home')}
-      {lnk('how', 'How it works')}
-      {lnk('pricing', 'Pricing')}
-      {lnk('contact', 'Contact')}
-      {lnk('privacy', 'Privacy')}
-      {lnk('terms', 'Terms')}
-      <span style={{ flex: 1 }} />
-      <button onClick={onSignup} style={{ padding: '9px 18px', borderRadius: 9, background: 'var(--accent)', color: '#fff', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>Start free — 2 applications</button>
+    <nav style={{ background: 'var(--surface)', borderBottom: '1px solid var(--border)', position: 'sticky', top: 'var(--header-h)', zIndex: 40 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexWrap: 'wrap', padding: '10px 20px' }}>
+        <div className="public-nav-links" style={{ display: 'flex', alignItems: 'center', gap: 4, flexWrap: 'wrap' }}>
+          {lnk('home', 'Home')}
+          {lnk('how', 'How it works')}
+          {lnk('pricing', 'Pricing')}
+          {lnk('contact', 'Contact')}
+          {lnk('privacy', 'Privacy')}
+          {lnk('terms', 'Terms')}
+        </div>
+        <button
+          className="public-nav-toggle tap-target"
+          onClick={() => setMobileOpen(o => !o)}
+          aria-expanded={mobileOpen}
+          aria-label="Toggle site navigation"
+          style={{ display: 'none', alignItems: 'center', gap: 6, padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface)', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}
+        >
+          Menu <Icon name={mobileOpen ? 'x' : 'menu'} size={16} />
+        </button>
+        <span style={{ flex: 1 }} />
+        <button onClick={onSignup} style={{ padding: '9px 18px', borderRadius: 9, background: 'var(--accent)', color: '#fff', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>Start free — 2 applications</button>
+      </div>
+      {mobileOpen && (
+        <div style={{ display: 'flex', flexDirection: 'column', padding: '0 20px 12px', borderTop: '1px solid var(--border)' }}>
+          {lnk('home', 'Home')}
+          {lnk('how', 'How it works')}
+          {lnk('pricing', 'Pricing')}
+          {lnk('contact', 'Contact')}
+          {lnk('privacy', 'Privacy')}
+          {lnk('terms', 'Terms')}
+        </div>
+      )}
     </nav>
   )
 }
@@ -52,6 +78,7 @@ export default function App() {
   const [selUser, setSelUser] = useState('u4')
   const [approvals, setApprovals] = useState({})
   const [toast, setToast] = useState(null)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const flash = (msg) => {
     setToast(msg)
@@ -62,6 +89,7 @@ export default function App() {
   const nav = (r, v) => {
     setRole(r)
     setView(v)
+    setSidebarOpen(false)
     window.scrollTo(0, 0)
   }
 
@@ -128,15 +156,18 @@ export default function App() {
           onToggleC1={() => setConsent1(c => !c)}
           onToggleC2={() => setConsent2(c => !c)}
           onPrivacy={() => go('privacy')}
+          onGoToStep={(i) => setStep(s => i <= s ? i : s)}
         />
       )
       default: return <Home onSignup={() => { setStep(0); nav('public', 'signup') }} onHow={() => go('how')} onPricing={() => go('pricing')} />
     }
   }
 
+  const setViewAndClose = (v) => { setView(v); setSidebarOpen(false) }
+
   const renderCustomerPage = () => {
     switch (view) {
-      case 'u-dash': return <CustomerDashboard approvals={approvals} onApprove={approveJob} onDecline={declineJob} onGoJobs={() => setView('u-jobs')} onGoApps={() => setView('u-apps')} onGoUpgrade={() => setView('u-upgrade')} onGoProfile={() => setView('u-profile')} onGoNotify={() => setView('u-notify')} />
+      case 'u-dash': return <CustomerDashboard approvals={approvals} onApprove={approveJob} onDecline={declineJob} onGoJobs={() => setViewAndClose('u-jobs')} onGoApps={() => setViewAndClose('u-apps')} onGoUpgrade={() => setViewAndClose('u-upgrade')} onGoProfile={() => setViewAndClose('u-profile')} onGoNotify={() => setViewAndClose('u-notify')} />
       case 'u-jobs': return <CustomerJobs approvals={approvals} onApprove={approveJob} onDecline={declineJob} />
       case 'u-apps': return <CustomerApplications approvals={approvals} />
       case 'u-docs': return <CustomerDocuments />
@@ -145,23 +176,23 @@ export default function App() {
       case 'u-notify': return <CustomerNotifications />
       case 'u-support': return <CustomerSupport onSend={() => flash('Message sent')} />
       case 'u-profile': return <CustomerProfile onSave={() => flash('Profile saved')} />
-      default: return <CustomerDashboard approvals={approvals} onApprove={approveJob} onDecline={declineJob} onGoJobs={() => setView('u-jobs')} onGoApps={() => setView('u-apps')} onGoUpgrade={() => setView('u-upgrade')} onGoProfile={() => setView('u-profile')} onGoNotify={() => setView('u-notify')} />
+      default: return <CustomerDashboard approvals={approvals} onApprove={approveJob} onDecline={declineJob} onGoJobs={() => setViewAndClose('u-jobs')} onGoApps={() => setViewAndClose('u-apps')} onGoUpgrade={() => setViewAndClose('u-upgrade')} onGoProfile={() => setViewAndClose('u-profile')} onGoNotify={() => setViewAndClose('u-notify')} />
     }
   }
 
   const renderAdminPage = () => {
     switch (view) {
-      case 'a-dash': return <AdminDashboard onGoQC={() => setView('a-qc')} onGoPay={() => setView('a-pay')} />
-      case 'a-users': return <AdminUsers onOpenUser={(id) => { setSelUser(id); setView('a-user') }} onGoExport={() => setView('a-export')} />
-      case 'a-user': return <AdminUserDetail userId={selUser} onBack={() => setView('a-users')} onGoAddJob={() => setView('a-jobnew')} onToast={flash} />
-      case 'a-jobnew': return <AdminAddJob userId={selUser} onSave={() => { flash('Job recommendation added'); setView('a-user') }} />
+      case 'a-dash': return <AdminDashboard onGoQC={() => setViewAndClose('a-qc')} onGoPay={() => setViewAndClose('a-pay')} />
+      case 'a-users': return <AdminUsers onOpenUser={(id) => { setSelUser(id); setViewAndClose('a-user') }} onGoExport={() => setViewAndClose('a-export')} />
+      case 'a-user': return <AdminUserDetail userId={selUser} onBack={() => setViewAndClose('a-users')} onGoAddJob={() => setViewAndClose('a-jobnew')} onToast={flash} />
+      case 'a-jobnew': return <AdminAddJob userId={selUser} onSave={() => { flash('Job recommendation added'); setViewAndClose('a-user') }} />
       case 'a-apps': return <AdminApplications />
       case 'a-qc': return <AdminQCQueue onToast={flash} />
       case 'a-pay': return <AdminPayments onToast={flash} />
       case 'a-staff': return <AdminStaff />
       case 'a-notify': return <AdminNotifications />
       case 'a-export': return <AdminExport onToast={flash} />
-      default: return <AdminDashboard onGoQC={() => setView('a-qc')} onGoPay={() => setView('a-pay')} />
+      default: return <AdminDashboard onGoQC={() => setViewAndClose('a-qc')} onGoPay={() => setViewAndClose('a-pay')} />
     }
   }
 
@@ -170,6 +201,9 @@ export default function App() {
       <Header
         role={role}
         view={view}
+        theme={theme}
+        showMenuToggle={isShell}
+        onToggleMenu={() => setSidebarOpen(o => !o)}
         onViewPublic={() => nav('public', 'home')}
         onViewUser={() => nav('user', 'u-dash')}
         onViewAdmin={() => nav('admin', 'a-dash')}
@@ -187,7 +221,7 @@ export default function App() {
       )}
 
       {isShell && (
-        <div style={{ display: 'grid', gridTemplateColumns: '248px 1fr', minHeight: 'calc(100vh - 60px)' }}>
+        <div className="app-shell">
           <Sidebar
             role={role}
             view={view}
@@ -197,6 +231,8 @@ export default function App() {
             whoName={whoName}
             whoRole={whoRole}
             whoInitials={whoInitials}
+            isOpen={sidebarOpen}
+            onClose={() => setSidebarOpen(false)}
           />
           <main style={{ minWidth: 0, padding: 0 }}>
             {role === 'user' ? renderCustomerPage() : renderAdminPage()}
@@ -204,7 +240,7 @@ export default function App() {
         </div>
       )}
 
-      <Toast message={toast} />
+      <Toast message={toast} onClose={() => setToast(null)} />
     </div>
   )
 }
@@ -215,7 +251,7 @@ function Footer({ onNav }) {
   )
   return (
     <footer style={{ background: 'var(--primary)', color: 'var(--on-primary)', marginTop: 0 }}>
-      <div style={{ maxWidth: 1120, margin: '0 auto', padding: '40px 24px', display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr 1fr', gap: 24 }}>
+      <div className="container footer-grid" style={{ padding: '40px 24px', gap: 24 }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 12 }}>
             <svg width="28" height="28" viewBox="0 0 36 36" fill="none"><rect width="36" height="36" rx="10" fill="rgba(255,255,255,.15)" /><path d="M18 8.5L9 27.5" stroke="white" strokeWidth="2.3" strokeLinecap="round" /><path d="M18 8.5L27 27.5" stroke="white" strokeWidth="2.3" strokeLinecap="round" /><path d="M12.5 21.5H23.5" stroke="white" strokeWidth="2.3" strokeLinecap="round" /><circle cx="18" cy="8.5" r="3" fill="#C2613B" /></svg>
@@ -247,7 +283,7 @@ function Footer({ onNav }) {
         </div>
       </div>
       <div style={{ borderTop: '1px solid rgba(255,255,255,.12)' }}>
-        <div style={{ maxWidth: 1120, margin: '0 auto', padding: '16px 24px', fontSize: 12, opacity: .6 }}>
+        <div className="container" style={{ padding: '16px 24px', fontSize: 12, opacity: .6 }}>
           © 2026 ATG Concordia (Pvt) Ltd · Colombo, Sri Lanka
         </div>
       </div>

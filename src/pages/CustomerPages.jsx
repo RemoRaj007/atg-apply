@@ -44,19 +44,19 @@ export function CustomerDashboard({ approvals, onApprove, onDecline, onGoJobs, o
           <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 30, margin: 0 }}>Welcome back, Nandini</h1>
           <p style={{ color: 'var(--muted)', margin: '5px 0 0', fontSize: 14 }}>Here's where your applications stand this week.</p>
         </div>
-        <button onClick={onGoJobs} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 17px', borderRadius: 9, background: 'var(--accent)', color: '#fff', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>
+        <button onClick={onGoJobs} className="tap-target" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 17px', borderRadius: 9, background: 'var(--accent)', color: '#fff', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>
           Review {myPending.length} new jobs
         </button>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: 18, alignItems: 'start' }}>
+      <div className="dash-grid" style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: 18, alignItems: 'start' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
           <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 20 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
               <h2 style={{ fontSize: 16, margin: 0 }}>Application tracker</h2>
               <button onClick={onGoApps} style={{ background: 'none', border: 'none', color: 'var(--primary)', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>View all</button>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 10 }}>
+            <div className="grid-4" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 10 }}>
               {tracker.map((t, i) => (
                 <div key={i} style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 10, padding: 13 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 7, color: t.c }}>
@@ -93,8 +93,8 @@ export function CustomerDashboard({ approvals, onApprove, onDecline, onGoJobs, o
                     <p style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.5, margin: '6px 0 0' }}>{r.reason}</p>
                     <div style={{ display: 'flex', gap: 9, marginTop: 12 }}>
                       {r.apPending && <>
-                        <button onClick={() => onApprove(r.id)} style={{ padding: '8px 16px', borderRadius: 8, background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>Approve</button>
-                        <button onClick={() => onDecline(r.id)} style={{ padding: '8px 16px', borderRadius: 8, background: 'var(--surface)', color: 'var(--muted)', border: '1px solid var(--border-2)', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>Skip</button>
+                        <button onClick={() => onApprove(r.id)} className="tap-target" style={{ padding: '8px 16px', borderRadius: 8, background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>Approve</button>
+                        <button onClick={() => onDecline(r.id)} className="tap-target" style={{ padding: '8px 16px', borderRadius: 8, background: 'var(--surface)', color: 'var(--muted)', border: '1px solid var(--border-2)', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>Skip</button>
                       </>}
                       {r.apApproved && <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#1F7A4D', fontWeight: 600, fontSize: 13 }}><Icon name="check" size={15} />Approved — sent to your team</span>}
                       {r.apDeclined && <span style={{ color: 'var(--muted)', fontWeight: 600, fontSize: 13 }}>Skipped</span>}
@@ -187,8 +187,8 @@ export function CustomerJobs({ approvals, onApprove, onDecline }) {
               <p style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.5, margin: '4px 0 0' }}>{r.reason}</p>
               <div style={{ display: 'flex', gap: 9, marginTop: 12, alignItems: 'center' }}>
                 {r.apPending && <>
-                  <button onClick={() => onApprove(r.id)} style={{ padding: '8px 16px', borderRadius: 8, background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>Approve</button>
-                  <button onClick={() => onDecline(r.id)} style={{ padding: '8px 16px', borderRadius: 8, background: 'var(--surface)', color: 'var(--muted)', border: '1px solid var(--border-2)', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>Skip</button>
+                  <button onClick={() => onApprove(r.id)} className="tap-target" style={{ padding: '8px 16px', borderRadius: 8, background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>Approve</button>
+                  <button onClick={() => onDecline(r.id)} className="tap-target" style={{ padding: '8px 16px', borderRadius: 8, background: 'var(--surface)', color: 'var(--muted)', border: '1px solid var(--border-2)', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>Skip</button>
                 </>}
                 {r.apApproved && <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#1F7A4D', fontWeight: 600, fontSize: 13 }}><Icon name="check" size={15} />Approved</span>}
                 {r.apDeclined && <span style={{ color: 'var(--muted)', fontWeight: 600, fontSize: 13 }}>Skipped</span>}
@@ -204,23 +204,23 @@ export function CustomerJobs({ approvals, onApprove, onDecline }) {
 export function CustomerApplications({ approvals }) {
   const myRows = ROWS.filter(r => r.uid === MY_UID && r.status).map(r => decRow(r, approvals))
   return (
-    <div style={{ padding: '26px 30px', maxWidth: 1080 }}>
+    <div className="container" style={{ padding: '26px 30px', maxWidth: 1080 }}>
       <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>Application tracker</h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 20px', fontSize: 14 }}>Every application we've submitted or are preparing, with proof of submission.</p>
-      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', overflow: 'hidden' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1.8fr 1fr 1fr 1.2fr', gap: 12, padding: '12px 18px', background: 'var(--surface-2)', borderBottom: '1px solid var(--border)', fontSize: 11, fontWeight: 700, letterSpacing: '.04em', textTransform: 'uppercase', color: 'var(--muted)' }}>
+      <div className="data-table" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', overflow: 'hidden' }}>
+        <div className="data-table-head" style={{ display: 'grid', gridTemplateColumns: '1.8fr 1fr 1fr 1.2fr', gap: 12, padding: '12px 18px', background: 'var(--surface-2)', borderBottom: '1px solid var(--border)', fontSize: 11, fontWeight: 700, letterSpacing: '.04em', textTransform: 'uppercase', color: 'var(--muted)' }}>
           <span>Role</span><span>Status</span><span>Applied</span><span>Proof</span>
         </div>
         {myRows.map(r => (
-          <div key={r.id} style={{ display: 'grid', gridTemplateColumns: '1.8fr 1fr 1fr 1.2fr', gap: 12, padding: '14px 18px', borderBottom: '1px solid var(--border)', alignItems: 'center' }}>
+          <div key={r.id} className="data-table-row" style={{ display: 'grid', gridTemplateColumns: '1.8fr 1fr 1fr 1.2fr', gap: 12, padding: '14px 18px', borderBottom: '1px solid var(--border)', alignItems: 'center' }}>
             <div>
               <div style={{ fontWeight: 600, fontSize: 14 }}>{r.title}</div>
               <div style={{ fontSize: 12, color: 'var(--muted)' }}>{r.company} · {r.loc}</div>
             </div>
-            <span style={{ display: 'inline-flex', width: 'fit-content', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 700, color: r.statusC, background: r.statusB, padding: '4px 9px', borderRadius: 7 }}>{r.statusLabel}</span>
-            <span style={{ fontSize: 13, color: 'var(--muted)' }}>{r.appliedFmt}</span>
+            <span data-label="Status" style={{ display: 'inline-flex', width: 'fit-content', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 700, color: r.statusC, background: r.statusB, padding: '4px 9px', borderRadius: 7 }}>{r.statusLabel}</span>
+            <span data-label="Applied" style={{ fontSize: 13, color: 'var(--muted)' }}>{r.appliedFmt}</span>
             {r.proofType && (
-              <span style={{ display: 'inline-flex', width: 'fit-content', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: 'var(--primary)' }}>
+              <span data-label="Proof" style={{ display: 'inline-flex', width: 'fit-content', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: 'var(--primary)' }}>
                 <Icon name="shield" size={14} />{r.proofType}
               </span>
             )}
@@ -239,20 +239,20 @@ export function CustomerDocuments() {
     { name: 'Cover letter — 99x Design Lead', meta: 'Leadership framing · Jun 14 · PDF' },
   ]
   return (
-    <div style={{ padding: '26px 30px', maxWidth: 920 }}>
+    <div className="container" style={{ padding: '26px 30px', maxWidth: 920 }}>
       <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>Your documents</h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 20px', fontSize: 14 }}>Tailored CVs and motivation letters your team prepared for each role.</p>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+      <div className="grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
         {docs.map((d, i) => (
           <div key={i} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 11, padding: 16, display: 'flex', gap: 13, alignItems: 'center' }}>
-            <span style={{ display: 'grid', placeItems: 'center', width: 42, height: 42, borderRadius: 10, background: 'var(--surface-2)', color: 'var(--primary)' }}>
+            <span style={{ display: 'grid', placeItems: 'center', width: 42, height: 42, borderRadius: 10, background: 'var(--surface-2)', color: 'var(--primary)', flexShrink: 0 }}>
               <Icon name="file" size={20} />
             </span>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontWeight: 600, fontSize: 14 }}>{d.name}</div>
               <div style={{ fontSize: 12, color: 'var(--muted)' }}>{d.meta}</div>
             </div>
-            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--primary)', cursor: 'pointer' }}>Download</span>
+            <button type="button" className="tap-target" style={{ fontSize: 12, fontWeight: 600, color: 'var(--primary)', cursor: 'pointer', background: 'none', border: 'none', flexShrink: 0 }}>Download</button>
           </div>
         ))}
       </div>
@@ -263,10 +263,10 @@ export function CustomerDocuments() {
 export function CustomerPayments() {
   const p = PAYMENTS.find(p => p.uid === MY_UID)
   return (
-    <div style={{ padding: '26px 30px', maxWidth: 880 }}>
+    <div className="container" style={{ padding: '26px 30px', maxWidth: 880 }}>
       <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 18px' }}>Payments</h1>
       <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 22, marginBottom: 16 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
           <div>
             <div style={{ fontSize: 13, color: 'var(--muted)' }}>Professional package</div>
             <div style={{ fontFamily: 'var(--font-display)', fontSize: 26, fontWeight: 600 }}>USD 100.00</div>
@@ -274,15 +274,15 @@ export function CustomerPayments() {
           <span style={{ fontSize: 12, fontWeight: 700, color: '#1F7A4D', background: '#E3F3E8', padding: '5px 11px', borderRadius: 8 }}>Paid</span>
         </div>
       </div>
-      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', overflow: 'hidden' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 12, padding: '12px 18px', background: 'var(--surface-2)', borderBottom: '1px solid var(--border)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.04em', color: 'var(--muted)' }}>
+      <div className="data-table" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', overflow: 'hidden' }}>
+        <div className="data-table-head" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 12, padding: '12px 18px', background: 'var(--surface-2)', borderBottom: '1px solid var(--border)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.04em', color: 'var(--muted)' }}>
           <span>Invoice</span><span>Method</span><span>Date</span><span style={{ textAlign: 'right' }}>Status</span>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 12, padding: '14px 18px', alignItems: 'center' }}>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>{p?.ref}</span>
-          <span style={{ fontSize: 13 }}>{p?.method}</span>
-          <span style={{ fontSize: 13, color: 'var(--muted)' }}>{fmtDate(p?.date)}</span>
-          <span style={{ textAlign: 'right' }}><span style={{ fontSize: 11, fontWeight: 700, color: '#1F7A4D', background: '#E3F3E8', padding: '4px 9px', borderRadius: 7 }}>Paid · ${p?.paid}</span></span>
+        <div className="data-table-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 12, padding: '14px 18px', alignItems: 'center' }}>
+          <span data-label="Invoice" style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>{p?.ref}</span>
+          <span data-label="Method" style={{ fontSize: 13 }}>{p?.method}</span>
+          <span data-label="Date" style={{ fontSize: 13, color: 'var(--muted)' }}>{fmtDate(p?.date)}</span>
+          <span data-label="Status" style={{ textAlign: 'right' }}><span style={{ fontSize: 11, fontWeight: 700, color: '#1F7A4D', background: '#E3F3E8', padding: '4px 9px', borderRadius: 7 }}>Paid · ${p?.paid}</span></span>
         </div>
       </div>
     </div>
@@ -303,7 +303,7 @@ export function CustomerUpgrade({ onUpgrade }) {
         </div>
       </div>
       <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 18px' }}>Choose a package</h1>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
+      <div className="grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
         {paid.map(p => {
           const hi = p.hi
           return (
@@ -323,7 +323,7 @@ export function CustomerUpgrade({ onUpgrade }) {
                 <span style={{ fontFamily: 'var(--font-display)', fontSize: 36, fontWeight: 600 }}>${p.price}</span>
                 <span style={{ opacity: hi ? .8 : 1, color: hi ? 'inherit' : 'var(--muted)', fontSize: 14 }}>· {p.apps} apps</span>
               </div>
-              <button onClick={onUpgrade} style={{ width: '100%', padding: '11px', borderRadius: 9, background: hi ? 'var(--accent)' : 'var(--surface-2)', color: hi ? '#fff' : 'var(--on-surface)', border: hi ? 'none' : '1px solid var(--border)', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>
+              <button onClick={onUpgrade} className="tap-target" style={{ width: '100%', padding: '11px', borderRadius: 9, background: hi ? 'var(--accent)' : 'var(--surface-2)', color: hi ? '#fff' : 'var(--on-surface)', border: hi ? 'none' : '1px solid var(--border)', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>
                 {p.cta}
               </button>
             </div>
@@ -384,8 +384,9 @@ export function CustomerSupport({ onSend }) {
         </div>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
-        <input placeholder="Type a message…" style={{ flex: 1, padding: '12px 14px', borderRadius: 9, border: '1px solid var(--border-2)', background: 'var(--surface)', fontSize: 14, color: 'inherit', fontFamily: 'inherit' }} />
-        <button onClick={onSend} style={{ padding: '12px 20px', borderRadius: 9, background: 'var(--accent)', color: '#fff', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>Send</button>
+        <label htmlFor="support-msg" style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>Message</label>
+        <input id="support-msg" name="message" placeholder="Type a message…" style={{ flex: 1, padding: '12px 14px', borderRadius: 9, border: '1px solid var(--border-2)', background: 'var(--surface)', fontSize: 14, color: 'inherit', fontFamily: 'inherit' }} />
+        <button onClick={onSend} className="tap-target" style={{ padding: '12px 20px', borderRadius: 9, background: 'var(--accent)', color: '#fff', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>Send</button>
       </div>
     </div>
   )
@@ -393,16 +394,16 @@ export function CustomerSupport({ onSend }) {
 
 export function CustomerProfile({ onSave }) {
   return (
-    <div style={{ padding: '26px 30px', maxWidth: 760 }}>
+    <div className="container" style={{ padding: '26px 30px', maxWidth: 760 }}>
       <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 18px' }}>Your profile</h1>
       <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-          <div><label style={flbl}>Full name</label><input defaultValue="Nandini" style={fin} /></div>
-          <div><label style={flbl}>Email</label><input defaultValue="nandini@gmail.com" style={fin} /></div>
-          <div><label style={flbl}>Target roles</label><input defaultValue="Senior UX Designer, Product Designer" style={fin} /></div>
-          <div><label style={flbl}>Locations</label><input defaultValue="Colombo, Remote" style={fin} /></div>
+        <div className="grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div><label htmlFor="prof-name" style={flbl}>Full name</label><input id="prof-name" name="fullName" defaultValue="Nandini" style={fin} /></div>
+          <div><label htmlFor="prof-email" style={flbl}>Email</label><input id="prof-email" name="email" type="email" defaultValue="nandini@gmail.com" style={fin} /></div>
+          <div><label htmlFor="prof-roles" style={flbl}>Target roles</label><input id="prof-roles" name="targetRoles" defaultValue="Senior UX Designer, Product Designer" style={fin} /></div>
+          <div><label htmlFor="prof-locations" style={flbl}>Locations</label><input id="prof-locations" name="locations" defaultValue="Colombo, Remote" style={fin} /></div>
         </div>
-        <button onClick={onSave} style={{ alignSelf: 'flex-start', padding: '11px 20px', borderRadius: 9, background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>Save changes</button>
+        <button onClick={onSave} className="tap-target" style={{ alignSelf: 'flex-start', padding: '11px 20px', borderRadius: 9, background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>Save changes</button>
       </div>
     </div>
   )
