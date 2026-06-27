@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Icon from '../components/Icon.jsx'
+import { useLang } from '../i18n/LanguageContext.jsx'
 import { ROWS, USERS, STAFF, PAYMENTS, TEMPLATES, ST, PAY_META, fitMeta, fmtDate, initials, staffName, userById } from '../data.js'
 
 function decRow(r, approvals = {}) {
@@ -20,6 +21,7 @@ function decRow(r, approvals = {}) {
 const PKG_BADGE = { Trial: '#ECEAE3', Starter: '#E4ECF7', Professional: '#E1EFE9', Premium: '#FBF0D9' }
 
 export function AdminDashboard({ onGoQC, onGoPay }) {
+  const { t } = useLang()
   const allRows = ROWS.map(r => decRow(r))
   const qcRows = allRows.filter(r => r.status === 'qc')
   const payNeedsCount = PAYMENTS.filter(p => p.status === 'pending' || p.status === 'partial').length
@@ -32,18 +34,18 @@ export function AdminDashboard({ onGoQC, onGoPay }) {
   })).filter(s => s.count > 0)
 
   const adminStats = [
-    { label: 'Active users', value: USERS.filter(u => u.state === 'active').length, sub: `${USERS.length} total`, icon: 'users' },
-    { label: 'Applications', value: ROWS.length, sub: `${ROWS.filter(r => r.status === 'applied').length} applied`, icon: 'list' },
-    { label: 'In QC', value: qcRows.length, sub: 'Need sign-off', icon: 'shield' },
-    { label: 'Revenue', value: `$${PAYMENTS.reduce((s, p) => s + p.paid, 0)}`, sub: 'USD · all time', icon: 'card' },
+    { label: t('admin.dash.activeUsers'), value: USERS.filter(u => u.state === 'active').length, sub: `${USERS.length} ${t('admin.dash.totalSuffix')}`, icon: 'users' },
+    { label: t('admin.dash.applications'), value: ROWS.length, sub: `${ROWS.filter(r => r.status === 'applied').length} ${t('admin.dash.appliedSuffix')}`, icon: 'list' },
+    { label: t('admin.dash.inQC'), value: qcRows.length, sub: t('admin.dash.needSignoff'), icon: 'shield' },
+    { label: t('admin.dash.revenue'), value: `$${PAYMENTS.reduce((s, p) => s + p.paid, 0)}`, sub: t('admin.dash.allTime'), icon: 'card' },
   ]
 
   return (
     <div className="container" style={{ padding: '24px 28px', maxWidth: 1280 }}>
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: 10 }}>
         <div>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: 0 }}>Operator console</h1>
-          <p style={{ color: 'var(--muted)', margin: '4px 0 0', fontSize: 14 }}>Thursday, 26 June 2026 · ATG Concordia operations</p>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: 0 }}>{t('admin.nav.label')}</h1>
+          <p style={{ color: 'var(--muted)', margin: '4px 0 0', fontSize: 14 }}>Thursday, 26 June 2026 · {t('admin.dash.subtitle')}</p>
         </div>
       </div>
 
@@ -62,7 +64,7 @@ export function AdminDashboard({ onGoQC, onGoPay }) {
 
       <div className="dash-grid" style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 16 }}>
         <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 20 }}>
-          <h2 style={{ fontSize: 16, margin: '0 0 14px' }}>Applications by status</h2>
+          <h2 style={{ fontSize: 16, margin: '0 0 14px' }}>{t('admin.dash.byStatus')}</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
             {statusList.map(s => (
               <div key={s.key} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -77,15 +79,15 @@ export function AdminDashboard({ onGoQC, onGoPay }) {
         </div>
 
         <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 20 }}>
-          <h2 style={{ fontSize: 16, margin: '0 0 14px' }}>Needs attention</h2>
+          <h2 style={{ fontSize: 16, margin: '0 0 14px' }}>{t('admin.dash.needsAttention')}</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             <button onClick={onGoQC} className="tap-target" style={{ display: 'flex', alignItems: 'center', gap: 12, width: '100%', textAlign: 'left', background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 10, padding: 13, cursor: 'pointer' }}>
               <span style={{ display: 'grid', placeItems: 'center', width: 36, height: 36, borderRadius: 9, background: '#FBF0D9', color: '#8A6100', flexShrink: 0 }}>
                 <Icon name="shield" size={18} />
               </span>
               <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 600, fontSize: 14 }}>QC queue</div>
-                <div style={{ fontSize: 12, color: 'var(--muted)' }}>Applications awaiting sign-off</div>
+                <div style={{ fontWeight: 600, fontSize: 14 }}>{t('admin.dash.qcQueueLabel')}</div>
+                <div style={{ fontSize: 12, color: 'var(--muted)' }}>{t('admin.dash.qcQueueSub')}</div>
               </div>
               <span style={{ fontWeight: 700, color: '#8A6100' }}>{qcRows.length}</span>
             </button>
@@ -94,8 +96,8 @@ export function AdminDashboard({ onGoQC, onGoPay }) {
                 <Icon name="card" size={18} />
               </span>
               <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 600, fontSize: 14 }}>Payments to reconcile</div>
-                <div style={{ fontSize: 12, color: 'var(--muted)' }}>Pending or partial</div>
+                <div style={{ fontWeight: 600, fontSize: 14 }}>{t('admin.dash.paymentsReconcile')}</div>
+                <div style={{ fontSize: 12, color: 'var(--muted)' }}>{t('admin.dash.pendingOrPartial')}</div>
               </div>
               <span style={{ fontWeight: 700, color: '#1E4E8C' }}>{payNeedsCount}</span>
             </button>
@@ -107,20 +109,21 @@ export function AdminDashboard({ onGoQC, onGoPay }) {
 }
 
 export function AdminUsers({ onOpenUser, onGoExport }) {
+  const { t } = useLang()
   return (
     <div className="container" style={{ padding: '24px 28px', maxWidth: 1280 }}>
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 12 }}>
         <div>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: 0 }}>Users</h1>
-          <p style={{ color: 'var(--muted)', margin: '4px 0 0', fontSize: 14 }}>{USERS.length} users · filter by package or payment status</p>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: 0 }}>{t('admin.nav.users')}</h1>
+          <p style={{ color: 'var(--muted)', margin: '4px 0 0', fontSize: 14 }}>{USERS.length} {t('admin.users.filterDesc')}</p>
         </div>
         <button onClick={onGoExport} className="tap-target" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '9px 15px', borderRadius: 9, background: 'var(--surface)', border: '1px solid var(--border-2)', fontWeight: 600, fontSize: 13, cursor: 'pointer', color: 'var(--on-surface)' }}>
-          <Icon name="download" size={15} />Export CSV
+          <Icon name="download" size={15} />{t('admin.users.exportCsv')}
         </button>
       </div>
       <div className="data-table" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', overflow: 'hidden' }}>
         <div className="data-table-head" style={{ display: 'grid', gridTemplateColumns: '2fr 1.2fr 1fr 1.4fr 1fr 0.6fr', gap: 12, padding: '11px 18px', background: 'var(--surface-2)', borderBottom: '1px solid var(--border)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.04em', color: 'var(--muted)' }}>
-          <span>User</span><span>Package</span><span>Balance</span><span>Staff</span><span>Payment</span><span />
+          <span>{t('admin.users.colUser')}</span><span>{t('admin.users.colPackage')}</span><span>{t('admin.users.colBalance')}</span><span>{t('admin.users.colStaff')}</span><span>{t('admin.users.colPayment')}</span><span />
         </div>
         {USERS.map(u => {
           const pm = PAY_META[u.pay]
@@ -133,10 +136,10 @@ export function AdminUsers({ onOpenUser, onGoExport }) {
                   <div style={{ fontSize: 12, color: 'var(--muted)' }}>{u.city}, {u.country}</div>
                 </div>
               </div>
-              <span data-label="Package" style={{ fontSize: 12, fontWeight: 600, width: 'fit-content', background: PKG_BADGE[u.pkg] || 'var(--surface-3)', padding: '4px 10px', borderRadius: 7 }}>{u.pkg}</span>
-              <span data-label="Balance" style={{ fontSize: 13, color: 'var(--muted)' }}>{u.remaining}/{u.total}</span>
-              <span data-label="Staff" style={{ fontSize: 13 }}>{staffName(u.staff)}</span>
-              <span data-label="Payment" style={{ display: 'inline-flex', width: 'fit-content', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 700, color: pm?.c, background: pm?.b, padding: '4px 9px', borderRadius: 7 }}>{pm?.l}</span>
+              <span data-label={t('admin.users.colPackage')} style={{ fontSize: 12, fontWeight: 600, width: 'fit-content', background: PKG_BADGE[u.pkg] || 'var(--surface-3)', padding: '4px 10px', borderRadius: 7 }}>{u.pkg}</span>
+              <span data-label={t('admin.users.colBalance')} style={{ fontSize: 13, color: 'var(--muted)' }}>{u.remaining}/{u.total}</span>
+              <span data-label={t('admin.users.colStaff')} style={{ fontSize: 13 }}>{staffName(u.staff)}</span>
+              <span data-label={t('admin.users.colPayment')} style={{ display: 'inline-flex', width: 'fit-content', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 700, color: pm?.c, background: pm?.b, padding: '4px 9px', borderRadius: 7 }}>{pm?.l}</span>
               <span style={{ color: 'var(--muted)', textAlign: 'right' }}><Icon name="chevronRight" size={16} /></span>
             </button>
           )
@@ -147,6 +150,7 @@ export function AdminUsers({ onOpenUser, onGoExport }) {
 }
 
 export function AdminUserDetail({ userId, onBack, onGoAddJob, onToast }) {
+  const { t } = useLang()
   const u = userById(userId)
   if (!u) return null
   const userRows = ROWS.filter(r => r.uid === userId).map(r => decRow(r))
@@ -156,7 +160,7 @@ export function AdminUserDetail({ userId, onBack, onGoAddJob, onToast }) {
   return (
     <div className="container" style={{ padding: '24px 28px', maxWidth: 1180 }}>
       <button onClick={onBack} className="tap-target" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', color: 'var(--muted)', fontWeight: 600, fontSize: 13, cursor: 'pointer', marginBottom: 14 }}>
-        <Icon name="chevronLeft" size={15} />All users
+        <Icon name="chevronLeft" size={15} />{t('admin.detail.allUsers')}
       </button>
       <div className="user-detail-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 18, alignItems: 'start' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -169,7 +173,7 @@ export function AdminUserDetail({ userId, onBack, onGoAddJob, onToast }) {
               </div>
             </div>
             <div className="grid-3" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
-              {[['Email', u.email], ['Phone', u.phone], ['Joined', fmtDate(u.created)]].map(([label, val]) => (
+              {[[t('admin.detail.emailLabel'), u.email], [t('admin.detail.phoneLabel'), u.phone], [t('admin.detail.joinedLabel'), fmtDate(u.created)]].map(([label, val]) => (
                 <div key={label}>
                   <div style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: '.04em', color: 'var(--muted)' }}>{label}</div>
                   <div style={{ fontSize: 13, fontWeight: 500, marginTop: 2, wordBreak: 'break-word' }}>{val}</div>
@@ -179,15 +183,15 @@ export function AdminUserDetail({ userId, onBack, onGoAddJob, onToast }) {
           </div>
 
           <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 20 }}>
-            <h2 style={{ fontSize: 16, margin: '0 0 14px' }}>Applications &amp; jobs</h2>
+            <h2 style={{ fontSize: 16, margin: '0 0 14px' }}>{t('admin.detail.appsAndJobs')}</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {userRows.length === 0 && <p style={{ fontSize: 13, color: 'var(--muted)', margin: 0 }}>No jobs added yet.</p>}
+              {userRows.length === 0 && <p style={{ fontSize: 13, color: 'var(--muted)', margin: 0 }}>{t('admin.detail.noJobs')}</p>}
               {userRows.map(r => (
                 <div key={r.id} style={{ border: '1px solid var(--border)', borderRadius: 10, padding: 13, display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
                   <span style={{ display: 'grid', placeItems: 'center', width: 42, height: 42, borderRadius: 9, fontWeight: 700, fontSize: 13, background: r.fitB, color: r.fitC, flexShrink: 0 }}>{r.fit}%</span>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontWeight: 600, fontSize: 14 }}>{r.title} · {r.company}</div>
-                    <div style={{ fontSize: 12, color: 'var(--muted)' }}>{r.loc} · via {r.source}</div>
+                    <div style={{ fontSize: 12, color: 'var(--muted)' }}>{r.loc} · {t('cust.jobs.via')} {r.source}</div>
                   </div>
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 700, color: r.statusC, background: r.statusB, padding: '4px 9px', borderRadius: 7, flexShrink: 0 }}>{r.statusLabel}</span>
                 </div>
@@ -198,47 +202,47 @@ export function AdminUserDetail({ userId, onBack, onGoAddJob, onToast }) {
           <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 20 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
               <Icon name="shield" size={16} />
-              <h2 style={{ fontSize: 15, margin: 0 }}>Internal notes</h2>
-              <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--destructive)', background: '#F7E5E2', padding: '3px 8px', borderRadius: 6 }}>Staff only · never shown to user</span>
+              <h2 style={{ fontSize: 15, margin: 0 }}>{t('admin.detail.internalNotes')}</h2>
+              <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--destructive)', background: '#F7E5E2', padding: '3px 8px', borderRadius: 6 }}>{t('admin.detail.staffOnly')}</span>
             </div>
             <div style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.6, background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 9, padding: 13 }}>
               {userId === 'u6'
                 ? 'First 3 applications require founder QC sign-off. User responsive on WhatsApp. Strong CAD portfolio — lead with John Keells and Hayleys roles.'
-                : 'No internal notes yet.'}
+                : t('admin.detail.noNotes')}
             </div>
           </div>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 18 }}>
-            <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8 }}>Package &amp; balance</div>
+            <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8 }}>{t('admin.detail.packageBalance')}</div>
             <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 8 }}>{u.pkg}</div>
             <div style={{ height: 8, borderRadius: 99, background: 'var(--surface-3)', overflow: 'hidden' }}>
               <div style={{ height: '100%', width: balPct, background: 'var(--primary)' }} />
             </div>
-            <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 6 }}>{u.used} used · {u.remaining} remaining</div>
+            <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 6 }}>{u.used} {t('admin.detail.usedRemaining', { r: u.remaining })}</div>
           </div>
 
           <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 18 }}>
-            <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8 }}>Assigned staff</div>
+            <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8 }}>{t('admin.detail.assignedStaff')}</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
               <span style={{ display: 'grid', placeItems: 'center', width: 38, height: 38, borderRadius: '50%', background: 'var(--surface-3)', color: 'var(--primary)', fontWeight: 700, fontSize: 13, flexShrink: 0 }}>{initials(selStaff?.name || '')}</span>
               <div>
-                <div style={{ fontWeight: 600, fontSize: 13 }}>{selStaff?.name || 'Unassigned'}</div>
-                <div style={{ fontSize: 11, color: 'var(--muted)' }}>Reassign below</div>
+                <div style={{ fontWeight: 600, fontSize: 13 }}>{selStaff?.name || t('admin.detail.unassigned')}</div>
+                <div style={{ fontSize: 11, color: 'var(--muted)' }}>{t('admin.detail.reassignBelow')}</div>
               </div>
             </div>
-            <label htmlFor="reassign-staff" style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>Reassign staff</label>
+            <label htmlFor="reassign-staff" style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>{t('admin.detail.reassignBelow')}</label>
             <select id="reassign-staff" style={{ width: '100%', padding: '11px 13px', borderRadius: 9, border: '1px solid var(--border-2)', background: 'var(--surface-2)', fontSize: 14, color: 'inherit', fontFamily: 'inherit' }}>
               {STAFF.map(s => <option key={s.id}>{s.name}</option>)}
             </select>
           </div>
 
           <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 18 }}>
-            <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 10 }}>Quick actions</div>
+            <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 10 }}>{t('admin.detail.quickActions')}</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <button onClick={onGoAddJob} className="tap-target" style={{ padding: 9, borderRadius: 8, background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>Add a job recommendation</button>
-              <button onClick={() => onToast('Document uploaded')} className="tap-target" style={{ padding: 9, borderRadius: 8, background: 'var(--surface-2)', border: '1px solid var(--border)', fontWeight: 600, fontSize: 13, cursor: 'pointer', color: 'var(--on-surface)' }}>Upload document</button>
+              <button onClick={onGoAddJob} className="tap-target" style={{ padding: 9, borderRadius: 8, background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>{t('admin.detail.addJobRec')}</button>
+              <button onClick={() => onToast(t('toast.docUploaded'))} className="tap-target" style={{ padding: 9, borderRadius: 8, background: 'var(--surface-2)', border: '1px solid var(--border)', fontWeight: 600, fontSize: 13, cursor: 'pointer', color: 'var(--on-surface)' }}>{t('admin.detail.uploadDoc')}</button>
             </div>
           </div>
         </div>
@@ -248,6 +252,7 @@ export function AdminUserDetail({ userId, onBack, onGoAddJob, onToast }) {
 }
 
 export function AdminAddJob({ userId, onSave }) {
+  const { t } = useLang()
   const u = userById(userId)
   const [rubric, setRubric] = useState({ skills: 72, location: 60, experience: 66, relevance: 80 })
   const computed = Math.round(rubric.skills * 0.4 + rubric.location * 0.2 + rubric.experience * 0.2 + rubric.relevance * 0.2)
@@ -258,33 +263,33 @@ export function AdminAddJob({ userId, onSave }) {
 
   return (
     <div className="container" style={{ padding: '24px 28px', maxWidth: 980 }}>
-      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>Add job recommendation</h1>
+      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>{t('admin.addjob.title')}</h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 20px', fontSize: 14 }}>For {u?.name || 'user'} · the fit score is computed from the rubric below, not typed by hand.</p>
       <div className="addjob-grid" style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: 18, alignItems: 'start' }}>
         <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 22, display: 'flex', flexDirection: 'column', gap: 14 }}>
           <div className="grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-            <div><label htmlFor="aj-company" style={flbl}>Company</label><input id="aj-company" name="company" placeholder="e.g. MAS Holdings" style={fin} /></div>
-            <div><label htmlFor="aj-title" style={flbl}>Job title</label><input id="aj-title" name="jobTitle" placeholder="e.g. Senior UX Designer" style={fin} /></div>
-            <div><label htmlFor="aj-location" style={flbl}>Location</label><input id="aj-location" name="location" placeholder="Colombo, LK" style={fin} /></div>
+            <div><label htmlFor="aj-company" style={flbl}>{t('admin.addjob.company')}</label><input id="aj-company" name="company" placeholder="e.g. MAS Holdings" style={fin} /></div>
+            <div><label htmlFor="aj-title" style={flbl}>{t('admin.addjob.jobTitle')}</label><input id="aj-title" name="jobTitle" placeholder="e.g. Senior UX Designer" style={fin} /></div>
+            <div><label htmlFor="aj-location" style={flbl}>{t('admin.addjob.location')}</label><input id="aj-location" name="location" placeholder="Colombo, LK" style={fin} /></div>
             <div>
-              <label htmlFor="aj-source" style={flbl}>Source</label>
+              <label htmlFor="aj-source" style={flbl}>{t('admin.addjob.source')}</label>
               <select id="aj-source" name="source" style={fin}><option>LinkedIn</option><option>Indeed</option><option>Company site</option><option>Niche board</option><option>Referral</option><option>Other</option></select>
             </div>
-            <div><label htmlFor="aj-url" style={flbl}>Job URL</label><input id="aj-url" name="jobUrl" placeholder="https://…" style={fin} /></div>
-            <div><label htmlFor="aj-deadline" style={flbl}>Deadline</label><input id="aj-deadline" name="deadline" type="date" defaultValue="2026-07-10" style={fin} /></div>
+            <div><label htmlFor="aj-url" style={flbl}>{t('admin.addjob.jobUrl')}</label><input id="aj-url" name="jobUrl" placeholder="https://…" style={fin} /></div>
+            <div><label htmlFor="aj-deadline" style={flbl}>{t('admin.addjob.deadline')}</label><input id="aj-deadline" name="deadline" type="date" defaultValue="2026-07-10" style={fin} /></div>
           </div>
-          <div><label htmlFor="aj-reason" style={flbl}>Fit reason (shown to user)</label><textarea id="aj-reason" name="fitReason" rows={2} placeholder="Why this is a good match…" style={fin} /></div>
+          <div><label htmlFor="aj-reason" style={flbl}>{t('admin.addjob.fitReason')}</label><textarea id="aj-reason" name="fitReason" rows={2} placeholder="Why this is a good match…" style={fin} /></div>
         </div>
 
         <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 22 }}>
-          <h2 style={{ fontSize: 15, margin: '0 0 4px' }}>Fit rubric</h2>
-          <p style={{ fontSize: 12, color: 'var(--muted)', margin: '0 0 16px' }}>Weights: skills 40% · location/visa 20% · experience 20% · relevance 20%.</p>
+          <h2 style={{ fontSize: 15, margin: '0 0 4px' }}>{t('admin.addjob.fitRubric')}</h2>
+          <p style={{ fontSize: 12, color: 'var(--muted)', margin: '0 0 16px' }}>{t('admin.addjob.weights')}</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             {[
-              ['skills', 'Skills match', 0.4],
-              ['location', 'Location / visa fit', 0.2],
-              ['experience', 'Experience match', 0.2],
-              ['relevance', 'Role relevance', 0.2],
+              ['skills', t('admin.addjob.skillsMatch'), 0.4],
+              ['location', t('admin.addjob.locationFit'), 0.2],
+              ['experience', t('admin.addjob.expMatch'), 0.2],
+              ['relevance', t('admin.addjob.roleRelevance'), 0.2],
             ].map(([key, label]) => (
               <div key={key}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, fontWeight: 600, marginBottom: 5 }}>
@@ -300,11 +305,11 @@ export function AdminAddJob({ userId, onSave }) {
             ))}
           </div>
           <div style={{ marginTop: 18, padding: 16, borderRadius: 11, background: fm.b, textAlign: 'center' }}>
-            <div style={{ fontSize: 12, fontWeight: 600, color: fm.c }}>Computed fit score</div>
+            <div style={{ fontSize: 12, fontWeight: 600, color: fm.c }}>{t('admin.addjob.computedScore')}</div>
             <div style={{ fontFamily: 'var(--font-display)', fontSize: 42, fontWeight: 600, color: fm.c, lineHeight: 1.1 }}>{computed}%</div>
             <div style={{ fontSize: 13, fontWeight: 700, color: fm.c }}>{fm.tier} fit</div>
           </div>
-          <button onClick={onSave} className="tap-target" style={{ width: '100%', marginTop: 14, padding: 11, borderRadius: 9, background: 'var(--accent)', color: '#fff', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>Recommend to user</button>
+          <button onClick={onSave} className="tap-target" style={{ width: '100%', marginTop: 14, padding: 11, borderRadius: 9, background: 'var(--accent)', color: '#fff', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>{t('admin.addjob.recommend')}</button>
         </div>
       </div>
     </div>
@@ -312,25 +317,26 @@ export function AdminAddJob({ userId, onSave }) {
 }
 
 export function AdminApplications() {
+  const { t } = useLang()
   const allRows = ROWS.map(r => decRow(r))
   return (
     <div className="container" style={{ padding: '24px 28px', maxWidth: 1280 }}>
-      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>Applications</h1>
-      <p style={{ color: 'var(--muted)', margin: '0 0 18px', fontSize: 14 }}>All applications across users · the full operations workflow.</p>
+      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>{t('admin.apps.title')}</h1>
+      <p style={{ color: 'var(--muted)', margin: '0 0 18px', fontSize: 14 }}>{t('admin.apps.subtitle')}</p>
       <div className="data-table" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', overflow: 'hidden' }}>
         <div className="data-table-head" style={{ display: 'grid', gridTemplateColumns: '1.6fr 1.4fr 1fr 1fr 1.2fr', gap: 12, padding: '11px 18px', background: 'var(--surface-2)', borderBottom: '1px solid var(--border)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.04em', color: 'var(--muted)' }}>
-          <span>User</span><span>Role</span><span>Fit</span><span>Staff</span><span>Status</span>
+          <span>{t('admin.apps.colUser')}</span><span>{t('admin.apps.colRole')}</span><span>{t('admin.apps.colFit')}</span><span>{t('admin.apps.colStaff')}</span><span>{t('admin.apps.colStatus')}</span>
         </div>
         {allRows.map(r => (
           <div key={r.id} className="data-table-row" style={{ display: 'grid', gridTemplateColumns: '1.6fr 1.4fr 1fr 1fr 1.2fr', gap: 12, padding: '12px 18px', borderBottom: '1px solid var(--border)', alignItems: 'center' }}>
-            <span data-label="User" style={{ fontWeight: 600, fontSize: 13 }}>{r.uname}</span>
-            <div data-label="Role" style={{ minWidth: 0 }}>
+            <span data-label={t('admin.apps.colUser')} style={{ fontWeight: 600, fontSize: 13 }}>{r.uname}</span>
+            <div data-label={t('admin.apps.colRole')} style={{ minWidth: 0 }}>
               <div style={{ fontSize: 13, fontWeight: 500 }}>{r.title}</div>
               <div style={{ fontSize: 12, color: 'var(--muted)' }}>{r.company}</div>
             </div>
-            <span data-label="Fit" style={{ display: 'inline-flex', width: 'fit-content', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 700, color: r.fitC, background: r.fitB, padding: '3px 8px', borderRadius: 6 }}>{r.fit}% {r.fitTier}</span>
-            <span data-label="Staff" style={{ fontSize: 12, color: 'var(--muted)' }}>{r.staffN}</span>
-            <span data-label="Status" style={{ display: 'inline-flex', width: 'fit-content', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 700, color: r.statusC, background: r.statusB, padding: '4px 9px', borderRadius: 7 }}>{r.statusLabel}</span>
+            <span data-label={t('admin.apps.colFit')} style={{ display: 'inline-flex', width: 'fit-content', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 700, color: r.fitC, background: r.fitB, padding: '3px 8px', borderRadius: 6 }}>{r.fit}% {r.fitTier}</span>
+            <span data-label={t('admin.apps.colStaff')} style={{ fontSize: 12, color: 'var(--muted)' }}>{r.staffN}</span>
+            <span data-label={t('admin.apps.colStatus')} style={{ display: 'inline-flex', width: 'fit-content', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 700, color: r.statusC, background: r.statusB, padding: '4px 9px', borderRadius: 7 }}>{r.statusLabel}</span>
           </div>
         ))}
       </div>
@@ -339,17 +345,18 @@ export function AdminApplications() {
 }
 
 export function AdminQCQueue({ onToast }) {
+  const { t } = useLang()
   const [signed, setSigned] = useState({})
   const qcRows = ROWS.filter(r => r.status === 'qc' || r.status === 'drafting').map(r => decRow(r))
   return (
     <div className="container" style={{ padding: '24px 28px', maxWidth: 980 }}>
-      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>QC queue</h1>
-      <p style={{ color: 'var(--muted)', margin: '0 0 20px', fontSize: 14 }}>Applications in drafting or QC. Nothing moves to Applied without a QC Lead's sign-off.</p>
+      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>{t('admin.qc.title')}</h1>
+      <p style={{ color: 'var(--muted)', margin: '0 0 20px', fontSize: 14 }}>{t('admin.qc.subtitle')}</p>
       {qcRows.length === 0 && (
         <div style={{ textAlign: 'center', padding: '48px 24px', color: 'var(--muted)', background: 'var(--surface)', border: '1px dashed var(--border-2)', borderRadius: 'var(--radius)' }}>
           <Icon name="shield" size={28} style={{ marginBottom: 10, opacity: .5 }} />
-          <div style={{ fontWeight: 600, fontSize: 15, color: 'var(--on-surface)' }}>Queue is clear</div>
-          <div style={{ fontSize: 13, marginTop: 4 }}>Nothing is currently in drafting or QC.</div>
+          <div style={{ fontWeight: 600, fontSize: 15, color: 'var(--on-surface)' }}>{t('admin.qc.empty')}</div>
+          <div style={{ fontSize: 13, marginTop: 4 }}>{t('admin.qc.emptyDesc')}</div>
         </div>
       )}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -367,12 +374,12 @@ export function AdminQCQueue({ onToast }) {
               )}
               <div style={{ display: 'flex', gap: 9, marginTop: 12, flexWrap: 'wrap' }}>
                 {signed[r.id] === 'applied'
-                  ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#1F7A4D', fontWeight: 600, fontSize: 13 }}><Icon name="check" size={15} />Approved &amp; marked applied</span>
+                  ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#1F7A4D', fontWeight: 600, fontSize: 13 }}><Icon name="check" size={15} />{t('admin.qc.approvedApplied')}</span>
                   : signed[r.id] === 'returned'
-                  ? <span style={{ color: 'var(--muted)', fontWeight: 600, fontSize: 13 }}>Returned to drafting</span>
+                  ? <span style={{ color: 'var(--muted)', fontWeight: 600, fontSize: 13 }}>{t('admin.qc.returnedDrafting')}</span>
                   : <>
-                    <button onClick={() => { setSigned(s => ({ ...s, [r.id]: 'applied' })); onToast('Application approved — marked as Applied') }} className="tap-target" style={{ padding: '8px 16px', borderRadius: 8, background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>Approve &amp; mark applied</button>
-                    <button onClick={() => { setSigned(s => ({ ...s, [r.id]: 'returned' })); onToast('Returned to drafting') }} className="tap-target" style={{ padding: '8px 16px', borderRadius: 8, background: 'var(--surface)', color: 'var(--muted)', border: '1px solid var(--border-2)', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>Return to drafting</button>
+                    <button onClick={() => { setSigned(s => ({ ...s, [r.id]: 'applied' })); onToast(t('toast.appApprovedMarked')) }} className="tap-target" style={{ padding: '8px 16px', borderRadius: 8, background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>{t('admin.qc.approveApplied')}</button>
+                    <button onClick={() => { setSigned(s => ({ ...s, [r.id]: 'returned' })); onToast(t('toast.returnedDrafting')) }} className="tap-target" style={{ padding: '8px 16px', borderRadius: 8, background: 'var(--surface)', color: 'var(--muted)', border: '1px solid var(--border-2)', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>{t('admin.qc.returnDrafting')}</button>
                   </>
                 }
               </div>
@@ -385,11 +392,12 @@ export function AdminQCQueue({ onToast }) {
 }
 
 export function AdminPayments({ onToast }) {
+  const { t } = useLang()
   const [statuses, setStatuses] = useState({})
   return (
     <div className="container" style={{ padding: '24px 28px', maxWidth: 1180 }}>
-      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>Payments</h1>
-      <p style={{ color: 'var(--muted)', margin: '0 0 20px', fontSize: 14 }}>Manual reconciliation · each status change is logged with who and when.</p>
+      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>{t('admin.pay.title')}</h1>
+      <p style={{ color: 'var(--muted)', margin: '0 0 20px', fontSize: 14 }}>{t('admin.pay.subtitle')}</p>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
         {PAYMENTS.map(p => {
           const u = userById(p.uid)
@@ -414,21 +422,21 @@ export function AdminPayments({ onToast }) {
                 </div>
               </div>
               <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid var(--border)' }}>
-                <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.04em', color: 'var(--muted)', marginBottom: 9 }}>Audit trail</div>
+                <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.04em', color: 'var(--muted)', marginBottom: 9 }}>{t('admin.pay.auditTrail')}</div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
-                  {p.trail.map((t, i) => (
+                  {p.trail.map((tr, i) => (
                     <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'center', fontSize: 13, flexWrap: 'wrap' }}>
                       <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--primary)', flexShrink: 0 }} />
-                      <span style={{ fontWeight: 600 }}>{t.a}</span>
-                      <span style={{ color: 'var(--muted)' }}>{t.act}</span>
-                      <span style={{ marginLeft: 'auto', fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--muted)' }}>{t.t}</span>
+                      <span style={{ fontWeight: 600 }}>{tr.a}</span>
+                      <span style={{ color: 'var(--muted)' }}>{tr.act}</span>
+                      <span style={{ marginLeft: 'auto', fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--muted)' }}>{tr.t}</span>
                     </div>
                   ))}
                 </div>
                 <div style={{ display: 'flex', gap: 8, marginTop: 12, flexWrap: 'wrap' }}>
-                  <button onClick={() => { setStatuses(s => ({ ...s, [p.id]: 'paid' })); onToast('Marked as Paid') }} className="tap-target" style={{ padding: '7px 13px', borderRadius: 8, background: 'var(--surface-2)', border: '1px solid var(--border)', fontWeight: 600, fontSize: 12, cursor: 'pointer', color: 'var(--on-surface)' }}>Mark Paid</button>
-                  <button onClick={() => { setStatuses(s => ({ ...s, [p.id]: 'partial' })); onToast('Marked as Partial') }} className="tap-target" style={{ padding: '7px 13px', borderRadius: 8, background: 'var(--surface-2)', border: '1px solid var(--border)', fontWeight: 600, fontSize: 12, cursor: 'pointer', color: 'var(--on-surface)' }}>Partial</button>
-                  <button onClick={() => { setStatuses(s => ({ ...s, [p.id]: 'refunded' })); onToast('Marked as Refunded') }} className="tap-target" style={{ padding: '7px 13px', borderRadius: 8, background: 'var(--surface-2)', border: '1px solid var(--border)', fontWeight: 600, fontSize: 12, cursor: 'pointer', color: 'var(--destructive)' }}>Refund</button>
+                  <button onClick={() => { setStatuses(s => ({ ...s, [p.id]: 'paid' })); onToast(t('toast.markedPaid')) }} className="tap-target" style={{ padding: '7px 13px', borderRadius: 8, background: 'var(--surface-2)', border: '1px solid var(--border)', fontWeight: 600, fontSize: 12, cursor: 'pointer', color: 'var(--on-surface)' }}>{t('admin.pay.markPaid')}</button>
+                  <button onClick={() => { setStatuses(s => ({ ...s, [p.id]: 'partial' })); onToast(t('toast.markedPartial')) }} className="tap-target" style={{ padding: '7px 13px', borderRadius: 8, background: 'var(--surface-2)', border: '1px solid var(--border)', fontWeight: 600, fontSize: 12, cursor: 'pointer', color: 'var(--on-surface)' }}>{t('admin.pay.partial')}</button>
+                  <button onClick={() => { setStatuses(s => ({ ...s, [p.id]: 'refunded' })); onToast(t('toast.markedRefunded')) }} className="tap-target" style={{ padding: '7px 13px', borderRadius: 8, background: 'var(--surface-2)', border: '1px solid var(--border)', fontWeight: 600, fontSize: 12, cursor: 'pointer', color: 'var(--destructive)' }}>{t('admin.pay.refund')}</button>
                 </div>
               </div>
             </div>
@@ -440,18 +448,19 @@ export function AdminPayments({ onToast }) {
 }
 
 export function AdminStaff() {
+  const { t } = useLang()
   const totalLoad = STAFF.reduce((s, st) => s + st.load, 0)
   const totalCap = STAFF.reduce((s, st) => s + st.max, 0)
   const openCap = totalCap - totalLoad
   return (
     <div className="container" style={{ padding: '24px 28px', maxWidth: 1080 }}>
-      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>Team capacity</h1>
-      <p style={{ color: 'var(--muted)', margin: '0 0 18px', fontSize: 14 }}>Capacity model: ~12 active users per specialist at ~35 min/user/week. Reassign before anyone hits capacity.</p>
+      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>{t('admin.staff.title')}</h1>
+      <p style={{ color: 'var(--muted)', margin: '0 0 18px', fontSize: 14 }}>{t('admin.staff.subtitle')}</p>
       <div className="grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14, marginBottom: 18 }}>
         {[
-          ['Team headcount', STAFF.length, ''],
-          ['Active load', `${totalLoad} / ${totalCap}`, ''],
-          ['Open capacity', `${openCap} users`, 'var(--primary)'],
+          [t('admin.staff.headcount'), STAFF.length, ''],
+          [t('admin.staff.activeLoad'), `${totalLoad} / ${totalCap}`, ''],
+          [t('admin.staff.openCapacity'), `${openCap} ${t('admin.staff.usersUnit')}`, 'var(--primary)'],
         ].map(([label, value, c], i) => (
           <div key={i} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 18 }}>
             <div style={{ fontSize: 13, color: 'var(--muted)' }}>{label}</div>
@@ -463,7 +472,7 @@ export function AdminStaff() {
         {STAFF.map(s => {
           const utilPct = Math.round((s.load / s.max) * 100)
           const barColor = utilPct >= 90 ? '#B23A2E' : utilPct >= 75 ? '#A85A1E' : 'var(--primary)'
-          const statusLabel = utilPct >= 90 ? 'At capacity' : utilPct >= 75 ? 'High load' : 'Available'
+          const statusLabel = utilPct >= 90 ? t('admin.staff.atCapacity') : utilPct >= 75 ? t('admin.staff.highLoad') : t('admin.staff.available')
           return (
             <div key={s.id} className="staff-row" style={{ padding: '16px 18px', borderBottom: '1px solid var(--border)', display: 'grid', gridTemplateColumns: '1.4fr 2fr 1fr', gap: 16, alignItems: 'center' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
@@ -475,7 +484,7 @@ export function AdminStaff() {
               </div>
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 5 }}>
-                  <span style={{ color: 'var(--muted)' }}>{s.load} of {s.max} users</span>
+                  <span style={{ color: 'var(--muted)' }}>{t('admin.staff.ofUsers', { max: s.max })}</span>
                   <span style={{ fontWeight: 600 }}>{utilPct}%</span>
                 </div>
                 <div style={{ height: 9, borderRadius: 99, background: 'var(--surface-3)', overflow: 'hidden' }}>
@@ -492,19 +501,20 @@ export function AdminStaff() {
 }
 
 export function AdminNotifications() {
+  const { t } = useLang()
   return (
     <div className="container" style={{ padding: '24px 28px', maxWidth: 920 }}>
-      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>Notification templates</h1>
-      <p style={{ color: 'var(--muted)', margin: '0 0 20px', fontSize: 14 }}>The exact copy sent to users on each event. Variables in {'{curly braces}'} are filled at send time.</p>
+      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>{t('admin.notif.title')}</h1>
+      <p style={{ color: 'var(--muted)', margin: '0 0 20px', fontSize: 14 }}>{t('admin.notif.subtitle')}</p>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-        {TEMPLATES.map(t => (
-          <div key={t.id} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 18 }}>
+        {TEMPLATES.map(tpl => (
+          <div key={tpl.id} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 18 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', marginBottom: 10 }}>
-              <span style={{ fontWeight: 700, fontSize: 15 }}>{t.key}</span>
-              <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--primary)', background: 'var(--surface-3)', padding: '4px 10px', borderRadius: 7 }}>{t.trigger}</span>
+              <span style={{ fontWeight: 700, fontSize: 15 }}>{tpl.key}</span>
+              <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--primary)', background: 'var(--surface-3)', padding: '4px 10px', borderRadius: 7 }}>{tpl.trigger}</span>
             </div>
-            <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 4 }}>Subject: <span style={{ fontWeight: 500, color: 'var(--muted)' }}>{t.subject}</span></div>
-            <div style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.6, background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 9, padding: '13px', marginTop: 8, fontFamily: 'var(--font-mono)' }}>{t.body}</div>
+            <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 4 }}>Subject: <span style={{ fontWeight: 500, color: 'var(--muted)' }}>{tpl.subject}</span></div>
+            <div style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.6, background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 9, padding: '13px', marginTop: 8, fontFamily: 'var(--font-mono)' }}>{tpl.body}</div>
           </div>
         ))}
       </div>
@@ -513,6 +523,7 @@ export function AdminNotifications() {
 }
 
 export function AdminExport({ onToast }) {
+  const { t } = useLang()
   const exports = [
     { name: 'Users export', rows: USERS.length, cols: 'name, email, phone, country, city, package, balance, payment status, staff' },
     { name: 'Applications export', rows: ROWS.length, cols: 'user, company, title, location, fit score, status, applied date, proof type' },
@@ -521,8 +532,8 @@ export function AdminExport({ onToast }) {
   ]
   return (
     <div className="container" style={{ padding: '24px 28px', maxWidth: 780 }}>
-      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>Export data</h1>
-      <p style={{ color: 'var(--muted)', margin: '0 0 20px', fontSize: 14 }}>Download operational data as CSV for reporting and reconciliation.</p>
+      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>{t('admin.export.title')}</h1>
+      <p style={{ color: 'var(--muted)', margin: '0 0 20px', fontSize: 14 }}>{t('admin.export.subtitle')}</p>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         {exports.map((e, i) => (
           <div key={i} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 11, padding: 16, display: 'flex', alignItems: 'center', gap: 13, flexWrap: 'wrap' }}>
@@ -533,8 +544,8 @@ export function AdminExport({ onToast }) {
               <div style={{ fontWeight: 600, fontSize: 14 }}>{e.name}</div>
               <div style={{ fontSize: 12, color: 'var(--muted)' }}>{e.rows} rows · {e.cols}</div>
             </div>
-            <button onClick={() => onToast(`${e.name} downloaded`)} className="tap-target" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '9px 15px', borderRadius: 9, background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>
-              <Icon name="download" size={15} />Download
+            <button onClick={() => onToast(t('toast.downloaded', { name: e.name }))} className="tap-target" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '9px 15px', borderRadius: 9, background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>
+              <Icon name="download" size={15} />{t('admin.export.download')}
             </button>
           </div>
         ))}

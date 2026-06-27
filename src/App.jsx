@@ -3,6 +3,7 @@ import Header from './components/Header.jsx'
 import Sidebar from './components/Sidebar.jsx'
 import Toast from './components/Toast.jsx'
 import Icon from './components/Icon.jsx'
+import { useLang } from './i18n/LanguageContext.jsx'
 import { Home, HowItWorks, Pricing, Contact, Privacy, Terms } from './pages/PublicPages.jsx'
 import SignupWizard from './pages/SignupWizard.jsx'
 import ArchitecturePage from './pages/ArchitecturePage.jsx'
@@ -19,6 +20,7 @@ import { ROWS } from './data.js'
 const MY_UID = 'u4'
 
 function PublicNav({ view, onNav, onSignup }) {
+  const { t } = useLang()
   const [mobileOpen, setMobileOpen] = useState(false)
   const lnk = (v, label) => (
     <button
@@ -34,12 +36,12 @@ function PublicNav({ view, onNav, onSignup }) {
     <nav style={{ background: 'var(--surface)', borderBottom: '1px solid var(--border)', position: 'sticky', top: 'var(--header-h)', zIndex: 40 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexWrap: 'wrap', padding: '10px 20px' }}>
         <div className="public-nav-links" style={{ display: 'flex', alignItems: 'center', gap: 4, flexWrap: 'wrap' }}>
-          {lnk('home', 'Home')}
-          {lnk('how', 'How it works')}
-          {lnk('pricing', 'Pricing')}
-          {lnk('contact', 'Contact')}
-          {lnk('privacy', 'Privacy')}
-          {lnk('terms', 'Terms')}
+          {lnk('home', t('nav.home'))}
+          {lnk('how', t('nav.how'))}
+          {lnk('pricing', t('nav.pricing'))}
+          {lnk('contact', t('nav.contact'))}
+          {lnk('privacy', t('nav.privacy'))}
+          {lnk('terms', t('nav.terms'))}
         </div>
         <button
           className="public-nav-toggle tap-target"
@@ -48,19 +50,19 @@ function PublicNav({ view, onNav, onSignup }) {
           aria-label="Toggle site navigation"
           style={{ display: 'none', alignItems: 'center', gap: 6, padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface)', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}
         >
-          Menu <Icon name={mobileOpen ? 'x' : 'menu'} size={16} />
+          {t('nav.menu')} <Icon name={mobileOpen ? 'x' : 'menu'} size={16} />
         </button>
         <span style={{ flex: 1 }} />
-        <button onClick={onSignup} style={{ padding: '9px 18px', borderRadius: 9, background: 'var(--accent)', color: '#fff', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>Start free — 2 applications</button>
+        <button onClick={onSignup} style={{ padding: '9px 18px', borderRadius: 9, background: 'var(--accent)', color: '#fff', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>{t('nav.startFree')}</button>
       </div>
       {mobileOpen && (
         <div style={{ display: 'flex', flexDirection: 'column', padding: '0 20px 12px', borderTop: '1px solid var(--border)' }}>
-          {lnk('home', 'Home')}
-          {lnk('how', 'How it works')}
-          {lnk('pricing', 'Pricing')}
-          {lnk('contact', 'Contact')}
-          {lnk('privacy', 'Privacy')}
-          {lnk('terms', 'Terms')}
+          {lnk('home', t('nav.home'))}
+          {lnk('how', t('nav.how'))}
+          {lnk('pricing', t('nav.pricing'))}
+          {lnk('contact', t('nav.contact'))}
+          {lnk('privacy', t('nav.privacy'))}
+          {lnk('terms', t('nav.terms'))}
         </div>
       )}
     </nav>
@@ -68,6 +70,7 @@ function PublicNav({ view, onNav, onSignup }) {
 }
 
 export default function App() {
+  const { t } = useLang()
   const [role, setRole] = useState('public')
   const [view, setView] = useState('home')
   const [theme, setTheme] = useState('light')
@@ -82,8 +85,8 @@ export default function App() {
 
   const flash = (msg) => {
     setToast(msg)
-    const t = setTimeout(() => setToast(null), 2600)
-    return () => clearTimeout(t)
+    const timer = setTimeout(() => setToast(null), 2600)
+    return () => clearTimeout(timer)
   }
 
   const nav = (r, v) => {
@@ -95,38 +98,38 @@ export default function App() {
 
   const approveJob = (id) => {
     setApprovals(a => ({ ...a, [id]: 'approved' }))
-    flash('Job approved — sent to your ATG team')
+    flash(t('toast.jobApproved'))
   }
   const declineJob = (id) => {
     setApprovals(a => ({ ...a, [id]: 'declined' }))
-    flash('Job skipped')
+    flash(t('toast.jobSkipped'))
   }
 
   const myPendingCount = ROWS.filter(r => r.uid === MY_UID && (approvals[r.id] || r.approval) === 'pending').length
   const qcCount = ROWS.filter(r => r.status === 'qc').length
 
   const userNav = [
-    { view: 'u-dash', label: 'Dashboard', icon: 'home' },
-    { view: 'u-jobs', label: 'Recommended jobs', icon: 'briefcase', badge: myPendingCount },
-    { view: 'u-apps', label: 'Applications', icon: 'list' },
-    { view: 'u-docs', label: 'Documents', icon: 'file' },
-    { view: 'u-pay', label: 'Payments', icon: 'card' },
-    { view: 'u-upgrade', label: 'Upgrade', icon: 'spark' },
-    { view: 'u-notify', label: 'Notifications', icon: 'bell', badge: 2 },
-    { view: 'u-support', label: 'Support', icon: 'chat' },
-    { view: 'u-profile', label: 'Profile', icon: 'users' },
+    { view: 'u-dash', label: t('cust.nav.dashboard'), icon: 'home' },
+    { view: 'u-jobs', label: t('cust.nav.jobs'), icon: 'briefcase', badge: myPendingCount },
+    { view: 'u-apps', label: t('cust.nav.applications'), icon: 'list' },
+    { view: 'u-docs', label: t('cust.nav.documents'), icon: 'file' },
+    { view: 'u-pay', label: t('cust.nav.payments'), icon: 'card' },
+    { view: 'u-upgrade', label: t('cust.nav.upgrade'), icon: 'spark' },
+    { view: 'u-notify', label: t('cust.nav.notifications'), icon: 'bell', badge: 2 },
+    { view: 'u-support', label: t('cust.nav.support'), icon: 'chat' },
+    { view: 'u-profile', label: t('cust.nav.profile'), icon: 'users' },
   ]
 
   const adminNav = [
-    { view: 'a-dash', label: 'Overview', icon: 'home' },
-    { view: 'a-users', label: 'Users', icon: 'users' },
-    { view: 'a-jobnew', label: 'Add job', icon: 'briefcase' },
-    { view: 'a-apps', label: 'Applications', icon: 'list' },
-    { view: 'a-qc', label: 'QC queue', icon: 'shield', badge: qcCount },
-    { view: 'a-pay', label: 'Payments', icon: 'card' },
-    { view: 'a-staff', label: 'Team capacity', icon: 'gauge' },
-    { view: 'a-notify', label: 'Notifications', icon: 'bell' },
-    { view: 'a-export', label: 'Export', icon: 'download' },
+    { view: 'a-dash', label: t('admin.nav.overview'), icon: 'home' },
+    { view: 'a-users', label: t('admin.nav.users'), icon: 'users' },
+    { view: 'a-jobnew', label: t('admin.nav.addJob'), icon: 'briefcase' },
+    { view: 'a-apps', label: t('admin.nav.applications'), icon: 'list' },
+    { view: 'a-qc', label: t('admin.nav.qc'), icon: 'shield', badge: qcCount },
+    { view: 'a-pay', label: t('admin.nav.payments'), icon: 'card' },
+    { view: 'a-staff', label: t('admin.nav.staff'), icon: 'gauge' },
+    { view: 'a-notify', label: t('admin.nav.notifications'), icon: 'bell' },
+    { view: 'a-export', label: t('admin.nav.export'), icon: 'download' },
   ]
 
   const isPublic = role === 'public'
@@ -142,7 +145,7 @@ export default function App() {
       case 'home': return <Home onSignup={() => { setStep(0); nav('public', 'signup') }} onHow={() => go('how')} onPricing={() => go('pricing')} />
       case 'how': return <HowItWorks />
       case 'pricing': return <Pricing onSignup={() => { setStep(0); nav('public', 'signup') }} onTerms={() => go('terms')} />
-      case 'contact': return <Contact onSend={() => flash("Message sent — we'll reply within one working day")} />
+      case 'contact': return <Contact onSend={() => flash(t('toast.messageSentReply'))} />
       case 'privacy': return <Privacy />
       case 'terms': return <Terms />
       case 'arch': return <ArchitecturePage />
@@ -151,8 +154,8 @@ export default function App() {
           step={step} consent1={consent1} consent2={consent2} draftSaved={draftSaved}
           onNext={() => setStep(s => Math.min(s + 1, 7))}
           onPrev={() => setStep(s => Math.max(s - 1, 0))}
-          onSaveDraft={() => { setDraftSaved(true); flash('Draft saved — you can finish later') }}
-          onFinish={() => { flash('Profile submitted! 2 free applications granted.'); nav('user', 'u-dash') }}
+          onSaveDraft={() => { setDraftSaved(true); flash(t('toast.draftSaved')) }}
+          onFinish={() => { flash(t('toast.profileSubmitted')); nav('user', 'u-dash') }}
           onToggleC1={() => setConsent1(c => !c)}
           onToggleC2={() => setConsent2(c => !c)}
           onPrivacy={() => go('privacy')}
@@ -172,10 +175,10 @@ export default function App() {
       case 'u-apps': return <CustomerApplications approvals={approvals} />
       case 'u-docs': return <CustomerDocuments />
       case 'u-pay': return <CustomerPayments />
-      case 'u-upgrade': return <CustomerUpgrade onUpgrade={() => flash('Upgrade request sent — your team will contact you shortly')} />
+      case 'u-upgrade': return <CustomerUpgrade onUpgrade={() => flash(t('toast.upgradeRequested'))} />
       case 'u-notify': return <CustomerNotifications />
-      case 'u-support': return <CustomerSupport onSend={() => flash('Message sent')} />
-      case 'u-profile': return <CustomerProfile onSave={() => flash('Profile saved')} />
+      case 'u-support': return <CustomerSupport onSend={() => flash(t('toast.messageSent'))} />
+      case 'u-profile': return <CustomerProfile onSave={() => flash(t('toast.profileSaved'))} />
       default: return <CustomerDashboard approvals={approvals} onApprove={approveJob} onDecline={declineJob} onGoJobs={() => setViewAndClose('u-jobs')} onGoApps={() => setViewAndClose('u-apps')} onGoUpgrade={() => setViewAndClose('u-upgrade')} onGoProfile={() => setViewAndClose('u-profile')} onGoNotify={() => setViewAndClose('u-notify')} />
     }
   }
@@ -185,7 +188,7 @@ export default function App() {
       case 'a-dash': return <AdminDashboard onGoQC={() => setViewAndClose('a-qc')} onGoPay={() => setViewAndClose('a-pay')} />
       case 'a-users': return <AdminUsers onOpenUser={(id) => { setSelUser(id); setViewAndClose('a-user') }} onGoExport={() => setViewAndClose('a-export')} />
       case 'a-user': return <AdminUserDetail userId={selUser} onBack={() => setViewAndClose('a-users')} onGoAddJob={() => setViewAndClose('a-jobnew')} onToast={flash} />
-      case 'a-jobnew': return <AdminAddJob userId={selUser} onSave={() => { flash('Job recommendation added'); setViewAndClose('a-user') }} />
+      case 'a-jobnew': return <AdminAddJob userId={selUser} onSave={() => { flash(t('toast.jobRecAdded')); setViewAndClose('a-user') }} />
       case 'a-apps': return <AdminApplications />
       case 'a-qc': return <AdminQCQueue onToast={flash} />
       case 'a-pay': return <AdminPayments onToast={flash} />
@@ -246,6 +249,7 @@ export default function App() {
 }
 
 function Footer({ onNav }) {
+  const { t } = useLang()
   const lnk = (role, view, label) => (
     <button onClick={() => onNav(role, view)} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,.7)', fontWeight: 400, fontSize: 14, cursor: 'pointer', padding: '2px 0', textAlign: 'left', fontFamily: 'inherit' }}>{label}</button>
   )
@@ -257,34 +261,34 @@ function Footer({ onNav }) {
             <svg width="28" height="28" viewBox="0 0 36 36" fill="none"><rect width="36" height="36" rx="10" fill="rgba(255,255,255,.15)" /><path d="M18 8.5L9 27.5" stroke="white" strokeWidth="2.3" strokeLinecap="round" /><path d="M18 8.5L27 27.5" stroke="white" strokeWidth="2.3" strokeLinecap="round" /><path d="M12.5 21.5H23.5" stroke="white" strokeWidth="2.3" strokeLinecap="round" /><circle cx="18" cy="8.5" r="3" fill="#C2613B" /></svg>
             <span style={{ fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 17 }}>ATG Apply</span>
           </div>
-          <p style={{ fontSize: 13, opacity: .75, lineHeight: 1.6, margin: 0, maxWidth: '24em' }}>Human-managed job applications. Research-led matching, prepared and submitted by a trained team.</p>
+          <p style={{ fontSize: 13, opacity: .75, lineHeight: 1.6, margin: 0, maxWidth: '24em' }}>{t('footer.tagline')}</p>
         </div>
         <div>
-          <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', opacity: .6, marginBottom: 12 }}>Product</div>
+          <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', opacity: .6, marginBottom: 12 }}>{t('footer.product')}</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
-            {lnk('public', 'how', 'How it works')}
-            {lnk('public', 'pricing', 'Pricing')}
-            {lnk('public', 'signup', 'Start free')}
+            {lnk('public', 'how', t('nav.how'))}
+            {lnk('public', 'pricing', t('nav.pricing'))}
+            {lnk('public', 'signup', t('footer.startFree'))}
           </div>
         </div>
         <div>
-          <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', opacity: .6, marginBottom: 12 }}>Company</div>
+          <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', opacity: .6, marginBottom: 12 }}>{t('footer.company')}</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
-            {lnk('public', 'contact', 'Contact')}
-            {lnk('public', 'arch', 'System architecture')}
+            {lnk('public', 'contact', t('nav.contact'))}
+            {lnk('public', 'arch', t('nav.architecture'))}
           </div>
         </div>
         <div>
-          <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', opacity: .6, marginBottom: 12 }}>Legal</div>
+          <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', opacity: .6, marginBottom: 12 }}>{t('footer.legal')}</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
-            {lnk('public', 'privacy', 'Privacy policy')}
-            {lnk('public', 'terms', 'Terms of service')}
+            {lnk('public', 'privacy', t('legal.privacyTitle'))}
+            {lnk('public', 'terms', t('legal.termsTitle'))}
           </div>
         </div>
       </div>
       <div style={{ borderTop: '1px solid rgba(255,255,255,.12)' }}>
         <div className="container" style={{ padding: '16px 24px', fontSize: 12, opacity: .6 }}>
-          © 2026 ATG Concordia (Pvt) Ltd · Colombo, Sri Lanka
+          {t('footer.copyright')}
         </div>
       </div>
     </footer>

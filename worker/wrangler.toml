@@ -1,0 +1,13 @@
+name = "atg-apply-scholarship-ingestion"
+main = "src/index.js"
+compatibility_date = "2026-06-01"
+
+# Runs once daily at 02:00 UTC (07:30 IST / Colombo time).
+# Scholarship feeds update at most a few times a week, so daily is
+# more than enough — no need to burn Worker invocations hourly.
+[triggers]
+crons = ["0 2 * * *"]
+
+# Set secrets via: wrangler secret put SUPABASE_URL
+#                  wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+# Never commit these as plain vars — they belong in Worker secrets.

@@ -1,4 +1,5 @@
 import Icon from './Icon.jsx'
+import { useLang } from '../i18n/LanguageContext.jsx'
 
 function NavBtn({ label, iconName, active, badge, onClick }) {
   return (
@@ -30,8 +31,9 @@ function NavBtn({ label, iconName, active, badge, onClick }) {
 }
 
 export default function Sidebar({ role, view, onNav, userNav, adminNav, whoName, whoRole, whoInitials, isOpen, onClose }) {
+  const { t } = useLang()
   const navItems = role === 'user' ? userNav : adminNav
-  const navLabel = role === 'user' ? 'My account' : 'Operator console'
+  const navLabel = role === 'user' ? t('cust.nav.label') : t('admin.nav.label')
 
   return (
     <>
