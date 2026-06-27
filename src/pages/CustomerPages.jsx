@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import Icon from '../components/Icon.jsx'
 import { useLang } from '../i18n/LanguageContext.jsx'
 import { ROWS, NOTIF, PAYMENTS, PRICING, ST, PAY_META, PROOF_LABELS, fitMeta, fmtDate, initials } from '../data.js'
@@ -415,6 +416,145 @@ export function CustomerProfile({ onSave }) {
         </div>
         <button onClick={onSave} className="tap-target" style={{ alignSelf: 'flex-start', padding: '11px 20px', borderRadius: 9, background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>{t('cust.prof.saveChanges')}</button>
       </div>
+    </div>
+  )
+}
+
+const DEGREE_COLORS = {
+  phd: { b: '#EDE9F8', c: '#6B3FA0' },
+  postdoc: { b: '#E8F4FD', c: '#1E4E8C' },
+  masters: { b: '#E6F4EC', c: '#1F7A4D' },
+  undergraduate: { b: '#FFF4E0', c: '#8A6100' },
+}
+
+const MOCK_SCHOLARSHIPS = [
+  {
+    id: 's1', title: 'Commonwealth Scholarships — Masters & PhD', source_name: 'Commonwealth Scholarship Commission',
+    source_url: 'https://cscuk.fcdo.gov.uk/apply/', country: 'UK', degree_level: 'masters',
+    deadline: '2026-10-15', fully_funded: true,
+    description: 'Full scholarships for citizens of Commonwealth countries to study at UK universities. Covers tuition, living allowance, and return flights.',
+  },
+  {
+    id: 's2', title: 'Chevening Scholarships 2026–27', source_name: 'UK Foreign Commonwealth & Development Office',
+    source_url: 'https://www.chevening.org/apply/', country: 'UK', degree_level: 'masters',
+    deadline: '2026-11-04', fully_funded: true,
+    description: 'UK government global scholarship programme for one-year master\'s degrees. Open to professionals with leadership potential.',
+  },
+  {
+    id: 's3', title: 'DAAD Research Grants — Doctoral Programmes', source_name: 'DAAD Germany',
+    source_url: 'https://www.daad.de/en/study-and-research-in-germany/scholarships/', country: 'Germany', degree_level: 'phd',
+    deadline: '2026-10-01', fully_funded: true,
+    description: 'Monthly stipend, travel allowance, and health insurance for doctoral researchers at German universities. Strong STEM and social sciences track record.',
+  },
+  {
+    id: 's4', title: 'Australia Awards Scholarships', source_name: 'Australia Awards',
+    source_url: 'https://www.australiaawards.gov.au/', country: 'Australia', degree_level: 'masters',
+    deadline: '2026-04-30', fully_funded: true,
+    description: 'Long-term development scholarships funded by the Australian Government for citizens of eligible countries in the Indo-Pacific region.',
+  },
+  {
+    id: 's5', title: 'Banting Postdoctoral Fellowships', source_name: 'Global Affairs Canada',
+    source_url: 'https://banting.fellowships-bourses.gc.ca/', country: 'Canada', degree_level: 'postdoc',
+    deadline: '2026-09-17', fully_funded: true,
+    description: 'CAD $70,000/year for two years at a Canadian university. Open to international researchers in health, natural sciences, engineering, and social sciences.',
+  },
+  {
+    id: 's6', title: 'Gilman International Scholarship', source_name: 'Gilman International Scholarship',
+    source_url: 'https://www.gilmanscholarship.org/apply/', country: 'USA', degree_level: 'undergraduate',
+    deadline: '2026-03-05', fully_funded: false,
+    description: 'Grant of up to $5,000 for US undergraduates with financial need to study or intern abroad. Preference for under-represented destinations.',
+  },
+]
+
+export function CustomerScholarships() {
+  const { t } = useLang()
+  const [filter, setFilter] = useState('all')
+  const [search, setSearch] = useState('')
+
+  const filtered = MOCK_SCHOLARSHIPS.filter(s => {
+    const matchLevel = filter === 'all' || s.degree_level === filter
+    const q = search.toLowerCase()
+    const matchSearch = !q || s.title.toLowerCase().includes(q) || (s.country || '').toLowerCase().includes(q) || s.description.toLowerCase().includes(q)
+    return matchLevel && matchSearch
+  })
+
+  const levelTabs = [
+    { key: 'all', label: t('cust.sch.filterAll') },
+    { key: 'undergraduate', label: t('cust.sch.filterUG') },
+    { key: 'masters', label: t('cust.sch.filterMasters') },
+    { key: 'phd', label: t('cust.sch.filterPhD') },
+    { key: 'postdoc', label: t('cust.sch.filterPostdoc') },
+  ]
+
+  return (
+    <div style={{ padding: '26px 30px', maxWidth: 1080 }}>
+      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap', marginBottom: 20 }}>
+        <div>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>{t('cust.sch.title')}</h1>
+          <p style={{ color: 'var(--muted)', margin: 0, fontSize: 14 }}>{t('cust.sch.subtitle')}</p>
+        </div>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '5px 10px', borderRadius: 7, background: 'var(--surface-2)', border: '1px solid var(--border)', fontSize: 12, color: 'var(--muted)' }}>
+          <Icon name="globe" size={13} />{t('cust.sch.poweredBy')}
+        </span>
+      </div>
+
+      <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap', marginBottom: 18 }}>
+        <input
+          type="search" value={search} onChange={e => setSearch(e.target.value)}
+          placeholder={t('cust.sch.searchPlaceholder')}
+          style={{ ...fin, maxWidth: 280, flexShrink: 0 }}
+        />
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+          {levelTabs.map(tab => (
+            <button key={tab.key} onClick={() => setFilter(tab.key)} className="tap-target" style={{
+              padding: '7px 13px', borderRadius: 8, border: '1px solid var(--border)', fontSize: 13, fontWeight: filter === tab.key ? 600 : 400,
+              background: filter === tab.key ? 'var(--primary)' : 'var(--surface)', color: filter === tab.key ? 'var(--on-primary)' : 'var(--on-surface)', cursor: 'pointer',
+            }}>{tab.label}</button>
+          ))}
+        </div>
+      </div>
+
+      {filtered.length === 0 ? (
+        <div style={{ textAlign: 'center', padding: '48px 24px', color: 'var(--muted)', fontSize: 14 }}>{t('cust.sch.noResults')}</div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {filtered.map(s => {
+            const dc = DEGREE_COLORS[s.degree_level] || { b: 'var(--surface-2)', c: 'var(--muted)' }
+            const overdue = s.deadline && new Date(s.deadline) < new Date()
+            return (
+              <div key={s.id} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 11, padding: 18, display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+                <span style={{ display: 'grid', placeItems: 'center', width: 44, height: 44, borderRadius: 10, background: dc.b, color: dc.c, flexShrink: 0 }}>
+                  <Icon name="globe" size={20} />
+                </span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8, flexWrap: 'wrap', marginBottom: 4 }}>
+                    <span style={{ fontWeight: 600, fontSize: 15, lineHeight: 1.3 }}>{s.title}</span>
+                    {s.fully_funded && (
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '2px 8px', borderRadius: 6, background: '#E6F4EC', color: '#1F7A4D', fontSize: 11, fontWeight: 700, flexShrink: 0 }}>
+                        <Icon name="check" size={11} />{t('cust.sch.fullyFunded')}
+                      </span>
+                    )}
+                  </div>
+                  <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', fontSize: 12, color: 'var(--muted)', marginBottom: 7 }}>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><Icon name="globe" size={12} />{s.country || '—'}</span>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '1px 7px', borderRadius: 5, background: dc.b, color: dc.c, fontWeight: 600 }}>{t(`cust.sch.level.${s.degree_level}`)}</span>
+                    {s.deadline && (
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, color: overdue ? '#C0392B' : 'var(--muted)' }}>
+                        <Icon name="clock" size={12} />{t('cust.sch.deadline')}: {s.deadline}
+                      </span>
+                    )}
+                    <span style={{ color: 'var(--muted)' }}>{t('cust.sch.source')}: {s.source_name}</span>
+                  </div>
+                  <p style={{ fontSize: 13, color: 'var(--muted)', margin: '0 0 10px', lineHeight: 1.5 }}>{s.description}</p>
+                  <a href={s.source_url} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '7px 13px', borderRadius: 8, background: 'var(--primary)', color: 'var(--on-primary)', fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>
+                    {t('cust.sch.apply')} <Icon name="send" size={13} />
+                  </a>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }
