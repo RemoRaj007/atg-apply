@@ -1,30 +1,45 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Icon from '../components/Icon.jsx'
 import { useLang } from '../i18n/LanguageContext.jsx'
 import { ROWS, USERS, STAFF, PAYMENTS, TEMPLATES, ST, PAY_META, fitMeta, fmtDate, initials, staffName, userById } from '../data.js'
+import {
+  getAllClients, getClientById, getAllJobs, getJobsByClient, getQCJobs,
+  getAllPayments, getAllStaff, getEmailTemplates, addJob, updateJob, updatePayment, addPaymentTrail,
+} from '../lib/db.js'
 
-function decRow(r, approvals = {}) {
-  const ap = approvals[r.id] || r.approval
+function decRow(r) {
+  const ap = r.approval
   const sm = r.status ? ST[r.status] : null
   const fm = fitMeta(r.fit)
-  const u = userById(r.uid)
   return {
     ...r, ap,
     statusLabel: sm ? sm.l : '—', statusC: sm ? sm.c : '#5F6B68', statusB: sm ? sm.b : '#ECEAE3',
     fitTier: fm.tier, fitC: fm.c, fitB: fm.b,
     deadlineFmt: fmtDate(r.deadline),
-    uname: u ? u.name : '',
-    staffN: staffName(r.staff),
+    uname: r.uname || (userById(r.uid)?.name || ''),
+    staffN: r.staffN || staffName(r.staff),
   }
 }
 
 const PKG_BADGE = { Trial: '#ECEAE3', Starter: '#E4ECF7', Professional: '#E1EFE9', Premium: '#FBF0D9' }
 
+// ── Dashboard ────────────────────────────────────────────────────────────────
+
 export function AdminDashboard({ onGoQC, onGoPay }) {
   const { t } = useLang()
-  const allRows = ROWS.map(r => decRow(r))
+  const [clients, setClients] = useState(USERS)
+  const [jobs, setJobs] = useState(ROWS)
+  const [payments, setPayments] = useState(PAYMENTS)
+
+  useEffect(() => {
+    getAllClients().then(setClients).catch(() => {})
+    getAllJobs().then(setJobs).catch(() => {})
+    getAllPayments().then(setPayments).catch(() => {})
+  }, [])
+
+  const allRows = jobs.map(r => decRow(r))
   const qcRows = allRows.filter(r => r.status === 'qc')
-  const payNeedsCount = PAYMENTS.filter(p => p.status === 'pending' || p.status === 'partial').length
+  const payNeedsCount = payments.filter(p => p.status === 'pending' || p.status === 'partial').length
 
   const statusCounts = {}
   allRows.forEach(r => { if (r.status) statusCounts[r.status] = (statusCounts[r.status] || 0) + 1 })
@@ -34,10 +49,10 @@ export function AdminDashboard({ onGoQC, onGoPay }) {
   })).filter(s => s.count > 0)
 
   const adminStats = [
-    { label: t('admin.dash.activeUsers'), value: USERS.filter(u => u.state === 'active').length, sub: `${USERS.length} ${t('admin.dash.totalSuffix')}`, icon: 'users' },
-    { label: t('admin.dash.applications'), value: ROWS.length, sub: `${ROWS.filter(r => r.status === 'applied').length} ${t('admin.dash.appliedSuffix')}`, icon: 'list' },
+    { label: t('admin.dash.activeUsers'), value: clients.filter(u => u.state === 'active').length, sub: `${clients.length} ${t('admin.dash.totalSuffix')}`, icon: 'users' },
+    { label: t('admin.dash.applications'), value: jobs.length, sub: `${jobs.filter(r => r.status === 'applied').length} ${t('admin.dash.appliedSuffix')}`, icon: 'list' },
     { label: t('admin.dash.inQC'), value: qcRows.length, sub: t('admin.dash.needSignoff'), icon: 'shield' },
-    { label: t('admin.dash.revenue'), value: `$${PAYMENTS.reduce((s, p) => s + p.paid, 0)}`, sub: t('admin.dash.allTime'), icon: 'card' },
+    { label: t('admin.dash.revenue'), value: `$${payments.reduce((s, p) => s + (Number(p.paid) || 0), 0)}`, sub: t('admin.dash.allTime'), icon: 'card' },
   ]
 
   return (
@@ -45,7 +60,7 @@ export function AdminDashboard({ onGoQC, onGoPay }) {
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: 10 }}>
         <div>
           <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: 0 }}>{t('admin.nav.label')}</h1>
-          <p style={{ color: 'var(--muted)', margin: '4px 0 0', fontSize: 14 }}>Thursday, 26 June 2026 · {t('admin.dash.subtitle')}</p>
+          <p style={{ color: 'var(--muted)', margin: '4px 0 0', fontSize: 14 }}>{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} · {t('admin.dash.subtitle')}</p>
         </div>
       </div>
 
@@ -82,9 +97,7 @@ export function AdminDashboard({ onGoQC, onGoPay }) {
           <h2 style={{ fontSize: 16, margin: '0 0 14px' }}>{t('admin.dash.needsAttention')}</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             <button onClick={onGoQC} className="tap-target" style={{ display: 'flex', alignItems: 'center', gap: 12, width: '100%', textAlign: 'left', background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 10, padding: 13, cursor: 'pointer' }}>
-              <span style={{ display: 'grid', placeItems: 'center', width: 36, height: 36, borderRadius: 9, background: '#FBF0D9', color: '#8A6100', flexShrink: 0 }}>
-                <Icon name="shield" size={18} />
-              </span>
+              <span style={{ display: 'grid', placeItems: 'center', width: 36, height: 36, borderRadius: 9, background: '#FBF0D9', color: '#8A6100', flexShrink: 0 }}><Icon name="shield" size={18} /></span>
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 600, fontSize: 14 }}>{t('admin.dash.qcQueueLabel')}</div>
                 <div style={{ fontSize: 12, color: 'var(--muted)' }}>{t('admin.dash.qcQueueSub')}</div>
@@ -92,9 +105,7 @@ export function AdminDashboard({ onGoQC, onGoPay }) {
               <span style={{ fontWeight: 700, color: '#8A6100' }}>{qcRows.length}</span>
             </button>
             <button onClick={onGoPay} className="tap-target" style={{ display: 'flex', alignItems: 'center', gap: 12, width: '100%', textAlign: 'left', background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 10, padding: 13, cursor: 'pointer' }}>
-              <span style={{ display: 'grid', placeItems: 'center', width: 36, height: 36, borderRadius: 9, background: '#E4ECF7', color: '#1E4E8C', flexShrink: 0 }}>
-                <Icon name="card" size={18} />
-              </span>
+              <span style={{ display: 'grid', placeItems: 'center', width: 36, height: 36, borderRadius: 9, background: '#E4ECF7', color: '#1E4E8C', flexShrink: 0 }}><Icon name="card" size={18} /></span>
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 600, fontSize: 14 }}>{t('admin.dash.paymentsReconcile')}</div>
                 <div style={{ fontSize: 12, color: 'var(--muted)' }}>{t('admin.dash.pendingOrPartial')}</div>
@@ -108,14 +119,22 @@ export function AdminDashboard({ onGoQC, onGoPay }) {
   )
 }
 
+// ── Users list ────────────────────────────────────────────────────────────────
+
 export function AdminUsers({ onOpenUser, onGoExport }) {
   const { t } = useLang()
+  const [clients, setClients] = useState(USERS)
+
+  useEffect(() => {
+    getAllClients().then(setClients).catch(() => {})
+  }, [])
+
   return (
     <div className="container" style={{ padding: '24px 28px', maxWidth: 1280 }}>
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 12 }}>
         <div>
           <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: 0 }}>{t('admin.nav.users')}</h1>
-          <p style={{ color: 'var(--muted)', margin: '4px 0 0', fontSize: 14 }}>{USERS.length} {t('admin.users.filterDesc')}</p>
+          <p style={{ color: 'var(--muted)', margin: '4px 0 0', fontSize: 14 }}>{clients.length} {t('admin.users.filterDesc')}</p>
         </div>
         <button onClick={onGoExport} className="tap-target" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '9px 15px', borderRadius: 9, background: 'var(--surface)', border: '1px solid var(--border-2)', fontWeight: 600, fontSize: 13, cursor: 'pointer', color: 'var(--on-surface)' }}>
           <Icon name="download" size={15} />{t('admin.users.exportCsv')}
@@ -125,7 +144,7 @@ export function AdminUsers({ onOpenUser, onGoExport }) {
         <div className="data-table-head" style={{ display: 'grid', gridTemplateColumns: '2fr 1.2fr 1fr 1.4fr 1fr 0.6fr', gap: 12, padding: '11px 18px', background: 'var(--surface-2)', borderBottom: '1px solid var(--border)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.04em', color: 'var(--muted)' }}>
           <span>{t('admin.users.colUser')}</span><span>{t('admin.users.colPackage')}</span><span>{t('admin.users.colBalance')}</span><span>{t('admin.users.colStaff')}</span><span>{t('admin.users.colPayment')}</span><span />
         </div>
-        {USERS.map(u => {
+        {clients.map(u => {
           const pm = PAY_META[u.pay]
           return (
             <button key={u.id} onClick={() => onOpenUser(u.id)} className="data-table-row" style={{ display: 'grid', gridTemplateColumns: '2fr 1.2fr 1fr 1.4fr 1fr 0.6fr', gap: 12, padding: '13px 18px', border: 'none', borderBottom: '1px solid var(--border)', background: 'none', cursor: 'pointer', textAlign: 'left', alignItems: 'center', width: '100%', color: 'inherit', fontFamily: 'inherit' }}>
@@ -149,13 +168,26 @@ export function AdminUsers({ onOpenUser, onGoExport }) {
   )
 }
 
+// ── User detail ───────────────────────────────────────────────────────────────
+
 export function AdminUserDetail({ userId, onBack, onGoAddJob, onToast }) {
   const { t } = useLang()
-  const u = userById(userId)
+  const [u, setU] = useState(() => userId ? userById(userId) : null)
+  const [userRows, setUserRows] = useState([])
+  const [staffList, setStaffList] = useState(STAFF)
+
+  useEffect(() => {
+    if (!userId) return
+    getClientById(userId).then(data => { if (data) setU(data) }).catch(() => {})
+    getJobsByClient(userId).then(rows => setUserRows(rows.map(r => decRow(r)))).catch(() => {
+      setUserRows(ROWS.filter(r => r.uid === userId).map(r => decRow(r)))
+    })
+    getAllStaff().then(setStaffList).catch(() => {})
+  }, [userId])
+
   if (!u) return null
-  const userRows = ROWS.filter(r => r.uid === userId).map(r => decRow(r))
-  const selStaff = STAFF.find(s => s.id === u.staff)
-  const balPct = `${Math.round((u.used / u.total) * 100)}%`
+  const balPct = u.total > 0 ? `${Math.round((u.used / u.total) * 100)}%` : '0%'
+  const selStaff = staffList.find(s => s.id === u.staff)
 
   return (
     <div className="container" style={{ padding: '24px 28px', maxWidth: 1180 }}>
@@ -198,19 +230,6 @@ export function AdminUserDetail({ userId, onBack, onGoAddJob, onToast }) {
               ))}
             </div>
           </div>
-
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 20 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
-              <Icon name="shield" size={16} />
-              <h2 style={{ fontSize: 15, margin: 0 }}>{t('admin.detail.internalNotes')}</h2>
-              <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--destructive)', background: '#F7E5E2', padding: '3px 8px', borderRadius: 6 }}>{t('admin.detail.staffOnly')}</span>
-            </div>
-            <div style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.6, background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 9, padding: 13 }}>
-              {userId === 'u6'
-                ? 'First 3 applications require founder QC sign-off. User responsive on WhatsApp. Strong CAD portfolio — lead with John Keells and Hayleys roles.'
-                : t('admin.detail.noNotes')}
-            </div>
-          </div>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -234,7 +253,7 @@ export function AdminUserDetail({ userId, onBack, onGoAddJob, onToast }) {
             </div>
             <label htmlFor="reassign-staff" style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>{t('admin.detail.reassignBelow')}</label>
             <select id="reassign-staff" style={{ width: '100%', padding: '11px 13px', borderRadius: 9, border: '1px solid var(--border-2)', background: 'var(--surface-2)', fontSize: 14, color: 'inherit', fontFamily: 'inherit' }}>
-              {STAFF.map(s => <option key={s.id}>{s.name}</option>)}
+              {staffList.map(s => <option key={s.id}>{s.name}</option>)}
             </select>
           </div>
 
@@ -251,18 +270,51 @@ export function AdminUserDetail({ userId, onBack, onGoAddJob, onToast }) {
   )
 }
 
+// ── Add job ───────────────────────────────────────────────────────────────────
+
 export function AdminAddJob({ userId, onSave }) {
   const { t } = useLang()
-  const u = userById(userId)
+  const [u, setU] = useState(() => userId ? userById(userId) : null)
   const [rubric, setRubric] = useState({ skills: 72, location: 60, experience: 66, relevance: 80 })
+  const [saving, setSaving] = useState(false)
   const computed = Math.round(rubric.skills * 0.4 + rubric.location * 0.2 + rubric.experience * 0.2 + rubric.relevance * 0.2)
   const fm = fitMeta(computed)
+
+  useEffect(() => {
+    if (!userId) return
+    getClientById(userId).then(data => { if (data) setU(data) }).catch(() => {})
+  }, [userId])
 
   const fin = { width: '100%', padding: '11px 13px', borderRadius: 9, border: '1px solid var(--border-2)', background: 'var(--surface-2)', fontSize: 14, color: 'inherit', boxSizing: 'border-box', fontFamily: 'inherit' }
   const flbl = { display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6 }
 
+  async function handleSave(e) {
+    const form = e.currentTarget.closest('[data-form]') || e.currentTarget.parentElement
+    setSaving(true)
+    try {
+      const inputs = form ? form.querySelectorAll('[name]') : []
+      const vals = {}
+      inputs.forEach(el => { vals[el.name] = el.value })
+      await addJob({
+        id: 'j' + Date.now(),
+        client_id: userId,
+        company: vals.company || '',
+        title: vals.jobTitle || '',
+        location: vals.location || '',
+        source: vals.source || 'LinkedIn',
+        fit_score: computed,
+        fit_reason: vals.fitReason || '',
+        deadline: vals.deadline || null,
+        approval: 'pending',
+        status: null,
+      })
+    } catch (_) { /* non-blocking */ }
+    setSaving(false)
+    onSave?.()
+  }
+
   return (
-    <div className="container" style={{ padding: '24px 28px', maxWidth: 980 }}>
+    <div className="container" style={{ padding: '24px 28px', maxWidth: 980 }} data-form>
       <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>{t('admin.addjob.title')}</h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 20px', fontSize: 14 }}>For {u?.name || 'user'} · the fit score is computed from the rubric below, not typed by hand.</p>
       <div className="addjob-grid" style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: 18, alignItems: 'start' }}>
@@ -309,16 +361,24 @@ export function AdminAddJob({ userId, onSave }) {
             <div style={{ fontFamily: 'var(--font-display)', fontSize: 42, fontWeight: 600, color: fm.c, lineHeight: 1.1 }}>{computed}%</div>
             <div style={{ fontSize: 13, fontWeight: 700, color: fm.c }}>{fm.tier} fit</div>
           </div>
-          <button onClick={onSave} className="tap-target" style={{ width: '100%', marginTop: 14, padding: 11, borderRadius: 9, background: 'var(--accent)', color: '#fff', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>{t('admin.addjob.recommend')}</button>
+          <button onClick={handleSave} disabled={saving} className="tap-target" style={{ width: '100%', marginTop: 14, padding: 11, borderRadius: 9, background: 'var(--accent)', color: '#fff', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer', opacity: saving ? .7 : 1 }}>{saving ? 'Saving…' : t('admin.addjob.recommend')}</button>
         </div>
       </div>
     </div>
   )
 }
 
+// ── All applications ──────────────────────────────────────────────────────────
+
 export function AdminApplications() {
   const { t } = useLang()
-  const allRows = ROWS.map(r => decRow(r))
+  const [jobs, setJobs] = useState(ROWS)
+
+  useEffect(() => {
+    getAllJobs().then(setJobs).catch(() => {})
+  }, [])
+
+  const allRows = jobs.map(r => decRow(r))
   return (
     <div className="container" style={{ padding: '24px 28px', maxWidth: 1280 }}>
       <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>{t('admin.apps.title')}</h1>
@@ -344,17 +404,37 @@ export function AdminApplications() {
   )
 }
 
+// ── QC Queue ──────────────────────────────────────────────────────────────────
+
 export function AdminQCQueue({ onToast }) {
   const { t } = useLang()
   const [signed, setSigned] = useState({})
-  const qcRows = ROWS.filter(r => r.status === 'qc' || r.status === 'drafting').map(r => decRow(r))
+  const [qcRows, setQcRows] = useState(
+    ROWS.filter(r => r.status === 'qc' || r.status === 'drafting').map(r => decRow(r))
+  )
+
+  useEffect(() => {
+    getQCJobs().then(rows => setQcRows(rows.map(r => decRow(r)))).catch(() => {})
+  }, [])
+
+  async function handleApprove(id) {
+    setSigned(s => ({ ...s, [id]: 'applied' }))
+    onToast(t('toast.appApprovedMarked'))
+    try { await updateJob(id, { status: 'applied', applied_date: new Date().toISOString().slice(0, 10) }) } catch (_) {}
+  }
+
+  async function handleReturn(id) {
+    setSigned(s => ({ ...s, [id]: 'returned' }))
+    onToast(t('toast.returnedDrafting'))
+    try { await updateJob(id, { status: 'drafting' }) } catch (_) {}
+  }
+
   return (
     <div className="container" style={{ padding: '24px 28px', maxWidth: 980 }}>
       <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>{t('admin.qc.title')}</h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 20px', fontSize: 14 }}>{t('admin.qc.subtitle')}</p>
       {qcRows.length === 0 && (
         <div style={{ textAlign: 'center', padding: '48px 24px', color: 'var(--muted)', background: 'var(--surface)', border: '1px dashed var(--border-2)', borderRadius: 'var(--radius)' }}>
-          <Icon name="shield" size={28} style={{ marginBottom: 10, opacity: .5 }} />
           <div style={{ fontWeight: 600, fontSize: 15, color: 'var(--on-surface)' }}>{t('admin.qc.empty')}</div>
           <div style={{ fontSize: 13, marginTop: 4 }}>{t('admin.qc.emptyDesc')}</div>
         </div>
@@ -378,8 +458,8 @@ export function AdminQCQueue({ onToast }) {
                   : signed[r.id] === 'returned'
                   ? <span style={{ color: 'var(--muted)', fontWeight: 600, fontSize: 13 }}>{t('admin.qc.returnedDrafting')}</span>
                   : <>
-                    <button onClick={() => { setSigned(s => ({ ...s, [r.id]: 'applied' })); onToast(t('toast.appApprovedMarked')) }} className="tap-target" style={{ padding: '8px 16px', borderRadius: 8, background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>{t('admin.qc.approveApplied')}</button>
-                    <button onClick={() => { setSigned(s => ({ ...s, [r.id]: 'returned' })); onToast(t('toast.returnedDrafting')) }} className="tap-target" style={{ padding: '8px 16px', borderRadius: 8, background: 'var(--surface)', color: 'var(--muted)', border: '1px solid var(--border-2)', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>{t('admin.qc.returnDrafting')}</button>
+                    <button onClick={() => handleApprove(r.id)} className="tap-target" style={{ padding: '8px 16px', borderRadius: 8, background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>{t('admin.qc.approveApplied')}</button>
+                    <button onClick={() => handleReturn(r.id)} className="tap-target" style={{ padding: '8px 16px', borderRadius: 8, background: 'var(--surface)', color: 'var(--muted)', border: '1px solid var(--border-2)', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>{t('admin.qc.returnDrafting')}</button>
                   </>
                 }
               </div>
@@ -391,25 +471,42 @@ export function AdminQCQueue({ onToast }) {
   )
 }
 
+// ── Payments ──────────────────────────────────────────────────────────────────
+
 export function AdminPayments({ onToast }) {
   const { t } = useLang()
+  const [payments, setPayments] = useState(PAYMENTS)
   const [statuses, setStatuses] = useState({})
+
+  useEffect(() => {
+    getAllPayments().then(setPayments).catch(() => {})
+  }, [])
+
+  async function markStatus(p, newStatus, toastKey) {
+    setStatuses(s => ({ ...s, [p.id]: newStatus }))
+    onToast(t(toastKey))
+    try {
+      await updatePayment(p.id, { status: newStatus, paid_usd: newStatus === 'paid' ? p.amount : p.paid })
+      await addPaymentTrail(p.id, 'Dilani Jayasuriya', `Marked ${newStatus}`)
+    } catch (_) {}
+  }
+
   return (
     <div className="container" style={{ padding: '24px 28px', maxWidth: 1180 }}>
       <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>{t('admin.pay.title')}</h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 20px', fontSize: 14 }}>{t('admin.pay.subtitle')}</p>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-        {PAYMENTS.map(p => {
-          const u = userById(p.uid)
+        {payments.map(p => {
           const status = statuses[p.id] || p.status
           const pm = PAY_META[status]
+          const uname = p.uname || (userById(p.uid)?.name || '')
           return (
             <div key={p.id} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 18 }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 14, flexWrap: 'wrap' }}>
                 <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                  <span style={{ display: 'grid', placeItems: 'center', width: 42, height: 42, borderRadius: 10, background: 'var(--surface-3)', color: 'var(--primary)', fontWeight: 700, fontSize: 13, flexShrink: 0 }}>{initials(u?.name || '')}</span>
+                  <span style={{ display: 'grid', placeItems: 'center', width: 42, height: 42, borderRadius: 10, background: 'var(--surface-3)', color: 'var(--primary)', fontWeight: 700, fontSize: 13, flexShrink: 0 }}>{initials(uname)}</span>
                   <div>
-                    <div style={{ fontWeight: 600, fontSize: 15 }}>{u?.name}</div>
+                    <div style={{ fontWeight: 600, fontSize: 15 }}>{uname}</div>
                     <div style={{ fontSize: 12, color: 'var(--muted)' }}>{p.pkg} · {p.method} · {fmtDate(p.date)}</div>
                   </div>
                 </div>
@@ -418,26 +515,28 @@ export function AdminPayments({ onToast }) {
                     <div style={{ fontWeight: 700, fontSize: 16 }}>${p.paid} <span style={{ fontSize: 12, color: 'var(--muted)', fontWeight: 500 }}>/ ${p.amount}</span></div>
                     <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--muted)' }}>{p.ref}</div>
                   </div>
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 12, fontWeight: 700, color: pm?.c, background: pm?.b, padding: '6px 11px', borderRadius: 8 }}>{pm?.l}</span>
+                  {pm && <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 12, fontWeight: 700, color: pm.c, background: pm.b, padding: '6px 11px', borderRadius: 8 }}>{pm.l}</span>}
                 </div>
               </div>
-              <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid var(--border)' }}>
-                <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.04em', color: 'var(--muted)', marginBottom: 9 }}>{t('admin.pay.auditTrail')}</div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
-                  {p.trail.map((tr, i) => (
-                    <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'center', fontSize: 13, flexWrap: 'wrap' }}>
-                      <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--primary)', flexShrink: 0 }} />
-                      <span style={{ fontWeight: 600 }}>{tr.a}</span>
-                      <span style={{ color: 'var(--muted)' }}>{tr.act}</span>
-                      <span style={{ marginLeft: 'auto', fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--muted)' }}>{tr.t}</span>
-                    </div>
-                  ))}
+              {p.trail && p.trail.length > 0 && (
+                <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid var(--border)' }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.04em', color: 'var(--muted)', marginBottom: 9 }}>{t('admin.pay.auditTrail')}</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+                    {p.trail.map((tr, i) => (
+                      <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'center', fontSize: 13, flexWrap: 'wrap' }}>
+                        <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--primary)', flexShrink: 0 }} />
+                        <span style={{ fontWeight: 600 }}>{tr.a || tr.actor}</span>
+                        <span style={{ color: 'var(--muted)' }}>{tr.act || tr.action}</span>
+                        <span style={{ marginLeft: 'auto', fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--muted)' }}>{tr.t || tr.created_at?.slice(0, 16)}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div style={{ display: 'flex', gap: 8, marginTop: 12, flexWrap: 'wrap' }}>
-                  <button onClick={() => { setStatuses(s => ({ ...s, [p.id]: 'paid' })); onToast(t('toast.markedPaid')) }} className="tap-target" style={{ padding: '7px 13px', borderRadius: 8, background: 'var(--surface-2)', border: '1px solid var(--border)', fontWeight: 600, fontSize: 12, cursor: 'pointer', color: 'var(--on-surface)' }}>{t('admin.pay.markPaid')}</button>
-                  <button onClick={() => { setStatuses(s => ({ ...s, [p.id]: 'partial' })); onToast(t('toast.markedPartial')) }} className="tap-target" style={{ padding: '7px 13px', borderRadius: 8, background: 'var(--surface-2)', border: '1px solid var(--border)', fontWeight: 600, fontSize: 12, cursor: 'pointer', color: 'var(--on-surface)' }}>{t('admin.pay.partial')}</button>
-                  <button onClick={() => { setStatuses(s => ({ ...s, [p.id]: 'refunded' })); onToast(t('toast.markedRefunded')) }} className="tap-target" style={{ padding: '7px 13px', borderRadius: 8, background: 'var(--surface-2)', border: '1px solid var(--border)', fontWeight: 600, fontSize: 12, cursor: 'pointer', color: 'var(--destructive)' }}>{t('admin.pay.refund')}</button>
-                </div>
+              )}
+              <div style={{ display: 'flex', gap: 8, marginTop: 12, flexWrap: 'wrap' }}>
+                <button onClick={() => markStatus(p, 'paid', 'toast.markedPaid')} className="tap-target" style={{ padding: '7px 13px', borderRadius: 8, background: 'var(--surface-2)', border: '1px solid var(--border)', fontWeight: 600, fontSize: 12, cursor: 'pointer', color: 'var(--on-surface)' }}>{t('admin.pay.markPaid')}</button>
+                <button onClick={() => markStatus(p, 'partial', 'toast.markedPartial')} className="tap-target" style={{ padding: '7px 13px', borderRadius: 8, background: 'var(--surface-2)', border: '1px solid var(--border)', fontWeight: 600, fontSize: 12, cursor: 'pointer', color: 'var(--on-surface)' }}>{t('admin.pay.partial')}</button>
+                <button onClick={() => markStatus(p, 'refunded', 'toast.markedRefunded')} className="tap-target" style={{ padding: '7px 13px', borderRadius: 8, background: 'var(--surface-2)', border: '1px solid var(--border)', fontWeight: 600, fontSize: 12, cursor: 'pointer', color: 'var(--destructive)' }}>{t('admin.pay.refund')}</button>
               </div>
             </div>
           )
@@ -447,18 +546,27 @@ export function AdminPayments({ onToast }) {
   )
 }
 
+// ── Staff ─────────────────────────────────────────────────────────────────────
+
 export function AdminStaff() {
   const { t } = useLang()
-  const totalLoad = STAFF.reduce((s, st) => s + st.load, 0)
-  const totalCap = STAFF.reduce((s, st) => s + st.max, 0)
+  const [staff, setStaff] = useState(STAFF)
+
+  useEffect(() => {
+    getAllStaff().then(setStaff).catch(() => {})
+  }, [])
+
+  const totalLoad = staff.reduce((s, st) => s + (st.load || 0), 0)
+  const totalCap = staff.reduce((s, st) => s + (st.max || 0), 0)
   const openCap = totalCap - totalLoad
+
   return (
     <div className="container" style={{ padding: '24px 28px', maxWidth: 1080 }}>
       <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>{t('admin.staff.title')}</h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 18px', fontSize: 14 }}>{t('admin.staff.subtitle')}</p>
       <div className="grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14, marginBottom: 18 }}>
         {[
-          [t('admin.staff.headcount'), STAFF.length, ''],
+          [t('admin.staff.headcount'), staff.length, ''],
           [t('admin.staff.activeLoad'), `${totalLoad} / ${totalCap}`, ''],
           [t('admin.staff.openCapacity'), `${openCap} ${t('admin.staff.usersUnit')}`, 'var(--primary)'],
         ].map(([label, value, c], i) => (
@@ -469,8 +577,8 @@ export function AdminStaff() {
         ))}
       </div>
       <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', overflow: 'hidden' }}>
-        {STAFF.map(s => {
-          const utilPct = Math.round((s.load / s.max) * 100)
+        {staff.map(s => {
+          const utilPct = s.max > 0 ? Math.round((s.load / s.max) * 100) : 0
           const barColor = utilPct >= 90 ? '#B23A2E' : utilPct >= 75 ? '#A85A1E' : 'var(--primary)'
           const statusLabel = utilPct >= 90 ? t('admin.staff.atCapacity') : utilPct >= 75 ? t('admin.staff.highLoad') : t('admin.staff.available')
           return (
@@ -500,14 +608,22 @@ export function AdminStaff() {
   )
 }
 
+// ── Email templates ───────────────────────────────────────────────────────────
+
 export function AdminNotifications() {
   const { t } = useLang()
+  const [templates, setTemplates] = useState(TEMPLATES)
+
+  useEffect(() => {
+    getEmailTemplates().then(data => { if (data.length > 0) setTemplates(data) }).catch(() => {})
+  }, [])
+
   return (
     <div className="container" style={{ padding: '24px 28px', maxWidth: 920 }}>
       <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>{t('admin.notif.title')}</h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 20px', fontSize: 14 }}>{t('admin.notif.subtitle')}</p>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-        {TEMPLATES.map(tpl => (
+        {templates.map(tpl => (
           <div key={tpl.id} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 18 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', marginBottom: 10 }}>
               <span style={{ fontWeight: 700, fontSize: 15 }}>{tpl.key}</span>
@@ -522,13 +638,27 @@ export function AdminNotifications() {
   )
 }
 
+// ── Export ────────────────────────────────────────────────────────────────────
+
 export function AdminExport({ onToast }) {
   const { t } = useLang()
+  const [counts, setCounts] = useState({ clients: USERS.length, jobs: ROWS.length, payments: PAYMENTS.length, staff: STAFF.length })
+
+  useEffect(() => {
+    Promise.allSettled([getAllClients(), getAllJobs(), getAllPayments(), getAllStaff()])
+      .then(([c, j, p, s]) => setCounts({
+        clients: c.value?.length ?? USERS.length,
+        jobs: j.value?.length ?? ROWS.length,
+        payments: p.value?.length ?? PAYMENTS.length,
+        staff: s.value?.length ?? STAFF.length,
+      }))
+  }, [])
+
   const exports = [
-    { name: 'Users export', rows: USERS.length, cols: 'name, email, phone, country, city, package, balance, payment status, staff' },
-    { name: 'Applications export', rows: ROWS.length, cols: 'user, company, title, location, fit score, status, applied date, proof type' },
-    { name: 'Payments export', rows: PAYMENTS.length, cols: 'user, package, amount, paid, method, status, reference, date' },
-    { name: 'Staff capacity export', rows: STAFF.length, cols: 'name, role, email, max capacity, current load' },
+    { name: 'Users export', rows: counts.clients, cols: 'name, email, phone, country, city, package, balance, payment status, staff' },
+    { name: 'Applications export', rows: counts.jobs, cols: 'user, company, title, location, fit score, status, applied date, proof type' },
+    { name: 'Payments export', rows: counts.payments, cols: 'user, package, amount, paid, method, status, reference, date' },
+    { name: 'Staff capacity export', rows: counts.staff, cols: 'name, role, email, max capacity, current load' },
   ]
   return (
     <div className="container" style={{ padding: '24px 28px', maxWidth: 780 }}>

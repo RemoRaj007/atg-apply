@@ -1,24 +1,24 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Header from './components/Header.jsx'
 import Sidebar from './components/Sidebar.jsx'
 import Toast from './components/Toast.jsx'
 import Icon from './components/Icon.jsx'
 import { useLang } from './i18n/LanguageContext.jsx'
+import { useAuth } from './lib/AuthContext.jsx'
+import { updateJobApproval, createClientRecord, createClientProfile } from './lib/db.js'
 import { Home, HowItWorks, Pricing, Contact, Privacy, Terms } from './pages/PublicPages.jsx'
 import SignupWizard from './pages/SignupWizard.jsx'
 import ArchitecturePage from './pages/ArchitecturePage.jsx'
+import LoginPage from './pages/LoginPage.jsx'
 import {
   CustomerDashboard, CustomerJobs, CustomerApplications, CustomerDocuments,
-  CustomerPayments, CustomerUpgrade, CustomerNotifications, CustomerSupport, CustomerProfile,
-  CustomerScholarships
+  CustomerPayments, CustomerUpgrade, CustomerNotifications, CustomerSupport,
+  CustomerProfile, CustomerScholarships
 } from './pages/CustomerPages.jsx'
 import {
   AdminDashboard, AdminUsers, AdminUserDetail, AdminAddJob, AdminApplications,
   AdminQCQueue, AdminPayments, AdminStaff, AdminNotifications, AdminExport
 } from './pages/AdminPages.jsx'
-import { ROWS } from './data.js'
-
-const MY_UID = 'u4'
 
 function PublicNav({ view, onNav, onSignup }) {
   const { t } = useLang()
@@ -72,17 +72,38 @@ function PublicNav({ view, onNav, onSignup }) {
 
 export default function App() {
   const { t } = useLang()
-  const [role, setRole] = useState('public')
+  const auth = useAuth()
+
+  // roleOverride lets the demo switcher in Header preview any role
+  // Real role from auth takes precedence when it matches the override
+  const [roleOverride, setRoleOverride] = useState('public')
   const [view, setView] = useState('home')
   const [theme, setTheme] = useState('light')
   const [step, setStep] = useState(0)
   const [consent1, setConsent1] = useState(false)
   const [consent2, setConsent2] = useState(false)
   const [draftSaved, setDraftSaved] = useState(false)
-  const [selUser, setSelUser] = useState('u4')
+  const [selUser, setSelUser] = useState(null)
   const [approvals, setApprovals] = useState({})
   const [toast, setToast] = useState(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [signupLoading, setSignupLoading] = useState(false)
+
+  // When auth resolves, sync the role override to match the real role
+  useEffect(() => {
+    if (!auth.loading && auth.profile) {
+      setRoleOverride(auth.profile.role)
+      if (auth.profile.role === 'user') setView('u-dash')
+      if (auth.profile.role === 'admin') setView('a-dash')
+    }
+  }, [auth.loading, auth.profile])
+
+  // Effective role: if logged in, honour auth role; otherwise use override for demo
+  const role = auth.profile ? auth.profile.role : roleOverride
+
+  // Client ID: real from auth, or 'u4' (mock) for demo preview
+  const clientId = auth.profile?.role === 'user' ? auth.profile.id : (roleOverride === 'user' ? 'u4' : null)
+  const adminName = auth.profile?.role === 'admin' ? auth.profile.name : 'Dilani Jayasuriya'
 
   const flash = (msg) => {
     setToast(msg)
@@ -91,33 +112,124 @@ export default function App() {
   }
 
   const nav = (r, v) => {
-    setRole(r)
+    setRoleOverride(r)
     setView(v)
     setSidebarOpen(false)
     window.scrollTo(0, 0)
   }
 
-  const approveJob = (id) => {
+  const approveJob = useCallback(async (id) => {
     setApprovals(a => ({ ...a, [id]: 'approved' }))
     flash(t('toast.jobApproved'))
-  }
-  const declineJob = (id) => {
+    if (auth.profile) {
+      try { await updateJobApproval(id, 'approved') } catch (_) { /* optimistic */ }
+    }
+  }, [auth.profile, t])
+
+  const declineJob = useCallback(async (id) => {
     setApprovals(a => ({ ...a, [id]: 'declined' }))
     flash(t('toast.jobSkipped'))
+    if (auth.profile) {
+      try { await updateJobApproval(id, 'declined') } catch (_) { /* optimistic */ }
+    }
+  }, [auth.profile, t])
+
+  const handleSignupFinish = async (formData) => {
+    const email = (formData.email || '').trim()
+    const password = formData.password || ''
+    const name = (formData.fullName || '').trim()
+
+    if (!email || !password || !name) { flash('Please fill in your name, email, and password'); return }
+    if (password.length < 8) { flash('Password must be at least 8 characters'); return }
+
+    setSignupLoading(true)
+    try {
+      const { data, error: authError } = await auth.signUp(email, password, {
+        data: { full_name: name },
+      })
+      if (authError) { flash(authError.message); return }
+
+      const authUserId = data?.user?.id
+      if (!authUserId) {
+        flash('Account created! Check your email to verify, then sign in.')
+        nav('public', 'login')
+        return
+      }
+
+      const clientId = await createClientRecord({
+        authUserId,
+        name,
+        email,
+        phone: formData.phone || '',
+        country: formData.country || '',
+        city: formData.city || '',
+        profession: (formData.targetTitles || '').split(',')[0].trim(),
+      })
+
+      createClientProfile(clientId, {
+        nationality: formData.nationality,
+        linkedin_url: formData.linkedin,
+        portfolio_url: formData.portfolio,
+        target_countries: formData.targetCountries,
+        visa_status: formData.visa,
+        availability: formData.availability,
+        degree: formData.degree,
+        university: formData.university,
+        edu_country: formData.eduCountry,
+        grad_date: formData.gradDate,
+        modules: formData.modules,
+        certifications: formData.certifications,
+        job_title: formData.jobTitle,
+        employer: formData.employer,
+        from_date: formData.fromDate,
+        to_date: formData.toDate,
+        achievements: formData.achievements,
+        target_titles: formData.targetTitles,
+        sectors: formData.sectors,
+        target_cities: formData.cities,
+        work_mode: formData.workMode,
+        expected_salary: formData.salary,
+        tech_skills: formData.techSkills,
+        soft_skills: formData.softSkills,
+        job_links: formData.jobLinks,
+      }).catch(err => console.warn('Profile insert warn:', err))
+
+      flash(t('toast.profileSubmitted'))
+      if (data.session) {
+        await auth.resolveProfile(authUserId)
+      } else {
+        nav('public', 'login')
+      }
+    } catch (err) {
+      flash(err.message || 'Signup failed')
+    } finally {
+      setSignupLoading(false)
+    }
   }
 
-  const myPendingCount = ROWS.filter(r => r.uid === MY_UID && (approvals[r.id] || r.approval) === 'pending').length
-  const qcCount = ROWS.filter(r => r.status === 'qc').length
+  const handleSignOut = async () => {
+    await auth.signOut()
+    setRoleOverride('public')
+    setView('home')
+    setApprovals({})
+  }
+
+  const isPublic = role === 'public'
+  const isShell = role === 'user' || role === 'admin'
+
+  const whoName = role === 'user' ? (auth.profile?.name || 'Nandini') : adminName
+  const whoRole = role === 'user' ? (auth.profile?.packageName || 'Professional') : 'Admin · Founder'
+  const whoInitials = (whoName || '?').split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase()
 
   const userNav = [
     { view: 'u-dash', label: t('cust.nav.dashboard'), icon: 'home' },
-    { view: 'u-jobs', label: t('cust.nav.jobs'), icon: 'briefcase', badge: myPendingCount },
+    { view: 'u-jobs', label: t('cust.nav.jobs'), icon: 'briefcase' },
     { view: 'u-apps', label: t('cust.nav.applications'), icon: 'list' },
     { view: 'u-scholarships', label: t('cust.nav.scholarships'), icon: 'globe' },
     { view: 'u-docs', label: t('cust.nav.documents'), icon: 'file' },
     { view: 'u-pay', label: t('cust.nav.payments'), icon: 'card' },
     { view: 'u-upgrade', label: t('cust.nav.upgrade'), icon: 'spark' },
-    { view: 'u-notify', label: t('cust.nav.notifications'), icon: 'bell', badge: 2 },
+    { view: 'u-notify', label: t('cust.nav.notifications'), icon: 'bell' },
     { view: 'u-support', label: t('cust.nav.support'), icon: 'chat' },
     { view: 'u-profile', label: t('cust.nav.profile'), icon: 'users' },
   ]
@@ -127,19 +239,14 @@ export default function App() {
     { view: 'a-users', label: t('admin.nav.users'), icon: 'users' },
     { view: 'a-jobnew', label: t('admin.nav.addJob'), icon: 'briefcase' },
     { view: 'a-apps', label: t('admin.nav.applications'), icon: 'list' },
-    { view: 'a-qc', label: t('admin.nav.qc'), icon: 'shield', badge: qcCount },
+    { view: 'a-qc', label: t('admin.nav.qc'), icon: 'shield' },
     { view: 'a-pay', label: t('admin.nav.payments'), icon: 'card' },
     { view: 'a-staff', label: t('admin.nav.staff'), icon: 'gauge' },
     { view: 'a-notify', label: t('admin.nav.notifications'), icon: 'bell' },
     { view: 'a-export', label: t('admin.nav.export'), icon: 'download' },
   ]
 
-  const isPublic = role === 'public'
-  const isShell = role === 'user' || role === 'admin'
-
-  const whoName = role === 'user' ? 'Nandini' : 'Dilani Jayasuriya'
-  const whoRole = role === 'user' ? `Professional · ${77 - Object.values(approvals).filter(v => v === 'approved').length * 0} left` : 'Admin · Founder'
-  const whoInitials = role === 'user' ? 'ND' : 'DJ'
+  const setViewAndClose = (v) => { setView(v); setSidebarOpen(false) }
 
   const renderPublicPage = () => {
     const go = (v) => nav('public', v)
@@ -151,13 +258,20 @@ export default function App() {
       case 'privacy': return <Privacy />
       case 'terms': return <Terms />
       case 'arch': return <ArchitecturePage />
+      case 'login': return (
+        <LoginPage
+          onSuccess={() => { /* AuthContext useEffect handles nav */ }}
+          onSignup={() => { setStep(0); nav('public', 'signup') }}
+        />
+      )
       case 'signup': return (
         <SignupWizard
           step={step} consent1={consent1} consent2={consent2} draftSaved={draftSaved}
+          loading={signupLoading}
           onNext={() => setStep(s => Math.min(s + 1, 7))}
           onPrev={() => setStep(s => Math.max(s - 1, 0))}
           onSaveDraft={() => { setDraftSaved(true); flash(t('toast.draftSaved')) }}
-          onFinish={() => { flash(t('toast.profileSubmitted')); nav('user', 'u-dash') }}
+          onFinish={handleSignupFinish}
           onToggleC1={() => setConsent1(c => !c)}
           onToggleC2={() => setConsent2(c => !c)}
           onPrivacy={() => go('privacy')}
@@ -168,21 +282,20 @@ export default function App() {
     }
   }
 
-  const setViewAndClose = (v) => { setView(v); setSidebarOpen(false) }
-
   const renderCustomerPage = () => {
+    const cp = { clientId, approvals, onApprove: approveJob, onDecline: declineJob }
     switch (view) {
-      case 'u-dash': return <CustomerDashboard approvals={approvals} onApprove={approveJob} onDecline={declineJob} onGoJobs={() => setViewAndClose('u-jobs')} onGoApps={() => setViewAndClose('u-apps')} onGoUpgrade={() => setViewAndClose('u-upgrade')} onGoProfile={() => setViewAndClose('u-profile')} onGoNotify={() => setViewAndClose('u-notify')} />
-      case 'u-jobs': return <CustomerJobs approvals={approvals} onApprove={approveJob} onDecline={declineJob} />
-      case 'u-apps': return <CustomerApplications approvals={approvals} />
+      case 'u-dash': return <CustomerDashboard {...cp} onGoJobs={() => setViewAndClose('u-jobs')} onGoApps={() => setViewAndClose('u-apps')} onGoUpgrade={() => setViewAndClose('u-upgrade')} onGoProfile={() => setViewAndClose('u-profile')} onGoNotify={() => setViewAndClose('u-notify')} />
+      case 'u-jobs': return <CustomerJobs {...cp} />
+      case 'u-apps': return <CustomerApplications {...cp} />
       case 'u-scholarships': return <CustomerScholarships />
-      case 'u-docs': return <CustomerDocuments />
-      case 'u-pay': return <CustomerPayments />
+      case 'u-docs': return <CustomerDocuments clientId={clientId} />
+      case 'u-pay': return <CustomerPayments clientId={clientId} />
       case 'u-upgrade': return <CustomerUpgrade onUpgrade={() => flash(t('toast.upgradeRequested'))} />
-      case 'u-notify': return <CustomerNotifications />
-      case 'u-support': return <CustomerSupport onSend={() => flash(t('toast.messageSent'))} />
-      case 'u-profile': return <CustomerProfile onSave={() => flash(t('toast.profileSaved'))} />
-      default: return <CustomerDashboard approvals={approvals} onApprove={approveJob} onDecline={declineJob} onGoJobs={() => setViewAndClose('u-jobs')} onGoApps={() => setViewAndClose('u-apps')} onGoUpgrade={() => setViewAndClose('u-upgrade')} onGoProfile={() => setViewAndClose('u-profile')} onGoNotify={() => setViewAndClose('u-notify')} />
+      case 'u-notify': return <CustomerNotifications clientId={clientId} />
+      case 'u-support': return <CustomerSupport clientId={clientId} onSend={() => flash(t('toast.messageSent'))} />
+      case 'u-profile': return <CustomerProfile clientId={clientId} onSave={() => flash(t('toast.profileSaved'))} />
+      default: return <CustomerDashboard {...cp} onGoJobs={() => setViewAndClose('u-jobs')} onGoApps={() => setViewAndClose('u-apps')} onGoUpgrade={() => setViewAndClose('u-upgrade')} onGoProfile={() => setViewAndClose('u-profile')} onGoNotify={() => setViewAndClose('u-notify')} />
     }
   }
 
@@ -202,6 +315,24 @@ export default function App() {
     }
   }
 
+  // Show spinner while auth resolves on first load
+  if (auth.loading) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--surface-2)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, color: 'var(--muted)' }}>
+          <svg width="40" height="40" viewBox="0 0 36 36" fill="none">
+            <rect width="36" height="36" rx="10" fill="var(--primary)" />
+            <path d="M18 8.5L9 27.5" stroke="white" strokeWidth="2.3" strokeLinecap="round" />
+            <path d="M18 8.5L27 27.5" stroke="white" strokeWidth="2.3" strokeLinecap="round" />
+            <path d="M12.5 21.5H23.5" stroke="white" strokeWidth="2.3" strokeLinecap="round" />
+            <circle cx="18" cy="8.5" r="3" fill="var(--accent)" />
+          </svg>
+          <span style={{ fontSize: 14 }}>Loading…</span>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div data-theme={theme} style={{ minHeight: '100vh', background: 'var(--surface-2)', color: 'var(--on-surface)', fontFamily: 'var(--font-ui)' }}>
       <Header
@@ -211,18 +342,23 @@ export default function App() {
         showMenuToggle={isShell}
         onToggleMenu={() => setSidebarOpen(o => !o)}
         onViewPublic={() => nav('public', 'home')}
-        onViewUser={() => nav('user', 'u-dash')}
-        onViewAdmin={() => nav('admin', 'a-dash')}
+        onViewUser={() => { if (auth.profile?.role === 'user') nav('user', 'u-dash'); else nav('user', 'u-dash') }}
+        onViewAdmin={() => { if (auth.profile?.role === 'admin') nav('admin', 'a-dash'); else nav('admin', 'a-dash') }}
         onToggleTheme={() => setTheme(t => t === 'light' ? 'dark' : 'light')}
         onGoHome={() => nav('public', 'home')}
         onGoArch={() => nav('public', 'arch')}
+        isLoggedIn={!!auth.profile}
+        onLogin={() => nav('public', 'login')}
+        onSignOut={handleSignOut}
       />
 
       {isPublic && (
         <>
-          <PublicNav view={view} onNav={nav} onSignup={() => { setStep(0); nav('public', 'signup') }} />
+          {view !== 'login' && view !== 'signup' && (
+            <PublicNav view={view} onNav={nav} onSignup={() => { setStep(0); nav('public', 'signup') }} />
+          )}
           <main>{renderPublicPage()}</main>
-          {view !== 'arch' && <Footer onNav={nav} />}
+          {view !== 'arch' && view !== 'login' && view !== 'signup' && <Footer onNav={nav} />}
         </>
       )}
 
@@ -239,6 +375,8 @@ export default function App() {
             whoInitials={whoInitials}
             isOpen={sidebarOpen}
             onClose={() => setSidebarOpen(false)}
+            onSignOut={handleSignOut}
+            isLoggedIn={!!auth.profile}
           />
           <main style={{ minWidth: 0, padding: 0 }}>
             {role === 'user' ? renderCustomerPage() : renderAdminPage()}

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Icon from '../components/Icon.jsx'
 import { useLang } from '../i18n/LanguageContext.jsx'
 
@@ -12,13 +12,14 @@ function Step0() {
   const { t } = useLang()
   return (
     <div className="grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-      <div><label htmlFor="s0-name" style={flbl}>{t('signup.fullName')}</label><input id="s0-name" name="fullName" defaultValue="Tharindu Wickramasinghe" style={fin} /></div>
-      <div><label htmlFor="s0-email" style={flbl}>{t('signup.email')}</label><input id="s0-email" name="email" type="email" defaultValue="tharindu.w@gmail.com" style={fin} /></div>
-      <div><label htmlFor="s0-phone" style={flbl}>{t('signup.phone')}</label><input id="s0-phone" name="phone" defaultValue="+94 71 555 0142" style={fin} /></div>
-      <div><label htmlFor="s0-country" style={flbl}>{t('signup.country')}</label><input id="s0-country" name="country" defaultValue="Sri Lanka" style={fin} /></div>
-      <div><label htmlFor="s0-nationality" style={flbl}>{t('signup.nationality')}</label><input id="s0-nationality" name="nationality" defaultValue="Sri Lankan" style={fin} /></div>
-      <div><label htmlFor="s0-linkedin" style={flbl}>{t('signup.linkedin')}</label><input id="s0-linkedin" name="linkedin" defaultValue="linkedin.com/in/tharindu-w" style={fin} /></div>
-      <div style={{ gridColumn: 'span 2' }}><label htmlFor="s0-portfolio" style={flbl}>{t('signup.portfolio')} <span style={fopt}>{t('signup.optional')}</span></label><input id="s0-portfolio" name="portfolio" placeholder="dribbble.com/…" style={fin} /></div>
+      <div style={{ gridColumn: 'span 2' }}><label htmlFor="s0-name" style={flbl}>{t('signup.fullName')}</label><input id="s0-name" name="fullName" placeholder="Your full name" style={fin} /></div>
+      <div><label htmlFor="s0-email" style={flbl}>{t('signup.email')}</label><input id="s0-email" name="email" type="email" placeholder="you@example.com" autoComplete="email" style={fin} /></div>
+      <div><label htmlFor="s0-phone" style={flbl}>{t('signup.phone')}</label><input id="s0-phone" name="phone" type="tel" placeholder="+1 555 000 0000" style={fin} /></div>
+      <div><label htmlFor="s0-password" style={flbl}>Password</label><input id="s0-password" name="password" type="password" placeholder="At least 8 characters" autoComplete="new-password" style={fin} /></div>
+      <div><label htmlFor="s0-country" style={flbl}>{t('signup.country')}</label><input id="s0-country" name="country" placeholder="Your country" style={fin} /></div>
+      <div><label htmlFor="s0-nationality" style={flbl}>{t('signup.nationality')}</label><input id="s0-nationality" name="nationality" placeholder="Your nationality" style={fin} /></div>
+      <div><label htmlFor="s0-linkedin" style={flbl}>{t('signup.linkedin')} <span style={fopt}>{t('signup.optional')}</span></label><input id="s0-linkedin" name="linkedin" placeholder="linkedin.com/in/you" style={fin} /></div>
+      <div><label htmlFor="s0-portfolio" style={flbl}>{t('signup.portfolio')} <span style={fopt}>{t('signup.optional')}</span></label><input id="s0-portfolio" name="portfolio" placeholder="dribbble.com/…" style={fin} /></div>
     </div>
   )
 }
@@ -186,8 +187,24 @@ function Step7({ consent1, consent2, onC1, onC2, onPrivacy, onTerms }) {
 
 const STEPS = [Step0, Step1, Step2, Step3, Step4, Step5, Step6]
 
-export default function SignupWizard({ step, consent1, consent2, draftSaved, onNext, onPrev, onSaveDraft, onFinish, onToggleC1, onToggleC2, onPrivacy, onGoToStep }) {
+export default function SignupWizard({ step, consent1, consent2, draftSaved, onNext, onPrev, onSaveDraft, onFinish, onToggleC1, onToggleC2, onPrivacy, onGoToStep, loading }) {
   const { t } = useLang()
+  const formData = useRef({})
+  const contentRef = useRef(null)
+
+  function collectStep() {
+    if (!contentRef.current) return
+    contentRef.current.querySelectorAll('[name]').forEach(el => {
+      if (el.type === 'checkbox') formData.current[el.name] = el.checked
+      else formData.current[el.name] = el.value
+    })
+  }
+
+  function handleNext() { collectStep(); onNext?.() }
+  function handlePrev() { collectStep(); onPrev?.() }
+  function handleGoToStep(i) { collectStep(); onGoToStep?.(i) }
+  function handleFinish() { collectStep(); onFinish?.(formData.current) }
+
   const wsteps = [t('signup.step0'), t('signup.step1'), t('signup.step2'), t('signup.step3'), t('signup.step4'), t('signup.step5'), t('signup.step6'), t('signup.step7')]
   const hints = [t('signup.hint0'), t('signup.hint1'), t('signup.hint2'), t('signup.hint3'), t('signup.hint4'), t('signup.hint5'), t('signup.hint6'), t('signup.hint7')]
   const total = wsteps.length
@@ -223,7 +240,7 @@ export default function SignupWizard({ step, consent1, consent2, draftSaved, onN
                 type="button"
                 aria-current={active ? 'step' : undefined}
                 disabled={!reachable}
-                onClick={() => reachable && onGoToStep?.(i)}
+                onClick={() => reachable && handleGoToStep(i)}
                 style={{
                   display: 'flex', alignItems: 'center', gap: 10, width: '100%',
                   padding: '9px 12px', borderRadius: 9, border: 'none', cursor: reachable ? 'pointer' : 'default',
@@ -251,14 +268,16 @@ export default function SignupWizard({ step, consent1, consent2, draftSaved, onN
           <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 24, margin: '0 0 4px' }}>{wsteps[step]}</h2>
           <p style={{ color: 'var(--muted)', fontSize: 14, margin: '0 0 22px' }}>{hints[step]}</p>
 
-          {step < 7
-            ? <StepComp />
-            : <Step7 consent1={consent1} consent2={consent2} onC1={onToggleC1} onC2={onToggleC2} onPrivacy={onPrivacy} />
-          }
+          <div ref={contentRef}>
+            {step < 7
+              ? <StepComp />
+              : <Step7 consent1={consent1} consent2={consent2} onC1={onToggleC1} onC2={onToggleC2} onPrivacy={onPrivacy} />
+            }
+          </div>
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginTop: 28, paddingTop: 20, borderTop: '1px solid var(--border)' }}>
             <button
-              onClick={onPrev}
+              onClick={handlePrev}
               className="tap-target"
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 6,
@@ -273,8 +292,8 @@ export default function SignupWizard({ step, consent1, consent2, draftSaved, onN
             <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
               {draftSaved && <span style={{ fontSize: 13, color: 'var(--primary)', fontWeight: 600 }}>{t('signup.draftSaved')}</span>}
               {isLast
-                ? <button onClick={onFinish} className="tap-target" style={{ padding: '12px 24px', borderRadius: 9, background: 'var(--accent)', color: '#fff', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>{t('signup.submit')}</button>
-                : <button onClick={onNext} className="tap-target" style={{ padding: '12px 24px', borderRadius: 9, background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>{t('signup.continue')}</button>
+                ? <button onClick={handleFinish} disabled={loading} className="tap-target" style={{ padding: '12px 24px', borderRadius: 9, background: 'var(--accent)', color: '#fff', border: 'none', fontWeight: 600, fontSize: 14, cursor: loading ? 'wait' : 'pointer', opacity: loading ? .7 : 1 }}>{loading ? 'Creating account…' : t('signup.submit')}</button>
+                : <button onClick={handleNext} className="tap-target" style={{ padding: '12px 24px', borderRadius: 9, background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>{t('signup.continue')}</button>
               }
             </div>
           </div>

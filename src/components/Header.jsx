@@ -2,7 +2,7 @@ import Icon from './Icon.jsx'
 import { useLang } from '../i18n/LanguageContext.jsx'
 import LanguageSwitcher from '../i18n/LanguageSwitcher.jsx'
 
-export default function Header({ role, view, onViewPublic, onViewUser, onViewAdmin, onToggleTheme, onGoHome, onGoArch, onToggleMenu, showMenuToggle, theme }) {
+export default function Header({ role, view, onViewPublic, onViewUser, onViewAdmin, onToggleTheme, onGoHome, onGoArch, onToggleMenu, showMenuToggle, theme, isLoggedIn, onLogin, onSignOut }) {
   const { t } = useLang()
   const segStyle = (active) => ({
     padding: '6px 13px', borderRadius: 7, border: 'none', cursor: 'pointer',
@@ -54,17 +54,19 @@ export default function Header({ role, view, onViewPublic, onViewUser, onViewAdm
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <div
-          role="tablist"
-          aria-label={t('nav.previewLabel')}
-          title={t('nav.previewLabel')}
-          className="hide-mobile"
-          style={{ display: 'flex', background: 'var(--surface-3)', border: '1px dashed var(--border-2)', borderRadius: 9, padding: 3, gap: 2 }}
-        >
-          <button role="tab" aria-selected={role === 'public'} onClick={onViewPublic} style={segStyle(role === 'public')}>{t('nav.visitor')}</button>
-          <button role="tab" aria-selected={role === 'user'} onClick={onViewUser} style={segStyle(role === 'user')}>{t('nav.customer')}</button>
-          <button role="tab" aria-selected={role === 'admin'} onClick={onViewAdmin} style={segStyle(role === 'admin')}>{t('nav.operator')}</button>
-        </div>
+        {!isLoggedIn && (
+          <div
+            role="tablist"
+            aria-label={t('nav.previewLabel')}
+            title={t('nav.previewLabel')}
+            className="hide-mobile"
+            style={{ display: 'flex', background: 'var(--surface-3)', border: '1px dashed var(--border-2)', borderRadius: 9, padding: 3, gap: 2 }}
+          >
+            <button role="tab" aria-selected={role === 'public'} onClick={onViewPublic} style={segStyle(role === 'public')}>{t('nav.visitor')}</button>
+            <button role="tab" aria-selected={role === 'user'} onClick={onViewUser} style={segStyle(role === 'user')}>{t('nav.customer')}</button>
+            <button role="tab" aria-selected={role === 'admin'} onClick={onViewAdmin} style={segStyle(role === 'admin')}>{t('nav.operator')}</button>
+          </div>
+        )}
         <button
           onClick={onGoArch}
           title={t('nav.architecture')}
@@ -84,6 +86,23 @@ export default function Header({ role, view, onViewPublic, onViewUser, onViewAdm
         >
           <Icon name="moon" size={18} />
         </button>
+        {isLoggedIn ? (
+          <button
+            onClick={onSignOut}
+            title="Sign out"
+            aria-label="Sign out"
+            style={iconBtn}
+          >
+            <Icon name="logout" size={18} />
+          </button>
+        ) : (
+          <button
+            onClick={onLogin}
+            style={{ ...iconBtn, padding: '0 14px', width: 'auto', fontSize: 13, fontWeight: 600, color: 'var(--primary)', borderColor: 'var(--primary)' }}
+          >
+            Sign in
+          </button>
+        )}
       </div>
     </header>
   )

@@ -30,7 +30,7 @@ function NavBtn({ label, iconName, active, badge, onClick }) {
   )
 }
 
-export default function Sidebar({ role, view, onNav, userNav, adminNav, whoName, whoRole, whoInitials, isOpen, onClose }) {
+export default function Sidebar({ role, view, onNav, userNav, adminNav, whoName, whoRole, whoInitials, isOpen, onClose, onSignOut, isLoggedIn }) {
   const { t } = useLang()
   const navItems = role === 'user' ? userNav : adminNav
   const navLabel = role === 'user' ? t('cust.nav.label') : t('admin.nav.label')
@@ -80,10 +80,20 @@ export default function Sidebar({ role, view, onNav, userNav, adminNav, whoName,
             <span style={{ display: 'grid', placeItems: 'center', width: 34, height: 34, borderRadius: '50%', background: 'var(--primary)', color: 'var(--on-primary)', fontWeight: 600, fontSize: 14, flexShrink: 0 }}>
               {whoInitials}
             </span>
-            <div style={{ minWidth: 0 }}>
+            <div style={{ minWidth: 0, flex: 1 }}>
               <div style={{ fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{whoName}</div>
               <div style={{ fontSize: 11, color: 'var(--muted)' }}>{whoRole}</div>
             </div>
+            {isLoggedIn && onSignOut && (
+              <button
+                onClick={onSignOut}
+                title="Sign out"
+                aria-label="Sign out"
+                style={{ display: 'grid', placeItems: 'center', width: 30, height: 30, borderRadius: 7, background: 'none', border: '1px solid var(--border)', cursor: 'pointer', color: 'var(--muted)', flexShrink: 0 }}
+              >
+                <Icon name="logout" size={15} />
+              </button>
+            )}
           </div>
         </div>
       </aside>
