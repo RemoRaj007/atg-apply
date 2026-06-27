@@ -1,6 +1,9 @@
 import Icon from './Icon.jsx'
+import { useLang } from '../i18n/LanguageContext.jsx'
+import LanguageSwitcher from '../i18n/LanguageSwitcher.jsx'
 
 export default function Header({ role, view, onViewPublic, onViewUser, onViewAdmin, onToggleTheme, onGoHome, onGoArch, onToggleMenu, showMenuToggle, theme }) {
+  const { t } = useLang()
   const segStyle = (active) => ({
     padding: '6px 13px', borderRadius: 7, border: 'none', cursor: 'pointer',
     fontSize: 13, fontWeight: 600,
@@ -53,28 +56,29 @@ export default function Header({ role, view, onViewPublic, onViewUser, onViewAdm
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <div
           role="tablist"
-          aria-label="Preview mode — switches what you see, not a real login"
-          title="Preview mode: switches between Visitor, Customer and Operator views"
+          aria-label={t('nav.previewLabel')}
+          title={t('nav.previewLabel')}
           className="hide-mobile"
           style={{ display: 'flex', background: 'var(--surface-3)', border: '1px dashed var(--border-2)', borderRadius: 9, padding: 3, gap: 2 }}
         >
-          <button role="tab" aria-selected={role === 'public'} onClick={onViewPublic} style={segStyle(role === 'public')}>Visitor</button>
-          <button role="tab" aria-selected={role === 'user'} onClick={onViewUser} style={segStyle(role === 'user')}>Customer</button>
-          <button role="tab" aria-selected={role === 'admin'} onClick={onViewAdmin} style={segStyle(role === 'admin')}>Operator</button>
+          <button role="tab" aria-selected={role === 'public'} onClick={onViewPublic} style={segStyle(role === 'public')}>{t('nav.visitor')}</button>
+          <button role="tab" aria-selected={role === 'user'} onClick={onViewUser} style={segStyle(role === 'user')}>{t('nav.customer')}</button>
+          <button role="tab" aria-selected={role === 'admin'} onClick={onViewAdmin} style={segStyle(role === 'admin')}>{t('nav.operator')}</button>
         </div>
         <button
           onClick={onGoArch}
-          title="System architecture (internal reference)"
-          aria-label="System architecture"
+          title={t('nav.architecture')}
+          aria-label={t('nav.architecture')}
           className="hide-mobile"
           style={iconBtn}
         >
           <Icon name="grid" size={18} />
         </button>
+        <LanguageSwitcher compact />
         <button
           onClick={onToggleTheme}
-          title="Toggle theme"
-          aria-label="Toggle dark mode"
+          title={t('nav.toggleTheme')}
+          aria-label={t('nav.toggleTheme')}
           aria-pressed={theme === 'dark'}
           style={iconBtn}
         >

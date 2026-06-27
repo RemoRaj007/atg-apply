@@ -1,4 +1,5 @@
 import Icon from '../components/Icon.jsx'
+import { useLang } from '../i18n/LanguageContext.jsx'
 import { ROWS, NOTIF, PAYMENTS, PRICING, ST, PAY_META, PROOF_LABELS, fitMeta, fmtDate, initials } from '../data.js'
 
 const MY_UID = 'u4'
@@ -23,15 +24,16 @@ const NOTIF_ICON = { interview: 'star', applied: 'send', job: 'briefcase', draft
 const NOTIF_ACCENT = { interview: '#6B3FA0', applied: '#1F7A4D', job: 'var(--accent)', drafting: '#1E4E8C', reply: 'var(--muted)', paid: '#1F7A4D' }
 
 export function CustomerDashboard({ approvals, onApprove, onDecline, onGoJobs, onGoApps, onGoUpgrade, onGoProfile, onGoNotify }) {
+  const { t } = useLang()
   const myRows = ROWS.filter(r => r.uid === MY_UID).map(r => decRow(r, approvals))
   const myPending = myRows.filter(r => r.apPending)
   const myApplied = myRows.filter(r => r.ap === 'approved' && r.status)
 
   const tracker = [
-    { label: 'Applied', count: myApplied.filter(r => ['applied', 'interview', 'rejected', 'follow_up_needed'].includes(r.status)).length, icon: 'send', c: '#1F7A4D' },
-    { label: 'Interview', count: myApplied.filter(r => r.status === 'interview').length, icon: 'star', c: '#6B3FA0' },
-    { label: 'In progress', count: myApplied.filter(r => ['drafting', 'qc', 'approved'].includes(r.status)).length, icon: 'clock', c: '#8A6100' },
-    { label: 'Pending your review', count: myPending.length, icon: 'briefcase', c: 'var(--accent)' },
+    { label: t('cust.dash.tApplied'), count: myApplied.filter(r => ['applied', 'interview', 'rejected', 'follow_up_needed'].includes(r.status)).length, icon: 'send', c: '#1F7A4D' },
+    { label: t('cust.dash.tInterview'), count: myApplied.filter(r => r.status === 'interview').length, icon: 'star', c: '#6B3FA0' },
+    { label: t('cust.dash.tInProgress'), count: myApplied.filter(r => ['drafting', 'qc', 'approved'].includes(r.status)).length, icon: 'clock', c: '#8A6100' },
+    { label: t('cust.dash.tPending'), count: myPending.length, icon: 'briefcase', c: 'var(--accent)' },
   ]
 
   const showPending = myPending.slice(0, 3)
@@ -41,11 +43,11 @@ export function CustomerDashboard({ approvals, onApprove, onDecline, onGoJobs, o
     <div style={{ padding: '26px 30px', maxWidth: 1180 }}>
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap', marginBottom: 22 }}>
         <div>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 30, margin: 0 }}>Welcome back, Nandini</h1>
-          <p style={{ color: 'var(--muted)', margin: '5px 0 0', fontSize: 14 }}>Here's where your applications stand this week.</p>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 30, margin: 0 }}>{t('cust.dash.welcome')}, Nandini</h1>
+          <p style={{ color: 'var(--muted)', margin: '5px 0 0', fontSize: 14 }}>{t('cust.dash.thisWeek')}</p>
         </div>
         <button onClick={onGoJobs} className="tap-target" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 17px', borderRadius: 9, background: 'var(--accent)', color: '#fff', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>
-          Review {myPending.length} new jobs
+          {t('cust.dash.reviewJobs', { n: myPending.length })}
         </button>
       </div>
 
@@ -53,17 +55,17 @@ export function CustomerDashboard({ approvals, onApprove, onDecline, onGoJobs, o
         <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
           <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 20 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-              <h2 style={{ fontSize: 16, margin: 0 }}>Application tracker</h2>
-              <button onClick={onGoApps} style={{ background: 'none', border: 'none', color: 'var(--primary)', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>View all</button>
+              <h2 style={{ fontSize: 16, margin: 0 }}>{t('cust.dash.tracker')}</h2>
+              <button onClick={onGoApps} style={{ background: 'none', border: 'none', color: 'var(--primary)', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>{t('cust.dash.viewAll')}</button>
             </div>
             <div className="grid-4" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 10 }}>
-              {tracker.map((t, i) => (
+              {tracker.map((tr, i) => (
                 <div key={i} style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 10, padding: 13 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 7, color: t.c }}>
-                    <Icon name={t.icon} size={16} />
-                    <span style={{ fontSize: 22, fontWeight: 700, color: 'var(--on-surface)' }}>{t.count}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 7, color: tr.c }}>
+                    <Icon name={tr.icon} size={16} />
+                    <span style={{ fontSize: 22, fontWeight: 700, color: 'var(--on-surface)' }}>{tr.count}</span>
                   </div>
-                  <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 4 }}>{t.label}</div>
+                  <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 4 }}>{tr.label}</div>
                 </div>
               ))}
             </div>
@@ -71,10 +73,10 @@ export function CustomerDashboard({ approvals, onApprove, onDecline, onGoJobs, o
 
           <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 20 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-              <h2 style={{ fontSize: 16, margin: 0 }}>Jobs awaiting your approval</h2>
-              <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent)', background: 'var(--accent-soft)', padding: '3px 9px', borderRadius: 7 }}>{myPending.length} pending</span>
+              <h2 style={{ fontSize: 16, margin: 0 }}>{t('cust.dash.awaiting')}</h2>
+              <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent)', background: 'var(--accent-soft)', padding: '3px 9px', borderRadius: 7 }}>{t('cust.dash.pendingBadge', { n: myPending.length })}</span>
             </div>
-            <p style={{ fontSize: 13, color: 'var(--muted)', margin: '0 0 14px' }}>Nothing is submitted until you approve it.</p>
+            <p style={{ fontSize: 13, color: 'var(--muted)', margin: '0 0 14px' }}>{t('cust.dash.nothingSubmitted')}</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>
               {showPending.map(r => (
                 <div key={r.id} style={{ border: '1px solid var(--border)', borderRadius: 11, padding: 14, display: 'flex', gap: 13, alignItems: 'flex-start' }}>
@@ -88,16 +90,16 @@ export function CustomerDashboard({ approvals, onApprove, onDecline, onGoJobs, o
                       <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 700, color: r.fitC, background: r.fitB, padding: '3px 8px', borderRadius: 6 }}>
                         <span style={{ width: 6, height: 6, borderRadius: '50%', background: r.fitC }} />{r.fitTier} fit
                       </span>
-                      <span style={{ fontSize: 12, color: 'var(--muted)' }}>Deadline {r.deadlineFmt}</span>
+                      <span style={{ fontSize: 12, color: 'var(--muted)' }}>{t('cust.dash.deadline', { d: r.deadlineFmt })}</span>
                     </div>
                     <p style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.5, margin: '6px 0 0' }}>{r.reason}</p>
                     <div style={{ display: 'flex', gap: 9, marginTop: 12 }}>
                       {r.apPending && <>
-                        <button onClick={() => onApprove(r.id)} className="tap-target" style={{ padding: '8px 16px', borderRadius: 8, background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>Approve</button>
-                        <button onClick={() => onDecline(r.id)} className="tap-target" style={{ padding: '8px 16px', borderRadius: 8, background: 'var(--surface)', color: 'var(--muted)', border: '1px solid var(--border-2)', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>Skip</button>
+                        <button onClick={() => onApprove(r.id)} className="tap-target" style={{ padding: '8px 16px', borderRadius: 8, background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>{t('cust.dash.approve')}</button>
+                        <button onClick={() => onDecline(r.id)} className="tap-target" style={{ padding: '8px 16px', borderRadius: 8, background: 'var(--surface)', color: 'var(--muted)', border: '1px solid var(--border-2)', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>{t('cust.dash.skip')}</button>
                       </>}
-                      {r.apApproved && <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#1F7A4D', fontWeight: 600, fontSize: 13 }}><Icon name="check" size={15} />Approved — sent to your team</span>}
-                      {r.apDeclined && <span style={{ color: 'var(--muted)', fontWeight: 600, fontSize: 13 }}>Skipped</span>}
+                      {r.apApproved && <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#1F7A4D', fontWeight: 600, fontSize: 13 }}><Icon name="check" size={15} />{t('cust.dash.approvedSent')}</span>}
+                      {r.apDeclined && <span style={{ color: 'var(--muted)', fontWeight: 600, fontSize: 13 }}>{t('cust.dash.skipped')}</span>}
                     </div>
                   </div>
                 </div>
@@ -108,20 +110,20 @@ export function CustomerDashboard({ approvals, onApprove, onDecline, onGoJobs, o
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
           <div style={{ background: 'var(--primary)', color: 'var(--on-primary)', borderRadius: 'var(--radius)', padding: 20 }}>
-            <div style={{ fontSize: 13, opacity: .8 }}>Professional package</div>
+            <div style={{ fontSize: 13, opacity: .8 }}>{t('cust.dash.professionalPackage')}</div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, margin: '4px 0 12px' }}>
               <span style={{ fontFamily: 'var(--font-display)', fontSize: 38, fontWeight: 600 }}>77</span>
-              <span style={{ opacity: .8, fontSize: 14 }}>of 100 left</span>
+              <span style={{ opacity: .8, fontSize: 14 }}>{t('cust.dash.ofLeft', { total: 100 })}</span>
             </div>
             <div style={{ height: 8, borderRadius: 99, background: 'rgba(255,255,255,.18)', overflow: 'hidden' }}>
               <div style={{ height: '100%', width: '23%', background: 'var(--accent)', borderRadius: 99 }} />
             </div>
-            <div style={{ fontSize: 12, opacity: .75, marginTop: 8 }}>23 applications used</div>
-            <button onClick={onGoUpgrade} style={{ width: '100%', marginTop: 14, padding: 10, borderRadius: 9, background: 'rgba(255,255,255,.14)', color: '#fff', border: '1px solid rgba(255,255,255,.2)', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>Top up or upgrade</button>
+            <div style={{ fontSize: 12, opacity: .75, marginTop: 8 }}>{t('cust.dash.appsUsedCount', { n: 23 })}</div>
+            <button onClick={onGoUpgrade} style={{ width: '100%', marginTop: 14, padding: 10, borderRadius: 9, background: 'rgba(255,255,255,.14)', color: '#fff', border: '1px solid rgba(255,255,255,.2)', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>{t('cust.dash.topUpOrUpgrade')}</button>
           </div>
 
           <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 20 }}>
-            <h2 style={{ fontSize: 15, margin: '0 0 12px' }}>Your profile</h2>
+            <h2 style={{ fontSize: 15, margin: '0 0 12px' }}>{t('cust.dash.profileCard')}</h2>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
               <span style={{ display: 'grid', placeItems: 'center', width: 46, height: 46, borderRadius: '50%', background: 'var(--surface-3)', color: 'var(--primary)', fontWeight: 700 }}>ND</span>
               <div>
@@ -130,17 +132,17 @@ export function CustomerDashboard({ approvals, onApprove, onDecline, onGoJobs, o
               </div>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: 13 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: 'var(--muted)' }}>Target roles</span><span style={{ fontWeight: 500 }}>UX / Product Design</span></div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: 'var(--muted)' }}>Locations</span><span style={{ fontWeight: 500 }}>Colombo · Remote</span></div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: 'var(--muted)' }}>Your team</span><span style={{ fontWeight: 500 }}>ATG specialist</span></div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: 'var(--muted)' }}>{t('cust.dash.targetRolesLabel')}</span><span style={{ fontWeight: 500 }}>UX / Product Design</span></div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: 'var(--muted)' }}>{t('cust.dash.locationsLabel')}</span><span style={{ fontWeight: 500 }}>Colombo · Remote</span></div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: 'var(--muted)' }}>{t('cust.dash.yourTeam')}</span><span style={{ fontWeight: 500 }}>{t('cust.dash.atgSpecialist')}</span></div>
             </div>
-            <button onClick={onGoProfile} style={{ width: '100%', marginTop: 14, padding: 9, borderRadius: 8, background: 'var(--surface-2)', border: '1px solid var(--border)', fontWeight: 600, fontSize: 13, cursor: 'pointer', color: 'var(--on-surface)' }}>Edit profile</button>
+            <button onClick={onGoProfile} style={{ width: '100%', marginTop: 14, padding: 9, borderRadius: 8, background: 'var(--surface-2)', border: '1px solid var(--border)', fontWeight: 600, fontSize: 13, cursor: 'pointer', color: 'var(--on-surface)' }}>{t('cust.dash.editProfile')}</button>
           </div>
 
           <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 20 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-              <h2 style={{ fontSize: 15, margin: 0 }}>Recent updates</h2>
-              <button onClick={onGoNotify} style={{ background: 'none', border: 'none', color: 'var(--primary)', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>All</button>
+              <h2 style={{ fontSize: 15, margin: 0 }}>{t('cust.dash.recentUpdates')}</h2>
+              <button onClick={onGoNotify} style={{ background: 'none', border: 'none', color: 'var(--primary)', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>{t('cust.dash.all')}</button>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {notifTop.map(n => (
@@ -163,11 +165,12 @@ export function CustomerDashboard({ approvals, onApprove, onDecline, onGoJobs, o
 }
 
 export function CustomerJobs({ approvals, onApprove, onDecline }) {
+  const { t } = useLang()
   const myRows = ROWS.filter(r => r.uid === MY_UID).map(r => decRow(r, approvals))
   return (
     <div style={{ padding: '26px 30px', maxWidth: 1080 }}>
-      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>Recommended jobs</h1>
-      <p style={{ color: 'var(--muted)', margin: '0 0 20px', fontSize: 14 }}>Roles your ATG team researched for you. Approve the ones you want — skip the rest.</p>
+      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>{t('cust.jobs.title')}</h1>
+      <p style={{ color: 'var(--muted)', margin: '0 0 20px', fontSize: 14 }}>{t('cust.jobs.subtitle')}</p>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         {myRows.map(r => (
           <div key={r.id} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 11, padding: 16, display: 'flex', gap: 14, alignItems: 'flex-start' }}>
@@ -182,16 +185,16 @@ export function CustomerJobs({ approvals, onApprove, onDecline }) {
                   <span style={{ width: 6, height: 6, borderRadius: '50%', background: r.fitC }} />{r.fitTier} fit
                 </span>
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 600, color: r.statusC, background: r.statusB, padding: '3px 8px', borderRadius: 6 }}>{r.statusLabel}</span>
-                <span style={{ fontSize: 12, color: 'var(--muted)' }}>Deadline {r.deadlineFmt} · via {r.source}</span>
+                <span style={{ fontSize: 12, color: 'var(--muted)' }}>{t('cust.dash.deadline', { d: r.deadlineFmt })} · {t('cust.jobs.via')} {r.source}</span>
               </div>
               <p style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.5, margin: '4px 0 0' }}>{r.reason}</p>
               <div style={{ display: 'flex', gap: 9, marginTop: 12, alignItems: 'center' }}>
                 {r.apPending && <>
-                  <button onClick={() => onApprove(r.id)} className="tap-target" style={{ padding: '8px 16px', borderRadius: 8, background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>Approve</button>
-                  <button onClick={() => onDecline(r.id)} className="tap-target" style={{ padding: '8px 16px', borderRadius: 8, background: 'var(--surface)', color: 'var(--muted)', border: '1px solid var(--border-2)', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>Skip</button>
+                  <button onClick={() => onApprove(r.id)} className="tap-target" style={{ padding: '8px 16px', borderRadius: 8, background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>{t('cust.dash.approve')}</button>
+                  <button onClick={() => onDecline(r.id)} className="tap-target" style={{ padding: '8px 16px', borderRadius: 8, background: 'var(--surface)', color: 'var(--muted)', border: '1px solid var(--border-2)', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>{t('cust.dash.skip')}</button>
                 </>}
-                {r.apApproved && <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#1F7A4D', fontWeight: 600, fontSize: 13 }}><Icon name="check" size={15} />Approved</span>}
-                {r.apDeclined && <span style={{ color: 'var(--muted)', fontWeight: 600, fontSize: 13 }}>Skipped</span>}
+                {r.apApproved && <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#1F7A4D', fontWeight: 600, fontSize: 13 }}><Icon name="check" size={15} />{t('cust.jobs.approved')}</span>}
+                {r.apDeclined && <span style={{ color: 'var(--muted)', fontWeight: 600, fontSize: 13 }}>{t('cust.dash.skipped')}</span>}
               </div>
             </div>
           </div>
@@ -202,14 +205,15 @@ export function CustomerJobs({ approvals, onApprove, onDecline }) {
 }
 
 export function CustomerApplications({ approvals }) {
+  const { t } = useLang()
   const myRows = ROWS.filter(r => r.uid === MY_UID && r.status).map(r => decRow(r, approvals))
   return (
     <div className="container" style={{ padding: '26px 30px', maxWidth: 1080 }}>
-      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>Application tracker</h1>
-      <p style={{ color: 'var(--muted)', margin: '0 0 20px', fontSize: 14 }}>Every application we've submitted or are preparing, with proof of submission.</p>
+      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>{t('cust.apps.title')}</h1>
+      <p style={{ color: 'var(--muted)', margin: '0 0 20px', fontSize: 14 }}>{t('cust.apps.subtitle')}</p>
       <div className="data-table" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', overflow: 'hidden' }}>
         <div className="data-table-head" style={{ display: 'grid', gridTemplateColumns: '1.8fr 1fr 1fr 1.2fr', gap: 12, padding: '12px 18px', background: 'var(--surface-2)', borderBottom: '1px solid var(--border)', fontSize: 11, fontWeight: 700, letterSpacing: '.04em', textTransform: 'uppercase', color: 'var(--muted)' }}>
-          <span>Role</span><span>Status</span><span>Applied</span><span>Proof</span>
+          <span>{t('cust.apps.colRole')}</span><span>{t('cust.apps.colStatus')}</span><span>{t('cust.apps.colApplied')}</span><span>{t('cust.apps.colProof')}</span>
         </div>
         {myRows.map(r => (
           <div key={r.id} className="data-table-row" style={{ display: 'grid', gridTemplateColumns: '1.8fr 1fr 1fr 1.2fr', gap: 12, padding: '14px 18px', borderBottom: '1px solid var(--border)', alignItems: 'center' }}>
@@ -217,10 +221,10 @@ export function CustomerApplications({ approvals }) {
               <div style={{ fontWeight: 600, fontSize: 14 }}>{r.title}</div>
               <div style={{ fontSize: 12, color: 'var(--muted)' }}>{r.company} · {r.loc}</div>
             </div>
-            <span data-label="Status" style={{ display: 'inline-flex', width: 'fit-content', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 700, color: r.statusC, background: r.statusB, padding: '4px 9px', borderRadius: 7 }}>{r.statusLabel}</span>
-            <span data-label="Applied" style={{ fontSize: 13, color: 'var(--muted)' }}>{r.appliedFmt}</span>
+            <span data-label={t('cust.apps.colStatus')} style={{ display: 'inline-flex', width: 'fit-content', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 700, color: r.statusC, background: r.statusB, padding: '4px 9px', borderRadius: 7 }}>{r.statusLabel}</span>
+            <span data-label={t('cust.apps.colApplied')} style={{ fontSize: 13, color: 'var(--muted)' }}>{r.appliedFmt}</span>
             {r.proofType && (
-              <span data-label="Proof" style={{ display: 'inline-flex', width: 'fit-content', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: 'var(--primary)' }}>
+              <span data-label={t('cust.apps.colProof')} style={{ display: 'inline-flex', width: 'fit-content', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: 'var(--primary)' }}>
                 <Icon name="shield" size={14} />{r.proofType}
               </span>
             )}
@@ -232,6 +236,7 @@ export function CustomerApplications({ approvals }) {
 }
 
 export function CustomerDocuments() {
+  const { t } = useLang()
   const docs = [
     { name: 'CV — MAS Holdings', meta: 'Tailored CV v3 · Jun 18 · PDF' },
     { name: 'Cover letter — MAS Holdings', meta: 'Sustainability-focused · Jun 18 · PDF' },
@@ -240,8 +245,8 @@ export function CustomerDocuments() {
   ]
   return (
     <div className="container" style={{ padding: '26px 30px', maxWidth: 920 }}>
-      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>Your documents</h1>
-      <p style={{ color: 'var(--muted)', margin: '0 0 20px', fontSize: 14 }}>Tailored CVs and motivation letters your team prepared for each role.</p>
+      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>{t('cust.docs.title')}</h1>
+      <p style={{ color: 'var(--muted)', margin: '0 0 20px', fontSize: 14 }}>{t('cust.docs.subtitle')}</p>
       <div className="grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
         {docs.map((d, i) => (
           <div key={i} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 11, padding: 16, display: 'flex', gap: 13, alignItems: 'center' }}>
@@ -252,7 +257,7 @@ export function CustomerDocuments() {
               <div style={{ fontWeight: 600, fontSize: 14 }}>{d.name}</div>
               <div style={{ fontSize: 12, color: 'var(--muted)' }}>{d.meta}</div>
             </div>
-            <button type="button" className="tap-target" style={{ fontSize: 12, fontWeight: 600, color: 'var(--primary)', cursor: 'pointer', background: 'none', border: 'none', flexShrink: 0 }}>Download</button>
+            <button type="button" className="tap-target" style={{ fontSize: 12, fontWeight: 600, color: 'var(--primary)', cursor: 'pointer', background: 'none', border: 'none', flexShrink: 0 }}>{t('cust.docs.download')}</button>
           </div>
         ))}
       </div>
@@ -261,28 +266,29 @@ export function CustomerDocuments() {
 }
 
 export function CustomerPayments() {
+  const { t } = useLang()
   const p = PAYMENTS.find(p => p.uid === MY_UID)
   return (
     <div className="container" style={{ padding: '26px 30px', maxWidth: 880 }}>
-      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 18px' }}>Payments</h1>
+      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 18px' }}>{t('cust.pay.title')}</h1>
       <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 22, marginBottom: 16 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
           <div>
-            <div style={{ fontSize: 13, color: 'var(--muted)' }}>Professional package</div>
+            <div style={{ fontSize: 13, color: 'var(--muted)' }}>{t('cust.dash.professionalPackage')}</div>
             <div style={{ fontFamily: 'var(--font-display)', fontSize: 26, fontWeight: 600 }}>USD 100.00</div>
           </div>
-          <span style={{ fontSize: 12, fontWeight: 700, color: '#1F7A4D', background: '#E3F3E8', padding: '5px 11px', borderRadius: 8 }}>Paid</span>
+          <span style={{ fontSize: 12, fontWeight: 700, color: '#1F7A4D', background: '#E3F3E8', padding: '5px 11px', borderRadius: 8 }}>{t('cust.pay.paid')}</span>
         </div>
       </div>
       <div className="data-table" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', overflow: 'hidden' }}>
         <div className="data-table-head" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 12, padding: '12px 18px', background: 'var(--surface-2)', borderBottom: '1px solid var(--border)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.04em', color: 'var(--muted)' }}>
-          <span>Invoice</span><span>Method</span><span>Date</span><span style={{ textAlign: 'right' }}>Status</span>
+          <span>{t('cust.pay.colInvoice')}</span><span>{t('cust.pay.colMethod')}</span><span>{t('cust.pay.colDate')}</span><span style={{ textAlign: 'right' }}>{t('cust.pay.colStatus')}</span>
         </div>
         <div className="data-table-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 12, padding: '14px 18px', alignItems: 'center' }}>
-          <span data-label="Invoice" style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>{p?.ref}</span>
-          <span data-label="Method" style={{ fontSize: 13 }}>{p?.method}</span>
-          <span data-label="Date" style={{ fontSize: 13, color: 'var(--muted)' }}>{fmtDate(p?.date)}</span>
-          <span data-label="Status" style={{ textAlign: 'right' }}><span style={{ fontSize: 11, fontWeight: 700, color: '#1F7A4D', background: '#E3F3E8', padding: '4px 9px', borderRadius: 7 }}>Paid · ${p?.paid}</span></span>
+          <span data-label={t('cust.pay.colInvoice')} style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>{p?.ref}</span>
+          <span data-label={t('cust.pay.colMethod')} style={{ fontSize: 13 }}>{p?.method}</span>
+          <span data-label={t('cust.pay.colDate')} style={{ fontSize: 13, color: 'var(--muted)' }}>{fmtDate(p?.date)}</span>
+          <span data-label={t('cust.pay.colStatus')} style={{ textAlign: 'right' }}><span style={{ fontSize: 11, fontWeight: 700, color: '#1F7A4D', background: '#E3F3E8', padding: '4px 9px', borderRadius: 7 }}>{t('cust.pay.paid')} · ${p?.paid}</span></span>
         </div>
       </div>
     </div>
@@ -290,6 +296,7 @@ export function CustomerPayments() {
 }
 
 export function CustomerUpgrade({ onUpgrade }) {
+  const { t } = useLang()
   const paid = PRICING.filter(p => p.price > 0)
   return (
     <div style={{ padding: '26px 30px', maxWidth: 1080 }}>
@@ -298,11 +305,11 @@ export function CustomerUpgrade({ onUpgrade }) {
           <Icon name="spark" size={22} />
         </span>
         <div>
-          <div style={{ fontWeight: 700, fontSize: 16, color: 'var(--accent-2)' }}>Keep the momentum going</div>
-          <div style={{ fontSize: 14, color: 'var(--accent-2)', opacity: .9 }}>You've used 23 of 100 applications. Top up or move to a bigger package any time — your profile and history stay exactly as they are.</div>
+          <div style={{ fontWeight: 700, fontSize: 16, color: 'var(--accent-2)' }}>{t('cust.up.kicker')}</div>
+          <div style={{ fontSize: 14, color: 'var(--accent-2)', opacity: .9 }}>{t('cust.up.kickerBody')}</div>
         </div>
       </div>
-      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 18px' }}>Choose a package</h1>
+      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 18px' }}>{t('cust.up.choosePackage')}</h1>
       <div className="grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
         {paid.map(p => {
           const hi = p.hi
@@ -314,14 +321,14 @@ export function CustomerUpgrade({ onUpgrade }) {
               border: hi ? 'none' : '1px solid var(--border)',
               borderRadius: 'var(--radius)', padding: '28px 22px',
             }}>
-              {hi && <span style={{ position: 'absolute', top: -11, left: 22, padding: '4px 11px', borderRadius: 7, background: 'var(--accent)', color: '#fff', fontSize: 11, fontWeight: 700 }}>Most popular</span>}
+              {hi && <span style={{ position: 'absolute', top: -11, left: 22, padding: '4px 11px', borderRadius: 7, background: 'var(--accent)', color: '#fff', fontSize: 11, fontWeight: 700 }}>{t('pricing.mostPopular')}</span>}
               <div>
                 <div style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 600 }}>{p.name}</div>
                 <div style={{ fontSize: 13, opacity: hi ? .8 : 1, color: hi ? 'inherit' : 'var(--muted)', marginTop: 4 }}>{p.blurb}</div>
               </div>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
                 <span style={{ fontFamily: 'var(--font-display)', fontSize: 36, fontWeight: 600 }}>${p.price}</span>
-                <span style={{ opacity: hi ? .8 : 1, color: hi ? 'inherit' : 'var(--muted)', fontSize: 14 }}>· {p.apps} apps</span>
+                <span style={{ opacity: hi ? .8 : 1, color: hi ? 'inherit' : 'var(--muted)', fontSize: 14 }}>· {p.apps} {t('pricing.applications')}</span>
               </div>
               <button onClick={onUpgrade} className="tap-target" style={{ width: '100%', padding: '11px', borderRadius: 9, background: hi ? 'var(--accent)' : 'var(--surface-2)', color: hi ? '#fff' : 'var(--on-surface)', border: hi ? 'none' : '1px solid var(--border)', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>
                 {p.cta}
@@ -335,10 +342,11 @@ export function CustomerUpgrade({ onUpgrade }) {
 }
 
 export function CustomerNotifications() {
+  const { t } = useLang()
   return (
     <div style={{ padding: '26px 30px', maxWidth: 760 }}>
-      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>Notifications</h1>
-      <p style={{ color: 'var(--muted)', margin: '0 0 20px', fontSize: 14 }}>Updates from your ATG team, newest first.</p>
+      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>{t('cust.notif.title')}</h1>
+      <p style={{ color: 'var(--muted)', margin: '0 0 20px', fontSize: 14 }}>{t('cust.notif.subtitle')}</p>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {NOTIF.map(n => {
           const accent = NOTIF_ACCENT[n.type] || 'var(--muted)'
@@ -370,10 +378,11 @@ export function CustomerNotifications() {
 }
 
 export function CustomerSupport({ onSend }) {
+  const { t } = useLang()
   return (
     <div style={{ padding: '26px 30px', maxWidth: 720 }}>
-      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>Support</h1>
-      <p style={{ color: 'var(--muted)', margin: '0 0 20px', fontSize: 14 }}>Message your team. A real person replies within one working day.</p>
+      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 4px' }}>{t('cust.sup.title')}</h1>
+      <p style={{ color: 'var(--muted)', margin: '0 0 20px', fontSize: 14 }}>{t('cust.sup.subtitle')}</p>
       <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 20, display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 16 }}>
         <div style={{ display: 'flex', gap: 11 }}>
           <span style={{ display: 'grid', placeItems: 'center', width: 34, height: 34, borderRadius: '50%', background: 'var(--surface-3)', color: 'var(--primary)', fontWeight: 700, fontSize: 13, flexShrink: 0 }}>RP</span>
@@ -384,26 +393,27 @@ export function CustomerSupport({ onSend }) {
         </div>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
-        <label htmlFor="support-msg" style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>Message</label>
-        <input id="support-msg" name="message" placeholder="Type a message…" style={{ flex: 1, padding: '12px 14px', borderRadius: 9, border: '1px solid var(--border-2)', background: 'var(--surface)', fontSize: 14, color: 'inherit', fontFamily: 'inherit' }} />
-        <button onClick={onSend} className="tap-target" style={{ padding: '12px 20px', borderRadius: 9, background: 'var(--accent)', color: '#fff', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>Send</button>
+        <label htmlFor="support-msg" style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>{t('contact.formMessage')}</label>
+        <input id="support-msg" name="message" placeholder={t('cust.sup.placeholder')} style={{ flex: 1, padding: '12px 14px', borderRadius: 9, border: '1px solid var(--border-2)', background: 'var(--surface)', fontSize: 14, color: 'inherit', fontFamily: 'inherit' }} />
+        <button onClick={onSend} className="tap-target" style={{ padding: '12px 20px', borderRadius: 9, background: 'var(--accent)', color: '#fff', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>{t('cust.sup.send')}</button>
       </div>
     </div>
   )
 }
 
 export function CustomerProfile({ onSave }) {
+  const { t } = useLang()
   return (
     <div className="container" style={{ padding: '26px 30px', maxWidth: 760 }}>
-      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 18px' }}>Your profile</h1>
+      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 28, margin: '0 0 18px' }}>{t('cust.prof.title')}</h1>
       <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
         <div className="grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-          <div><label htmlFor="prof-name" style={flbl}>Full name</label><input id="prof-name" name="fullName" defaultValue="Nandini" style={fin} /></div>
-          <div><label htmlFor="prof-email" style={flbl}>Email</label><input id="prof-email" name="email" type="email" defaultValue="nandini@gmail.com" style={fin} /></div>
-          <div><label htmlFor="prof-roles" style={flbl}>Target roles</label><input id="prof-roles" name="targetRoles" defaultValue="Senior UX Designer, Product Designer" style={fin} /></div>
-          <div><label htmlFor="prof-locations" style={flbl}>Locations</label><input id="prof-locations" name="locations" defaultValue="Colombo, Remote" style={fin} /></div>
+          <div><label htmlFor="prof-name" style={flbl}>{t('signup.fullName')}</label><input id="prof-name" name="fullName" defaultValue="Nandini" style={fin} /></div>
+          <div><label htmlFor="prof-email" style={flbl}>{t('signup.email')}</label><input id="prof-email" name="email" type="email" defaultValue="nandini@gmail.com" style={fin} /></div>
+          <div><label htmlFor="prof-roles" style={flbl}>{t('cust.dash.targetRolesLabel')}</label><input id="prof-roles" name="targetRoles" defaultValue="Senior UX Designer, Product Designer" style={fin} /></div>
+          <div><label htmlFor="prof-locations" style={flbl}>{t('cust.dash.locationsLabel')}</label><input id="prof-locations" name="locations" defaultValue="Colombo, Remote" style={fin} /></div>
         </div>
-        <button onClick={onSave} className="tap-target" style={{ alignSelf: 'flex-start', padding: '11px 20px', borderRadius: 9, background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>Save changes</button>
+        <button onClick={onSave} className="tap-target" style={{ alignSelf: 'flex-start', padding: '11px 20px', borderRadius: 9, background: 'var(--primary)', color: 'var(--on-primary)', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>{t('cust.prof.saveChanges')}</button>
       </div>
     </div>
   )
