@@ -93,7 +93,7 @@ export default function ArchitecturePage() {
       </div>
 
       <Section title="Sitemap &amp; route inventory">
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 18 }}>
+        <div className="grid-3" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 18 }}>
           <Card>
             <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', color: '#1E4E8C', marginBottom: 12 }}>Visitor (Public)</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
@@ -148,7 +148,7 @@ export default function ArchitecturePage() {
       </Section>
 
       <Section title="Data model (entity relationship overview)">
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+        <div className="grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
           {ENTITIES.map(e => (
             <Card key={e.name}>
               <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 10, color: 'var(--primary)' }}>{e.name}</div>
@@ -200,7 +200,7 @@ export default function ArchitecturePage() {
       </Section>
 
       <Section title="Demo data plan">
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+        <div className="grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
           {[
             { label: 'Logged-in customer', desc: 'Nandini (u4) · Professional package · 100 apps · 23 used · Colombo, Sri Lanka' },
             { label: 'Total users', desc: '10 users across Sri Lanka, Bangladesh, Maldives · Trial through Premium packages' },
@@ -246,7 +246,7 @@ export default function ArchitecturePage() {
       </Section>
 
       <Section title="Technology stack">
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14 }}>
+        <div className="grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14 }}>
           {[
             { label: 'Framework', value: 'React 18 (Vite)', note: 'Component tree, state, no URL routing' },
             { label: 'Styling', value: 'Inline styles + CSS custom properties', note: 'Token-driven, dark mode via data-theme attribute' },

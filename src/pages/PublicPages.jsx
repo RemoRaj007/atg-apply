@@ -8,17 +8,17 @@ export function Home({ onSignup, onHow, onPricing }) {
   return (
     <div>
       <section style={{ position: 'relative', overflow: 'hidden', background: 'var(--surface)', borderBottom: '1px solid var(--border)' }}>
-        <div style={{ maxWidth: 1120, margin: '0 auto', padding: '64px 24px 56px', display: 'grid', gridTemplateColumns: '1.05fr .95fr', gap: 48, alignItems: 'center' }}>
+        <div className="container grid-2" style={{ padding: '64px 24px 56px', display: 'grid', gridTemplateColumns: '1.05fr .95fr', gap: 48, alignItems: 'center' }}>
           <div>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 13px', borderRadius: 999, background: 'var(--surface-2)', border: '1px solid var(--border)', fontSize: 13, fontWeight: 600, color: 'var(--primary)' }}>
               <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--accent)' }} />
               Human-managed · Research-led
             </span>
-            <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 52, lineHeight: 1.08, letterSpacing: '-.02em', margin: '20px 0 0' }}>Your personal job application team.</h1>
+            <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 'var(--text-6xl)', lineHeight: 1.08, letterSpacing: '-.02em', margin: '20px 0 0' }}>Your personal job application team.</h1>
             <p style={{ fontSize: 18, lineHeight: 1.6, color: 'var(--muted)', margin: '18px 0 0', maxWidth: '30em' }}>We help students, graduates and busy professionals find suitable jobs, prepare stronger applications, and apply with confidence. Our trained team researches roles, checks your fit, tailors your CV and motivation letter, and submits on your behalf.</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 28 }}>
-              <button onClick={onSignup} style={{ padding: '14px 24px', borderRadius: 10, background: 'var(--accent)', color: '#fff', border: 'none', fontWeight: 600, fontSize: 15, cursor: 'pointer' }}>Start free — 2 applications</button>
-              <button onClick={onHow} style={{ padding: '14px 24px', borderRadius: 10, background: 'var(--surface)', color: 'var(--on-surface)', border: '1px solid var(--border-2)', fontWeight: 600, fontSize: 15, cursor: 'pointer' }}>See how it works</button>
+              <button onClick={onSignup} className="tap-target" style={{ padding: '14px 24px', borderRadius: 10, background: 'var(--accent)', color: '#fff', border: 'none', fontWeight: 600, fontSize: 15, cursor: 'pointer' }}>Start free — 2 applications</button>
+              <button onClick={onHow} className="tap-target" style={{ padding: '14px 24px', borderRadius: 10, background: 'var(--surface)', color: 'var(--on-surface)', border: '1px solid var(--border-2)', fontWeight: 600, fontSize: 15, cursor: 'pointer' }}>See how it works</button>
             </div>
             <p style={{ fontSize: 13, color: 'var(--muted)', marginTop: 14 }}>No card required. Pay only when you are satisfied.</p>
           </div>
@@ -34,12 +34,12 @@ export function Home({ onSignup, onHow, onPricing }) {
                 { fit: '58%', fitBg: '#FBF0D9', fitColor: '#8A6100', title: 'UX Researcher · Dialog Axiata', sub: 'Awaiting your approval', statusLabel: 'Review', statusBg: 'var(--accent-soft)', statusColor: 'var(--accent)', border: '1px dashed var(--border-2)' },
               ].map((item, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'var(--surface)', border: item.border || '1px solid var(--border)', borderRadius: 11, padding: '13px 14px' }}>
-                  <span style={{ display: 'grid', placeItems: 'center', width: 42, height: 42, borderRadius: 10, background: item.fitBg, color: item.fitColor, fontWeight: 700, fontSize: 14 }}>{item.fit}</span>
+                  <span style={{ display: 'grid', placeItems: 'center', width: 42, height: 42, borderRadius: 10, background: item.fitBg, color: item.fitColor, fontWeight: 700, fontSize: 14, flexShrink: 0 }}>{item.fit}</span>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontWeight: 600, fontSize: 14 }}>{item.title}</div>
                     <div style={{ fontSize: 12, color: 'var(--muted)' }}>{item.sub}</div>
                   </div>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: item.statusColor, background: item.statusBg, padding: '4px 9px', borderRadius: 7 }}>{item.statusLabel}</span>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: item.statusColor, background: item.statusBg, padding: '4px 9px', borderRadius: 7, flexShrink: 0 }}>{item.statusLabel}</span>
                 </div>
               ))}
             </div>
@@ -47,8 +47,8 @@ export function Home({ onSignup, onHow, onPricing }) {
         </div>
       </section>
 
-      <section style={{ maxWidth: 1120, margin: '0 auto', padding: '40px 24px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 18 }}>
+      <section className="container" style={{ padding: '40px 24px' }}>
+        <div className="grid-4" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 18 }}>
           {[['2 free', 'applications to start'], ['100%', 'human-prepared & checked'], ['3', 'working-day match SLA'], ['Proof', 'of every submission']].map(([v, l]) => (
             <div key={l} style={{ textAlign: 'center' }}>
               <div style={{ fontFamily: 'var(--font-display)', fontSize: 34, fontWeight: 600, color: 'var(--primary)' }}>{v}</div>
@@ -59,10 +59,10 @@ export function Home({ onSignup, onHow, onPricing }) {
       </section>
 
       <section style={{ background: 'var(--surface)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
-        <div style={{ maxWidth: 1120, margin: '0 auto', padding: '56px 24px' }}>
+        <div className="container" style={{ padding: '56px 24px' }}>
           <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 34, letterSpacing: '-.01em', margin: '0 0 6px' }}>How it works</h2>
           <p style={{ color: 'var(--muted)', margin: '0 0 32px', fontSize: 16 }}>Four steps. Real people at every one.</p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 20 }}>
+          <div className="grid-4" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 20 }}>
             {[
               ['01', 'Tell us about you', 'Complete a guided intake — experience, target roles, documents. About 12 minutes.'],
               ['02', 'We research & score', 'Your team finds roles and rates each one with a clear fit score and an honest reason.'],
@@ -79,84 +79,39 @@ export function Home({ onSignup, onHow, onPricing }) {
         </div>
       </section>
 
-      <section style={{ maxWidth: 1120, margin: '0 auto', padding: '56px 24px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40, alignItems: 'center' }}>
-          <div>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 32, letterSpacing: '-.01em', margin: '0 0 16px' }}>Not a bot. A team.</h2>
-            <p style={{ fontSize: 16, color: 'var(--muted)', lineHeight: 1.65, margin: '0 0 18px' }}>We don't mass auto-apply or scrape job boards and fire off generic applications. Trained specialists in Sri Lanka research roles, tailor each application, and run a quality check before anything is submitted in your name.</p>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {['Every application reviewed by a person before it\'s sent', 'Sensitive documents never sent to external AI tools', 'You approve every role before we apply'].map(item => (
-                <li key={item} style={{ display: 'flex', gap: 11, alignItems: 'flex-start', fontSize: 15 }}>
-                  <span style={{ color: 'var(--primary)', marginTop: 2 }}><Icon name="check" size={18} /></span>
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div style={{ background: 'var(--primary)', color: 'var(--on-primary)', borderRadius: 16, padding: 32 }}>
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: 21, lineHeight: 1.45, fontWeight: 400 }}>"I had two interviews in three weeks. They handled the applications I never had time to finish — and showed me proof of every single one."</div>
-            <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', gap: 11 }}>
-              <span style={{ display: 'grid', placeItems: 'center', width: 40, height: 40, borderRadius: '50%', background: 'rgba(255,255,255,.15)', fontWeight: 600 }}>ND</span>
-              <div>
-                <div style={{ fontWeight: 600, fontSize: 14 }}>Nandini R.</div>
-                <div style={{ fontSize: 13, opacity: .75 }}>Senior UX Designer · Colombo</div>
-              </div>
+      <section className="container grid-2" style={{ padding: '56px 24px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40, alignItems: 'center' }}>
+        <div>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 32, letterSpacing: '-.01em', margin: '0 0 16px' }}>Not a bot. A team.</h2>
+          <p style={{ fontSize: 16, color: 'var(--muted)', lineHeight: 1.65, margin: '0 0 18px' }}>We don't mass auto-apply or scrape job boards and fire off generic applications. Trained specialists in Sri Lanka research roles, tailor each application, and run a quality check before anything is submitted in your name.</p>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {['Every application reviewed by a person before it\'s sent', 'Sensitive documents never sent to external AI tools', 'You approve every role before we apply'].map(item => (
+              <li key={item} style={{ display: 'flex', gap: 11, alignItems: 'flex-start', fontSize: 15 }}>
+                <span style={{ color: 'var(--primary)', marginTop: 2, flexShrink: 0 }}><Icon name="check" size={18} /></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div style={{ background: 'var(--primary)', color: 'var(--on-primary)', borderRadius: 16, padding: 32 }}>
+          <div style={{ fontFamily: 'var(--font-display)', fontSize: 21, lineHeight: 1.45, fontWeight: 400 }}>"I had two interviews in three weeks. They handled the applications I never had time to finish — and showed me proof of every single one."</div>
+          <div style={{ marginTop: 20, display: 'flex', alignItems: 'center', gap: 11 }}>
+            <span style={{ display: 'grid', placeItems: 'center', width: 40, height: 40, borderRadius: '50%', background: 'rgba(255,255,255,.15)', fontWeight: 600, flexShrink: 0 }}>ND</span>
+            <div>
+              <div style={{ fontWeight: 600, fontSize: 14 }}>Nandini R.</div>
+              <div style={{ fontSize: 13, opacity: .75 }}>Senior UX Designer · Colombo</div>
             </div>
           </div>
         </div>
       </section>
 
       <section style={{ background: 'var(--surface)', borderTop: '1px solid var(--border)' }}>
-        <div style={{ maxWidth: 1120, margin: '0 auto', padding: '56px 24px', textAlign: 'center' }}>
+        <div className="container" style={{ padding: '56px 24px', textAlign: 'center' }}>
           <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 34, margin: '0 0 10px' }}>Start with two free applications.</h2>
           <p style={{ color: 'var(--muted)', fontSize: 16, margin: '0 0 24px' }}>Prove the quality first. Choose a package only when you're satisfied.</p>
-          <button onClick={onSignup} style={{ padding: '14px 28px', borderRadius: 10, background: 'var(--accent)', color: '#fff', border: 'none', fontWeight: 600, fontSize: 15, cursor: 'pointer' }}>Create your account</button>
+          <button onClick={onSignup} className="tap-target" style={{ padding: '14px 28px', borderRadius: 10, background: 'var(--accent)', color: '#fff', border: 'none', fontWeight: 600, fontSize: 15, cursor: 'pointer' }}>Create your account</button>
         </div>
       </section>
-
-      <Footer onHow={onHow} onPricing={onPricing} onSignup={onSignup} />
     </div>
-  )
-}
-
-function Footer({ onHow, onPricing, onSignup }) {
-  const footLink = { background: 'none', border: 'none', color: 'rgba(255,255,255,.82)', cursor: 'pointer', fontSize: 14, textAlign: 'left', padding: 0, fontFamily: 'inherit' }
-  return (
-    <footer style={{ background: 'var(--primary)', color: 'var(--on-primary)', marginTop: 0 }}>
-      <div style={{ maxWidth: 1120, margin: '0 auto', padding: '40px 24px', display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr 1fr', gap: 24 }}>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 12 }}>
-            <span style={{ display: 'grid', placeItems: 'center', width: 30, height: 30, borderRadius: 8, background: 'rgba(255,255,255,.14)', fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 16 }}>a</span>
-            <span style={{ fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 17 }}>ATG Apply</span>
-          </div>
-          <p style={{ fontSize: 13, opacity: .75, lineHeight: 1.6, margin: 0, maxWidth: '24em' }}>Human-managed job applications. Research-led matching, prepared and submitted by a trained team.</p>
-        </div>
-        <div>
-          <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', opacity: .6, marginBottom: 12 }}>Product</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 9, fontSize: 14 }}>
-            <button onClick={onHow} style={footLink}>How it works</button>
-            <button onClick={onPricing} style={footLink}>Pricing</button>
-            <button onClick={onSignup} style={footLink}>Start free</button>
-          </div>
-        </div>
-        <div>
-          <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', opacity: .6, marginBottom: 12 }}>Company</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 9, fontSize: 14 }}>
-            <button style={footLink}>Contact</button>
-          </div>
-        </div>
-        <div>
-          <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', opacity: .6, marginBottom: 12 }}>Legal</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 9, fontSize: 14 }}>
-            <button style={footLink}>Privacy policy</button>
-            <button style={footLink}>Terms of service</button>
-          </div>
-        </div>
-      </div>
-      <div style={{ borderTop: '1px solid rgba(255,255,255,.12)' }}>
-        <div style={{ maxWidth: 1120, margin: '0 auto', padding: '16px 24px', fontSize: 12, opacity: .6 }}>© 2026 ATG Concordia (Pvt) Ltd · Colombo, Sri Lanka. A clickable V1 prototype.</div>
-      </div>
-    </footer>
   )
 }
 
@@ -175,13 +130,13 @@ export function HowItWorks() {
     { n: 11, t: 'Continue with a package', d: 'Happy after your trial? Pick Starter, Professional or Premium and your balance updates.' },
   ]
   return (
-    <div style={{ maxWidth: 920, margin: '0 auto', padding: '56px 24px' }}>
-      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 42, letterSpacing: '-.02em', margin: '0 0 12px' }}>How ATG Apply works</h1>
+    <div className="container" style={{ maxWidth: 920, padding: '56px 24px' }}>
+      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 'var(--text-5xl)', letterSpacing: '-.02em', margin: '0 0 12px' }}>How ATG Apply works</h1>
       <p style={{ fontSize: 18, color: 'var(--muted)', lineHeight: 1.6, margin: '0 0 40px', maxWidth: '38em' }}>A human-managed service from intake to submission. Here is the full 11-step journey your application takes — and exactly where you stay in control.</p>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
         {journey.map(j => (
-          <div key={j.n} style={{ display: 'grid', gridTemplateColumns: '48px 1fr', gap: 18, padding: '16px 0', borderBottom: '1px solid var(--border)' }}>
-            <span style={{ display: 'grid', placeItems: 'center', width: 40, height: 40, borderRadius: '50%', background: 'var(--surface)', border: '1.5px solid var(--primary)', color: 'var(--primary)', fontWeight: 700, fontSize: 15 }}>{j.n}</span>
+          <div key={j.n} style={{ display: 'grid', gridTemplateColumns: '40px 1fr', gap: 18, padding: '16px 0', borderBottom: '1px solid var(--border)' }}>
+            <span style={{ display: 'grid', placeItems: 'center', width: 40, height: 40, borderRadius: '50%', background: 'var(--surface)', border: '1.5px solid var(--primary)', color: 'var(--primary)', fontWeight: 700, fontSize: 15, flexShrink: 0 }}>{j.n}</span>
             <div>
               <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 3 }}>{j.t}</div>
               <div style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.55 }}>{j.d}</div>
@@ -191,7 +146,7 @@ export function HowItWorks() {
       </div>
       <div style={{ marginTop: 36, background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 24 }}>
         <h3 style={{ margin: '0 0 14px', fontSize: 18 }}>How fit scores are decided</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14 }}>
+        <div className="grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14 }}>
           {[
             { label: 'High · 80–100%', c: '#1F7A4D', dot: '#1F7A4D', desc: 'Strong match. Recommended to apply.' },
             { label: 'Medium · 50–79%', c: '#8A6100', dot: '#B7791F', desc: 'Possible match — some skills, visa or experience gaps.' },
@@ -199,7 +154,7 @@ export function HowItWorks() {
           ].map(item => (
             <div key={item.label} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, padding: 16 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 700, color: item.c }}>
-                <span style={{ width: 9, height: 9, borderRadius: '50%', background: item.dot }} />
+                <span style={{ width: 9, height: 9, borderRadius: '50%', background: item.dot, flexShrink: 0 }} />
                 {item.label}
               </div>
               <p style={{ fontSize: 13, color: 'var(--muted)', margin: '8px 0 0', lineHeight: 1.5 }}>{item.desc}</p>
@@ -213,12 +168,12 @@ export function HowItWorks() {
 
 export function Pricing({ onSignup, onTerms }) {
   return (
-    <div style={{ maxWidth: 1120, margin: '0 auto', padding: '56px 24px' }}>
+    <div className="container" style={{ maxWidth: 1120, padding: '56px 24px' }}>
       <div style={{ textAlign: 'center', marginBottom: 40 }}>
-        <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 42, letterSpacing: '-.02em', margin: '0 0 10px' }}>Simple, honest pricing</h1>
+        <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 'var(--text-5xl)', letterSpacing: '-.02em', margin: '0 0 10px' }}>Simple, honest pricing</h1>
         <p style={{ fontSize: 17, color: 'var(--muted)', margin: 0 }}>Start with 2 free applications. Pay only when you're satisfied.</p>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 18 }}>
+      <div className="grid-4" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 18 }}>
         {PRICING.map(p => (
           <div key={p.name} style={{
             position: 'relative', display: 'flex', flexDirection: 'column', gap: 16, padding: '26px 22px',
@@ -248,6 +203,7 @@ export function Pricing({ onSignup, onTerms }) {
             </div>
             <button
               onClick={onSignup}
+              className="tap-target"
               style={{
                 marginTop: 'auto', padding: 12, borderRadius: 9, border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: 14,
                 background: p.hi ? 'var(--accent)' : 'var(--surface-3)',
@@ -268,20 +224,20 @@ export function Pricing({ onSignup, onTerms }) {
   )
 }
 
-export function Contact({ onFlash }) {
+export function Contact({ onSend }) {
   return (
-    <div style={{ maxWidth: 920, margin: '0 auto', padding: '56px 24px' }}>
-      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 42, letterSpacing: '-.02em', margin: '0 0 12px' }}>Contact &amp; support</h1>
+    <div className="container" style={{ maxWidth: 920, padding: '56px 24px' }}>
+      <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 'var(--text-5xl)', letterSpacing: '-.02em', margin: '0 0 12px' }}>Contact &amp; support</h1>
       <p style={{ fontSize: 17, color: 'var(--muted)', margin: '0 0 36px', maxWidth: '34em' }}>A real person replies within one working day. Existing customers can also message their team directly from the dashboard.</p>
-      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr .8fr', gap: 28 }}>
-        <form onSubmit={e => e.preventDefault()} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 24, display: 'flex', flexDirection: 'column', gap: 14 }}>
-          <div><label style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Your name</label><input placeholder="Tharindu W." style={finStyle} /></div>
-          <div><label style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Email</label><input placeholder="you@email.com" style={finStyle} /></div>
-          <div><label style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Message</label><textarea rows={5} placeholder="How can we help?" style={{ ...finStyle, resize: 'vertical' }} /></div>
-          <button onClick={() => onFlash('Message sent — we reply within one working day')} type="button" style={{ alignSelf: 'flex-start', padding: '12px 22px', borderRadius: 9, background: 'var(--accent)', color: '#fff', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>Send message</button>
+      <div className="grid-2" style={{ display: 'grid', gridTemplateColumns: '1.2fr .8fr', gap: 28 }}>
+        <form onSubmit={e => { e.preventDefault(); onSend?.() }} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 24, display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <div><label htmlFor="contact-name" style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Your name</label><input id="contact-name" name="name" placeholder="Tharindu W." style={finStyle} /></div>
+          <div><label htmlFor="contact-email" style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Email</label><input id="contact-email" name="email" type="email" placeholder="you@email.com" style={finStyle} /></div>
+          <div><label htmlFor="contact-message" style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Message</label><textarea id="contact-message" name="message" rows={5} placeholder="How can we help?" style={{ ...finStyle, resize: 'vertical' }} /></div>
+          <button type="submit" style={{ alignSelf: 'flex-start', padding: '12px 22px', borderRadius: 9, background: 'var(--accent)', color: '#fff', border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>Send message</button>
         </form>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          {[['Email', 'hello@atgconcordia.com'], ['WhatsApp', '+94 76 000 0000'], ['Operating hours', 'Mon–Sat · 9:00–18:00 IST']].map(([label, val]) => (
+          {[['Email', 'hello@atgconcordia.com'], ['WhatsApp', '+94 76 000 0000'], ['Operating hours', 'Mon–Sat · 9:00–18:00 (Sri Lanka time, GMT+5:30)']].map(([label, val]) => (
             <div key={label} style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 18 }}>
               <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 4 }}>{label}</div>
               <div style={{ fontWeight: 600 }}>{val}</div>
@@ -306,7 +262,7 @@ export function Privacy() {
     { title: 'Your rights', body: 'You can access, correct, export or delete your data, and withdraw consent at any time. Contact privacy@atgconcordia.com.' },
   ]
   return (
-    <div style={{ maxWidth: 820, margin: '0 auto', padding: '56px 24px 72px' }}>
+    <div className="container" style={{ maxWidth: 820, padding: '56px 24px 72px' }}>
       <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 40, letterSpacing: '-.02em', margin: '0 0 8px' }}>Privacy policy</h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 32px' }}>Last updated 26 June 2026 · ATG Concordia (Pvt) Ltd</p>
       {sections.map(s => (
@@ -337,7 +293,7 @@ export function Terms() {
     { title: '8. Acceptable use', body: 'You may not use the service for fraudulent applications or misrepresentation. We may pause or end service for misuse, with a pro-rata refund of unused applications where appropriate.' },
   ]
   return (
-    <div style={{ maxWidth: 820, margin: '0 auto', padding: '56px 24px 72px' }}>
+    <div className="container" style={{ maxWidth: 820, padding: '56px 24px 72px' }}>
       <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 40, letterSpacing: '-.02em', margin: '0 0 8px' }}>Terms of service</h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 32px' }}>Last updated 26 June 2026 · ATG Concordia (Pvt) Ltd</p>
       {sections.map(s => (
