@@ -9,7 +9,8 @@ import SignupWizard from './pages/SignupWizard.jsx'
 import ArchitecturePage from './pages/ArchitecturePage.jsx'
 import {
   CustomerDashboard, CustomerJobs, CustomerApplications, CustomerDocuments,
-  CustomerPayments, CustomerUpgrade, CustomerNotifications, CustomerSupport, CustomerProfile
+  CustomerPayments, CustomerUpgrade, CustomerNotifications, CustomerSupport, CustomerProfile,
+  CustomerScholarships
 } from './pages/CustomerPages.jsx'
 import {
   AdminDashboard, AdminUsers, AdminUserDetail, AdminAddJob, AdminApplications,
@@ -112,6 +113,7 @@ export default function App() {
     { view: 'u-dash', label: t('cust.nav.dashboard'), icon: 'home' },
     { view: 'u-jobs', label: t('cust.nav.jobs'), icon: 'briefcase', badge: myPendingCount },
     { view: 'u-apps', label: t('cust.nav.applications'), icon: 'list' },
+    { view: 'u-scholarships', label: t('cust.nav.scholarships'), icon: 'globe' },
     { view: 'u-docs', label: t('cust.nav.documents'), icon: 'file' },
     { view: 'u-pay', label: t('cust.nav.payments'), icon: 'card' },
     { view: 'u-upgrade', label: t('cust.nav.upgrade'), icon: 'spark' },
@@ -173,6 +175,7 @@ export default function App() {
       case 'u-dash': return <CustomerDashboard approvals={approvals} onApprove={approveJob} onDecline={declineJob} onGoJobs={() => setViewAndClose('u-jobs')} onGoApps={() => setViewAndClose('u-apps')} onGoUpgrade={() => setViewAndClose('u-upgrade')} onGoProfile={() => setViewAndClose('u-profile')} onGoNotify={() => setViewAndClose('u-notify')} />
       case 'u-jobs': return <CustomerJobs approvals={approvals} onApprove={approveJob} onDecline={declineJob} />
       case 'u-apps': return <CustomerApplications approvals={approvals} />
+      case 'u-scholarships': return <CustomerScholarships />
       case 'u-docs': return <CustomerDocuments />
       case 'u-pay': return <CustomerPayments />
       case 'u-upgrade': return <CustomerUpgrade onUpgrade={() => flash(t('toast.upgradeRequested'))} />
