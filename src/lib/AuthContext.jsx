@@ -13,7 +13,7 @@ export function AuthProvider({ children }) {
       setSession(session)
       if (session) resolveProfile(session.user.id)
       else setLoading(false)
-    })
+    }).catch(() => setLoading(false))
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
